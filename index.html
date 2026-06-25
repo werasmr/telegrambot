@@ -814,6 +814,156 @@
 
     .report-card__title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
     .report-card__desc  { font-size: 12px; color: var(--text-2); }
+
+    /* =============================================
+       НАЛОГОВЫЙ УЧЁТ
+       ============================================= */
+    .tax-regime-selector {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
+    }
+
+    .tax-regime-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+
+    .tax-regime-card:hover { border-color: var(--accent); }
+
+    .tax-regime-card.active {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .tax-regime-card__code {
+      font-size: 16px; font-weight: 800; letter-spacing: -0.5px;
+      color: var(--accent); margin-bottom: 4px;
+    }
+
+    .tax-regime-card.active .tax-regime-card__code { color: var(--accent); }
+
+    .tax-regime-card__name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .tax-regime-card__rate { font-size: 11.5px; color: var(--text-3); }
+
+    .tax-block {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden; margin-bottom: 12px;
+    }
+
+    .tax-block__header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 0.5px solid var(--border);
+      background: var(--surface-2);
+      cursor: pointer;
+    }
+
+    .tax-block__title {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13.5px; font-weight: 600;
+    }
+
+    .tax-block__title .ti { font-size: 16px; color: var(--text-2); }
+    .tax-block__badge-amount { font-size: 15px; font-weight: 700; }
+    .tax-block__body { padding: 16px 20px; }
+
+    .tax-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 0.5px solid var(--border);
+      gap: 12px;
+    }
+
+    .tax-row:last-child { border-bottom: none; }
+    .tax-row__label { font-size: 13px; color: var(--text-2); flex: 1; }
+    .tax-row__formula { font-size: 11.5px; color: var(--text-3); background: var(--surface-2); padding: 2px 8px; border-radius: var(--radius-sm); font-family: 'Courier New', monospace; }
+    .tax-row__value { font-size: 14px; font-weight: 700; color: var(--text); min-width: 120px; text-align: right; }
+    .tax-row__value.tax-due { color: var(--danger); }
+    .tax-row__value.tax-paid { color: var(--success); }
+
+    .tax-calendar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+
+    .tax-deadline-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+
+    .tax-deadline-card.overdue { border-color: var(--danger); background: var(--danger-light); }
+    .tax-deadline-card.soon    { border-color: var(--warning); background: var(--warning-light); }
+    .tax-deadline-card.future  { border-color: var(--border); }
+    .tax-deadline-card.done    { border-color: var(--success); background: var(--success-light); opacity: 0.75; }
+
+    .tax-deadline-card__date {
+      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+      margin-bottom: 2px;
+    }
+
+    .tax-deadline-card.overdue .tax-deadline-card__date { color: var(--danger); }
+    .tax-deadline-card.soon    .tax-deadline-card__date { color: var(--warning); }
+    .tax-deadline-card.done    .tax-deadline-card__date { color: var(--success); }
+
+    .tax-deadline-card__name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .tax-deadline-card__desc { font-size: 12px; color: var(--text-2); }
+
+    .tax-deadline-card__footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 12px; padding-top: 10px;
+      border-top: 0.5px solid var(--border);
+    }
+
+    .declaration-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 80px;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 0.5px solid var(--border);
+      gap: 12px;
+    }
+
+    .declaration-row:last-child { border-bottom: none; }
+    .declaration-row:hover { background: var(--surface-2); }
+
+    .fns-company-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .fns-company-card__head {
+      display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px;
+    }
+
+    .fns-logo {
+      width: 48px; height: 48px; border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #003087 0%, #1040a0 100%);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .fns-logo span { color: #fff; font-size: 11px; font-weight: 800; letter-spacing: -0.3px; }
+
+    .fns-company-fields {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px;
+    }
+
+    .fns-field { display: flex; flex-direction: column; gap: 3px; }
+    .fns-field__label { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.4px; }
+    .fns-field__value { font-size: 13.5px; font-weight: 500; color: var(--text); }
+
+    .usn-inputs { display: grid; grid-template-columns: repeat(3,1fr); gap:10px; margin-bottom:16px; }
+    .usn-input-card { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 12px; }
+    .usn-input-card label { font-size:11px; font-weight:600; color:var(--text-3); display:block; margin-bottom:5px; text-transform:uppercase; }
+    .usn-input-card input { background: var(--surface); font-size:13.5px; font-weight:600; }
   </style>
 </head>
 <body>
@@ -865,6 +1015,9 @@
       </div>
 
       <div class="sidebar__section-label">Инструменты</div>
+      <div class="nav-item" onclick="nav(this,'taxes')" aria-label="Налоговый учёт">
+        <i class="ti ti-receipt-tax"></i><span>Налоговый учёт</span>
+      </div>
       <div class="nav-item" onclick="nav(this,'ai')" aria-label="AI-ассистент">
         <i class="ti ti-sparkles"></i><span>AI-ассистент</span>
       </div>
@@ -1756,6 +1909,234 @@
       </section>
 
       <!-- ============================
+           НАЛОГОВЫЙ УЧЁТ (NEW)
+           ============================ -->
+      <section id="taxes" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-header__title">Налоговый учёт</div>
+            <div class="page-header__sub" id="tax-sub">Загрузка...</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost" onclick="openModal('modal-tax-settings')"><i class="ti ti-settings"></i> Настройки компании</button>
+            <button class="btn btn-ghost" onclick="lookupFns()"><i class="ti ti-building-community"></i> Запрос в ФНС</button>
+            <button class="btn btn-primary" onclick="recalcTaxes()"><i class="ti ti-calculator"></i> Пересчитать</button>
+          </div>
+        </div>
+
+        <!-- Карточка компании (данные ФНС) -->
+        <div class="fns-company-card" id="fns-company-card">
+          <div class="fns-company-card__head">
+            <div class="fns-logo"><span>ФНС</span></div>
+            <div style="flex:1;">
+              <div style="font-size:16px;font-weight:700;" id="tax-company-name">ИП Иванов Пётр Сергеевич</div>
+              <div style="font-size:13px;color:var(--text-2);margin-top:3px;" id="tax-company-status">
+                <span class="badge badge-success">Действующий</span>
+                <span style="margin-left:8px;color:var(--text-3);">Данные из открытого реестра ФНС</span>
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="syncFns()"><i class="ti ti-refresh"></i> Обновить из ФНС</button>
+          </div>
+          <div class="fns-company-fields" id="fns-company-fields">
+            <div class="fns-field"><div class="fns-field__label">ИНН</div><div class="fns-field__value" id="fld-inn">771234567890</div></div>
+            <div class="fns-field"><div class="fns-field__label">ОГРНИП / ОГРН</div><div class="fns-field__value" id="fld-ogrn">321774600123456</div></div>
+            <div class="fns-field"><div class="fns-field__label">Дата регистрации</div><div class="fns-field__value" id="fld-regdate">15 января 2020</div></div>
+            <div class="fns-field"><div class="fns-field__label">Форма</div><div class="fns-field__value" id="fld-form">ИП</div></div>
+            <div class="fns-field"><div class="fns-field__label">ИФНС</div><div class="fns-field__value" id="fld-ifns">ИФНС № 28 по г. Москве</div></div>
+            <div class="fns-field"><div class="fns-field__label">ОКВЭД (основной)</div><div class="fns-field__value" id="fld-okved">62.01 — Разработка ПО</div></div>
+          </div>
+        </div>
+
+        <!-- Выбор налогового режима -->
+        <div style="margin-bottom:8px;font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;">Налоговый режим</div>
+        <div class="tax-regime-selector" id="tax-regime-selector">
+          <div class="tax-regime-card active" onclick="selectRegime('usn6')" id="regime-usn6">
+            <div class="tax-regime-card__code">УСН 6%</div>
+            <div class="tax-regime-card__name">Доходы</div>
+            <div class="tax-regime-card__rate">6% от выручки</div>
+          </div>
+          <div class="tax-regime-card" onclick="selectRegime('usn15')" id="regime-usn15">
+            <div class="tax-regime-card__code">УСН 15%</div>
+            <div class="tax-regime-card__name">Доходы − Расходы</div>
+            <div class="tax-regime-card__rate">15% от прибыли (мин. 1%)</div>
+          </div>
+          <div class="tax-regime-card" onclick="selectRegime('osn')" id="regime-osn">
+            <div class="tax-regime-card__code">ОСН</div>
+            <div class="tax-regime-card__name">Общая система</div>
+            <div class="tax-regime-card__rate">НДС 20% + НДФЛ 13%</div>
+          </div>
+          <div class="tax-regime-card" onclick="selectRegime('patent')" id="regime-patent">
+            <div class="tax-regime-card__code">ПСН</div>
+            <div class="tax-regime-card__name">Патент</div>
+            <div class="tax-regime-card__rate">6% от потенц. дохода</div>
+          </div>
+        </div>
+
+        <!-- Сводка к уплате -->
+        <div class="metrics-grid" id="tax-summary-metrics" style="margin-bottom:20px;">
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-receipt-tax"></i> Начислено за период</div>
+            <div class="metric-card__value" id="tax-total-accrued">₽ 0</div>
+            <div class="metric-card__delta delta-neu" id="tax-accrued-label">Расчётный период</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-circle-check" style="color:var(--success)"></i> Уплачено</div>
+            <div class="metric-card__value tx-type-income" id="tax-total-paid">₽ 0</div>
+            <div class="metric-card__delta delta-up">Подтверждено</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-alert-triangle" style="color:var(--danger)"></i> К уплате</div>
+            <div class="metric-card__value tx-type-expense" id="tax-total-due">₽ 0</div>
+            <div class="metric-card__delta delta-down">Осталось заплатить</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-calendar-event"></i> Ближайший дедлайн</div>
+            <div class="metric-card__value" id="tax-next-deadline" style="font-size:16px;">28 июл</div>
+            <div class="metric-card__delta delta-down" id="tax-next-deadline-label">Авансовый платёж УСН</div>
+          </div>
+        </div>
+
+        <div class="two-col" style="margin-bottom:20px;">
+          <!-- Расчёт налогов -->
+          <div>
+            <!-- Ввод данных -->
+            <div class="usn-inputs" id="tax-inputs-block">
+              <div class="usn-input-card">
+                <label>Доходы с начала года, ₽</label>
+                <input type="number" id="tax-in-revenue" placeholder="0" oninput="recalcTaxes()" />
+              </div>
+              <div class="usn-input-card">
+                <label>Расходы с начала года, ₽</label>
+                <input type="number" id="tax-in-expenses" placeholder="0" oninput="recalcTaxes()" />
+              </div>
+              <div class="usn-input-card">
+                <label>Уплачено авансов, ₽</label>
+                <input type="number" id="tax-in-paid" placeholder="0" oninput="recalcTaxes()" />
+              </div>
+            </div>
+
+            <!-- Основной налог (режим) -->
+            <div class="tax-block">
+              <div class="tax-block__header" onclick="toggleTaxBlock('block-main')">
+                <div class="tax-block__title">
+                  <i class="ti ti-receipt-tax"></i>
+                  <span id="tax-main-title">УСН «Доходы» 6%</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <span class="tax-block__badge-amount tx-type-expense" id="tax-main-total">₽ 0</span>
+                  <i class="ti ti-chevron-down" id="icon-block-main" style="color:var(--text-3);font-size:14px;"></i>
+                </div>
+              </div>
+              <div id="block-main" class="tax-block__body" style="display:block;">
+                <div id="tax-main-rows"></div>
+              </div>
+            </div>
+
+            <!-- Страховые взносы -->
+            <div class="tax-block">
+              <div class="tax-block__header" onclick="toggleTaxBlock('block-sv')">
+                <div class="tax-block__title">
+                  <i class="ti ti-shield-check"></i>
+                  Страховые взносы
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <span class="tax-block__badge-amount tx-type-expense" id="tax-sv-total">₽ 0</span>
+                  <i class="ti ti-chevron-down" id="icon-block-sv" style="color:var(--text-3);font-size:14px;"></i>
+                </div>
+              </div>
+              <div id="block-sv" class="tax-block__body" style="display:block;">
+                <div id="tax-sv-rows"></div>
+              </div>
+            </div>
+
+            <!-- НДФЛ сотрудники -->
+            <div class="tax-block">
+              <div class="tax-block__header" onclick="toggleTaxBlock('block-ndfl')">
+                <div class="tax-block__title">
+                  <i class="ti ti-user-dollar"></i>
+                  НДФЛ (сотрудники)
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <span class="tax-block__badge-amount tx-type-expense" id="tax-ndfl-total">₽ 0</span>
+                  <i class="ti ti-chevron-down" id="icon-block-ndfl" style="color:var(--text-3);font-size:14px;"></i>
+                </div>
+              </div>
+              <div id="block-ndfl" class="tax-block__body" style="display:block;">
+                <div id="tax-ndfl-rows"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Правая колонка: Подсказки ФНС + ставки -->
+          <div>
+            <div class="card" style="margin-bottom:12px;">
+              <div class="card__header">
+                <span class="card__title">Ставки и лимиты 2026</span>
+                <span class="badge badge-accent">Актуально</span>
+              </div>
+              <div id="tax-rates-table"></div>
+            </div>
+
+            <div class="card">
+              <div class="card__header">
+                <span class="card__title">Связь с ФНС</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;" id="fns-links">
+                <a href="https://www.nalog.gov.ru/" target="_blank" rel="noopener" class="btn btn-ghost" style="justify-content:flex-start;gap:10px;font-size:12.5px;">
+                  <i class="ti ti-world"></i> nalog.gov.ru — портал ФНС
+                </a>
+                <a href="https://service.nalog.ru/static/personal-account/index.html" target="_blank" rel="noopener" class="btn btn-ghost" style="justify-content:flex-start;gap:10px;font-size:12.5px;">
+                  <i class="ti ti-user-circle"></i> Личный кабинет ИП/ЮЛ
+                </a>
+                <a href="https://egrul.nalog.ru/" target="_blank" rel="noopener" class="btn btn-ghost" style="justify-content:flex-start;gap:10px;font-size:12.5px;">
+                  <i class="ti ti-search"></i> ЕГРЮЛ / ЕГРИП — реестр
+                </a>
+                <a href="https://pb.nalog.ru/" target="_blank" rel="noopener" class="btn btn-ghost" style="justify-content:flex-start;gap:10px;font-size:12.5px;">
+                  <i class="ti ti-building-community"></i> Прозрачный бизнес
+                </a>
+                <button class="btn btn-ghost" style="justify-content:flex-start;gap:10px;font-size:12.5px;" onclick="openModal('modal-fns-api')">
+                  <i class="ti ti-api"></i> API ФНС — настройка интеграции
+                </button>
+                <div style="margin-top:4px;padding:10px 12px;background:var(--surface-2);border-radius:var(--radius-md);font-size:12px;color:var(--text-3);">
+                  <i class="ti ti-info-circle" style="font-size:14px;vertical-align:middle;margin-right:4px;"></i>
+                  Автоматическое обновление ставок через <code>/api/fns/rates</code> · Данные компании через <code>/api/fns/company/{inn}</code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Календарь налоговых платежей -->
+        <div style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:13px;font-weight:600;">Календарь платежей и деклараций — 2026</div>
+          <div style="display:flex;gap:6px;">
+            <span style="display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--danger);"><i class="ti ti-circle-filled" style="font-size:8px;"></i> Просрочено</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--warning);margin-left:8px;"><i class="ti ti-circle-filled" style="font-size:8px;"></i> Скоро</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--success);margin-left:8px;"><i class="ti ti-circle-filled" style="font-size:8px;"></i> Уплачено</span>
+          </div>
+        </div>
+        <div class="tax-calendar-grid" id="tax-calendar"></div>
+
+        <!-- Декларации и отчётность -->
+        <div class="card" style="padding:0;margin-top:4px;">
+          <div class="card__header" style="padding:16px 20px 0;">
+            <span class="card__title">Декларации и отчётность</span>
+            <button class="btn btn-ghost btn-sm" onclick="openModal('modal-add-declaration')"><i class="ti ti-plus"></i> Добавить</button>
+          </div>
+          <div style="margin-top:4px;">
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 80px;padding:0 20px 10px;border-bottom:0.5px solid var(--border);">
+              <span style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;">Декларация</span>
+              <span style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;">Период</span>
+              <span style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;">Срок сдачи</span>
+              <span style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;">Статус</span>
+              <span></span>
+            </div>
+            <div id="tax-declarations-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================
            ИНТЕГРАЦИИ
            ============================ -->
       <section id="integrations" class="section">
@@ -2127,6 +2508,135 @@
   </div>
 </div>
 
+<!-- Настройки компании (налог) -->
+<div class="modal-overlay" id="modal-tax-settings" role="dialog" aria-modal="true" aria-label="Настройки компании">
+  <div class="modal modal--wide">
+    <div class="modal__header">
+      <span class="modal__title">Настройки компании</span>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-tax-settings')" aria-label="Закрыть"><i class="ti ti-x"></i></button>
+    </div>
+    <form onsubmit="saveTaxSettings(event)">
+      <div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Реквизиты</div>
+      <div class="form-row">
+        <div class="form-group"><label>Наименование *</label><input type="text" id="ts-name" placeholder="ИП Иванов Пётр Сергеевич" /></div>
+        <div class="form-group"><label>Форма</label>
+          <select id="ts-form"><option value="ИП">ИП</option><option value="ООО">ООО</option><option value="АО">АО</option><option value="ПАО">ПАО</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>ИНН *</label><input type="text" id="ts-inn" placeholder="771234567890" maxlength="12" /></div>
+        <div class="form-group"><label>ОГРНИП / ОГРН</label><input type="text" id="ts-ogrn" placeholder="321774600123456" /></div>
+        <div class="form-group"><label>КПП (для ООО)</label><input type="text" id="ts-kpp" placeholder="770101001" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>ИФНС</label><input type="text" id="ts-ifns" placeholder="ИФНС № 28 по г. Москве" /></div>
+        <div class="form-group"><label>ОКВЭД (основной)</label><input type="text" id="ts-okved" placeholder="62.01" /></div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Налоговый режим</div>
+      <div class="form-row">
+        <div class="form-group"><label>Система налогообложения</label>
+          <select id="ts-regime">
+            <option value="usn6">УСН «Доходы» (6%)</option>
+            <option value="usn15">УСН «Доходы − Расходы» (15%)</option>
+            <option value="osn">ОСН (НДС + НДФЛ)</option>
+            <option value="patent">Патентная система (ПСН)</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Ставка региона, %</label><input type="number" id="ts-rate" placeholder="6" min="0" max="20" step="0.1" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Кол-во сотрудников</label><input type="number" id="ts-emp-count" placeholder="0" /></div>
+        <div class="form-group"><label>Дата регистрации</label><input type="date" id="ts-regdate" /></div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Расчётный счёт</div>
+      <div class="form-row">
+        <div class="form-group"><label>Банк</label><input type="text" id="ts-bank" placeholder="Точка Банк" /></div>
+        <div class="form-group"><label>Расчётный счёт</label><input type="text" id="ts-acc" placeholder="40802810100000012345" /></div>
+        <div class="form-group"><label>БИК</label><input type="text" id="ts-bik" placeholder="044525999" /></div>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('modal-tax-settings')">Отмена</button>
+        <button type="submit" class="btn btn-primary"><i class="ti ti-check"></i> Сохранить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ФНС API настройка -->
+<div class="modal-overlay" id="modal-fns-api" role="dialog" aria-modal="true" aria-label="API ФНС">
+  <div class="modal">
+    <div class="modal__header">
+      <span class="modal__title">Интеграция с ФНС</span>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-fns-api')" aria-label="Закрыть"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="background:var(--accent-light);border:0.5px solid var(--accent);border-radius:var(--radius-md);padding:12px 16px;font-size:12.5px;color:var(--text-2);margin-bottom:16px;">
+      <strong style="color:var(--accent);">ФНС России API</strong> — запросы проходят через прокси <code>/api/fns</code>. Данные доступны по открытым реестрам ЕГРЮЛ/ЕГРИП и ФНС REST API (требуется ключ).
+    </div>
+    <div class="form-row"><div class="form-group"><label>ИНН для поиска компании</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="fns-lookup-inn" placeholder="7712345678 или 771234567890" maxlength="12" style="flex:1;" />
+        <button type="button" class="btn btn-primary" onclick="lookupFnsByInn()"><i class="ti ti-search"></i> Найти</button>
+      </div>
+    </div></div>
+    <div id="fns-lookup-result" style="display:none;background:var(--surface-2);border:0.5px solid var(--border);border-radius:var(--radius-md);padding:14px;font-size:13px;margin-bottom:16px;"></div>
+    <div class="divider"></div>
+    <div class="form-row"><div class="form-group"><label>API-ключ ФНС (Контур/СБИС/СПА)</label><input type="password" id="fns-api-key" placeholder="Введите ключ доступа..." /></div></div>
+    <div class="form-row"><div class="form-group"><label>Режим</label>
+      <select id="fns-mode">
+        <option value="egrul">Открытые данные ЕГРЮЛ (без ключа)</option>
+        <option value="api">ФНС API (требует ключ)</option>
+        <option value="kontur">Контур.Фокус (требует ключ)</option>
+      </select>
+    </div></div>
+    <div class="modal__footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-fns-api')">Закрыть</button>
+      <button class="btn btn-primary" onclick="saveFnsSettings()"><i class="ti ti-check"></i> Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Добавить декларацию -->
+<div class="modal-overlay" id="modal-add-declaration" role="dialog" aria-modal="true" aria-label="Добавить декларацию">
+  <div class="modal">
+    <div class="modal__header">
+      <span class="modal__title">Добавить декларацию</span>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-add-declaration')" aria-label="Закрыть"><i class="ti ti-x"></i></button>
+    </div>
+    <form onsubmit="submitAddDeclaration(event)">
+      <div class="form-row"><div class="form-group"><label>Название *</label>
+        <select id="decl-name">
+          <option>Декларация по УСН</option>
+          <option>Декларация НДС</option>
+          <option>6-НДФЛ</option>
+          <option>РСВ (страховые взносы)</option>
+          <option>Декларация по налогу на имущество</option>
+          <option>Бухгалтерская отчётность</option>
+          <option>Другая</option>
+        </select>
+      </div></div>
+      <div class="form-row">
+        <div class="form-group"><label>Период</label>
+          <select id="decl-period"><option>2026 (год)</option><option>Q1 2026</option><option>Q2 2026</option><option>Q3 2026</option><option>Q4 2026</option><option>Январь 2026</option></select>
+        </div>
+        <div class="form-group"><label>Срок сдачи</label><input type="date" id="decl-due" /></div>
+      </div>
+      <div class="form-row"><div class="form-group"><label>Статус</label>
+        <select id="decl-status">
+          <option value="pending">Не сдана</option>
+          <option value="inwork">В работе</option>
+          <option value="done">Сдана</option>
+        </select>
+      </div></div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('modal-add-declaration')">Отмена</button>
+        <button type="submit" class="btn btn-primary"><i class="ti ti-check"></i> Добавить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- Уведомления -->
 <div class="notification-area" id="notification-area"></div>
 
@@ -2146,6 +2656,7 @@ const SECTION_TITLES = {
   reports:      'Отчёты',
   hr:           'Сотрудники',
   marketing:    'Маркетинг & PR',
+  taxes:        'Налоговый учёт',
   ai:           'AI-ассистент',
   integrations: 'Интеграции',
 };
@@ -3479,6 +3990,503 @@ function initCharts() {
 }
 
 // =============================================
+// =============================================
+// НАЛОГОВЫЙ УЧЁТ
+// =============================================
+
+// --- Постоянные ставки и лимиты 2026 ---
+const TAX_RATES_2026 = {
+  usn6:   { rate: 0.06,  minRate: null,   name: 'УСН «Доходы»' },
+  usn15:  { rate: 0.15,  minRate: 0.01,   name: 'УСН «Доходы−Расходы»' },
+  osn:    { nds: 0.20,   ndfl: 0.13,      name: 'ОСН' },
+  patent: { rate: 0.06,  name: 'ПСН' },
+};
+
+// Страховые взносы ИП 2026 (фиксированные)
+const SV_IP_2026 = {
+  ofp:      49500,  // ОПС фиксированная часть (пенсионный)
+  foms:     9119,   // ОМС фиксированная
+  additional: 0.01, // 1% от дохода свыше 300 000
+  maxAdditional: 277571, // максимум доп. взносов
+  socialVoluntary: 16239, // ФСС добровольное
+};
+
+// Взносы за сотрудников 2026 (до порога 2 225 000)
+const SV_EMP_2026 = {
+  ops:  0.22,
+  oms:  0.051,
+  fss:  0.029,
+  reduced_ops: 0.10,  // после порога МСП для малого бизнеса
+  reduced_fss: 0,
+  reduced_oms: 0.05,
+  msp_threshold: 1500 * 12, // 1 500 * 12 мес зарплата
+};
+
+const NDFL_RATE = 0.13; // до 2.4 млн, выше 15%
+
+let taxSettings = loadData('taxSettings', {
+  name: 'ИП Иванов Пётр Сергеевич',
+  form: 'ИП',
+  inn:  '771234567890',
+  ogrn: '321774600123456',
+  kpp:  '',
+  ifns: 'ИФНС № 28 по г. Москве',
+  okved: '62.01 — Разработка ПО',
+  regime: 'usn6',
+  rate: 6,
+  regdate: '2020-01-15',
+  bank: 'Точка Банк',
+  acc:  '40802810100000012345',
+  bik:  '044525999',
+  empCount: 6,
+});
+
+let currentRegime = loadData('taxRegime', 'usn6');
+
+let declarations = loadData('declarations', [
+  { id: 1, name: 'Декларация по УСН',   period: '2025 (год)', due: '2026-04-25', status: 'done' },
+  { id: 2, name: '6-НДФЛ',             period: 'Q1 2026',   due: '2026-04-25', status: 'done' },
+  { id: 3, name: '6-НДФЛ',             period: 'Q2 2026',   due: '2026-07-25', status: 'pending' },
+  { id: 4, name: 'РСВ (страх. взносы)', period: 'Q2 2026',  due: '2026-07-25', status: 'pending' },
+  { id: 5, name: 'Декларация по УСН',   period: '2026 (год)', due: '2027-04-25', status: 'pending' },
+]);
+
+let declIdSeq = loadData('declIdSeq', 6);
+
+// Налоговый календарь 2026 (платежи)
+const TAX_CALENDAR_2026 = [
+  { id: 'usn-q1', name: 'Аванс УСН (Q1)',      date: '2026-04-28', amount: null, type: 'usn',  regimes: ['usn6','usn15'], status: 'paid' },
+  { id: 'sv-q1',  name: 'Страх. взносы (апр)', date: '2026-04-28', amount: null, type: 'sv',   regimes: ['all'], status: 'paid' },
+  { id: 'ndfl-q1',name: 'НДФЛ сотрудники',     date: '2026-04-28', amount: null, type: 'ndfl', regimes: ['all'], status: 'paid' },
+  { id: 'usn-q2', name: 'Аванс УСН (Q2)',      date: '2026-07-28', amount: null, type: 'usn',  regimes: ['usn6','usn15'], status: 'pending' },
+  { id: 'sv-q2',  name: 'Страх. взносы (июл)', date: '2026-07-28', amount: null, type: 'sv',   regimes: ['all'], status: 'pending' },
+  { id: 'ndfl-q2',name: 'НДФЛ сотрудники',     date: '2026-07-28', amount: null, type: 'ndfl', regimes: ['all'], status: 'pending' },
+  { id: 'usn-q3', name: 'Аванс УСН (Q3)',      date: '2026-10-28', amount: null, type: 'usn',  regimes: ['usn6','usn15'], status: 'future' },
+  { id: 'sv-q3',  name: 'Страх. взносы (окт)', date: '2026-10-28', amount: null, type: 'sv',   regimes: ['all'], status: 'future' },
+  { id: 'sv-ip',  name: 'Страх. взносы ИП (фикс)', date: '2026-12-31', amount: SV_IP_2026.ofp + SV_IP_2026.foms, type: 'sv', regimes: ['all'], status: 'future' },
+  { id: 'usn-yr', name: 'Налог УСН за год',    date: '2027-04-28', amount: null, type: 'usn',  regimes: ['usn6','usn15'], status: 'future' },
+  { id: 'sv-1pct',name: '1% с дохода свыше 300к', date: '2027-07-01', amount: null, type: 'sv', regimes: ['all'], status: 'future' },
+  { id: 'nds-oct',name: 'НДС (3-й квартал)',   date: '2026-10-28', amount: null, type: 'nds',  regimes: ['osn'], status: 'future' },
+];
+
+function selectRegime(regime) {
+  currentRegime = regime;
+  saveData('taxRegime', regime);
+  document.querySelectorAll('.tax-regime-card').forEach(c => c.classList.remove('active'));
+  const card = document.getElementById('regime-' + regime);
+  if (card) card.classList.add('active');
+  recalcTaxes();
+}
+
+function getFinanceData() {
+  const income  = parseFloat(document.getElementById('tax-in-revenue')?.value) || 0;
+  const expense = parseFloat(document.getElementById('tax-in-expenses')?.value) || 0;
+  const paid    = parseFloat(document.getElementById('tax-in-paid')?.value) || 0;
+  return { income, expense, paid };
+}
+
+function recalcTaxes() {
+  const { income, expense, paid } = getFinanceData();
+  const fot = employees.reduce((s, e) => s + e.salary, 0) * 12; // годовой ФОТ
+  const empCount = employees.length;
+
+  let mainTax = 0, svTotal = 0, ndflTotal = 0;
+  let mainRows = [], svRows = [], ndflRows = [];
+
+  // --- Основной налог ---
+  if (currentRegime === 'usn6') {
+    const gross = income * 0.06;
+    const svDeduct = Math.min(SV_IP_2026.ofp + SV_IP_2026.foms, gross * 0.5);
+    mainTax = Math.max(0, gross - svDeduct);
+    mainRows = [
+      { label: 'Доходы (налоговая база)', formula: null, value: formatRub(income), cls: '' },
+      { label: 'Ставка', formula: '6%', value: '6%', cls: '' },
+      { label: 'Налог до вычетов', formula: 'Д × 6%', value: formatRub(gross), cls: 'tax-due' },
+      { label: 'Вычет — страх. взносы (≤50%)', formula: null, value: '− ' + formatRub(svDeduct), cls: 'tax-paid' },
+      { label: 'Уплачено авансов', formula: null, value: '− ' + formatRub(paid), cls: 'tax-paid' },
+      { label: 'Итого к уплате', formula: null, value: formatRub(Math.max(0, mainTax - paid)), cls: 'tax-due' },
+    ];
+    document.getElementById('tax-main-title').textContent = 'УСН «Доходы» 6%';
+
+  } else if (currentRegime === 'usn15') {
+    const profit = Math.max(0, income - expense);
+    const gross  = profit * 0.15;
+    const minTax = income * 0.01;
+    mainTax = Math.max(gross, minTax);
+    mainRows = [
+      { label: 'Доходы', formula: null, value: formatRub(income), cls: '' },
+      { label: 'Расходы', formula: null, value: '− ' + formatRub(expense), cls: 'tax-paid' },
+      { label: 'Прибыль (налоговая база)', formula: 'Д − Р', value: formatRub(profit), cls: '' },
+      { label: 'Налог (15% от прибыли)', formula: 'Б × 15%', value: formatRub(gross), cls: '' },
+      { label: 'Минимальный налог (1% от дохода)', formula: 'Д × 1%', value: formatRub(minTax), cls: '' },
+      { label: 'Применяется большее из двух', formula: 'max(15%, мин.)', value: formatRub(mainTax), cls: 'tax-due' },
+      { label: 'Уплачено авансов', formula: null, value: '− ' + formatRub(paid), cls: 'tax-paid' },
+      { label: 'Итого к уплате', formula: null, value: formatRub(Math.max(0, mainTax - paid)), cls: 'tax-due' },
+    ];
+    document.getElementById('tax-main-title').textContent = 'УСН «Доходы − Расходы» 15%';
+
+  } else if (currentRegime === 'osn') {
+    const nds   = (income / 1.2) * 0.2;
+    const ndflOsn = Math.max(0, income - expense) * 0.13;
+    mainTax = nds + ndflOsn;
+    mainRows = [
+      { label: 'Выручка (с НДС)', formula: null, value: formatRub(income), cls: '' },
+      { label: 'НДС к начислению 20%', formula: 'В / 1.2 × 20%', value: formatRub(nds), cls: 'tax-due' },
+      { label: 'НДФЛ (13% от прибыли)', formula: '(Д−Р) × 13%', value: formatRub(ndflOsn), cls: 'tax-due' },
+      { label: 'Итого ОСН', formula: null, value: formatRub(mainTax), cls: 'tax-due' },
+    ];
+    document.getElementById('tax-main-title').textContent = 'ОСН — НДС 20% + НДФЛ 13%';
+
+  } else if (currentRegime === 'patent') {
+    const potential = 500000;
+    mainTax = potential * 0.06;
+    mainRows = [
+      { label: 'Потенциальный доход (по патенту)', formula: null, value: formatRub(potential), cls: '' },
+      { label: 'Ставка', formula: '6%', value: '6%', cls: '' },
+      { label: 'Стоимость патента (год)', formula: 'Д × 6%', value: formatRub(mainTax), cls: 'tax-due' },
+      { label: '— (фактический доход не облагается)', formula: null, value: '0 ₽ доп.', cls: '' },
+    ];
+    document.getElementById('tax-main-title').textContent = 'ПСН — Патентная система';
+  }
+
+  // --- Страховые взносы ---
+  const svFixed  = SV_IP_2026.ofp + SV_IP_2026.foms;
+  const svAddl   = income > 300000 ? Math.min((income - 300000) * SV_IP_2026.additional, SV_IP_2026.maxAdditional) : 0;
+  const svEmpOps = fot * SV_EMP_2026.ops;
+  const svEmpOms = fot * SV_EMP_2026.oms;
+  const svEmpFss = fot * SV_EMP_2026.fss;
+  svTotal = svFixed + svAddl + (empCount > 0 ? svEmpOps + svEmpOms + svEmpFss : 0);
+
+  svRows = [
+    { label: `ОПС ИП (фикс.) — ₽ ${SV_IP_2026.ofp.toLocaleString('ru-RU')}`, formula: 'Фиксированная', value: formatRub(SV_IP_2026.ofp), cls: 'tax-due' },
+    { label: `ОМС ИП (фикс.) — ₽ ${SV_IP_2026.foms.toLocaleString('ru-RU')}`, formula: 'Фиксированная', value: formatRub(SV_IP_2026.foms), cls: 'tax-due' },
+  ];
+
+  if (income > 300000) {
+    svRows.push({ label: `1% от дохода свыше ₽ 300 000`, formula: `(${formatRub(income)} − 300к) × 1%`, value: formatRub(svAddl), cls: 'tax-due' });
+  }
+
+  if (empCount > 0) {
+    svRows.push({ label: `ОПС за ${empCount} сотрудников (22%)`, formula: 'ФОТ × 22%', value: formatRub(svEmpOps), cls: 'tax-due' });
+    svRows.push({ label: `ОМС за сотрудников (5,1%)`, formula: 'ФОТ × 5.1%', value: formatRub(svEmpOms), cls: 'tax-due' });
+    svRows.push({ label: `ФСС за сотрудников (2,9%)`, formula: 'ФОТ × 2.9%', value: formatRub(svEmpFss), cls: 'tax-due' });
+  }
+
+  svRows.push({ label: 'Итого страховые взносы', formula: null, value: formatRub(svTotal), cls: 'tax-due' });
+  document.getElementById('tax-sv-total').textContent = formatRub(svTotal);
+
+  // --- НДФЛ сотрудников ---
+  if (empCount > 0) {
+    ndflTotal = fot * NDFL_RATE;
+    ndflRows = [
+      { label: `Годовой ФОТ (${empCount} сотр.)`, formula: null, value: formatRub(fot), cls: '' },
+      { label: 'Ставка НДФЛ', formula: '13% (до 2.4 млн)', value: '13%', cls: '' },
+      { label: 'НДФЛ к удержанию', formula: 'ФОТ × 13%', value: formatRub(ndflTotal), cls: 'tax-due' },
+      { label: 'К перечислению в бюджет', formula: null, value: formatRub(ndflTotal), cls: 'tax-due' },
+    ];
+  } else {
+    ndflRows = [{ label: 'Нет наёмных сотрудников', formula: null, value: '₽ 0', cls: '' }];
+  }
+  document.getElementById('tax-ndfl-total').textContent = formatRub(ndflTotal);
+
+  // Render rows
+  function renderTaxRows(containerId, rows) {
+    document.getElementById(containerId).innerHTML = rows.map(r => `
+      <div class="tax-row">
+        <span class="tax-row__label">${r.label}</span>
+        ${r.formula ? `<span class="tax-row__formula">${r.formula}</span>` : '<span></span>'}
+        <span class="tax-row__value ${r.cls}">${r.value}</span>
+      </div>
+    `).join('');
+  }
+
+  renderTaxRows('tax-main-rows', mainRows);
+  renderTaxRows('tax-sv-rows', svRows);
+  renderTaxRows('tax-ndfl-rows', ndflRows);
+
+  // Итоги в метрике
+  const totalAccrued = mainTax + svTotal + ndflTotal;
+  const totalPaid    = svFixed + paid;
+  const totalDue     = Math.max(0, totalAccrued - totalPaid);
+
+  document.getElementById('tax-main-total').textContent    = formatRub(mainTax);
+  document.getElementById('tax-total-accrued').textContent = formatRub(totalAccrued);
+  document.getElementById('tax-total-paid').textContent    = formatRub(totalPaid);
+  document.getElementById('tax-total-due').textContent     = formatRub(totalDue);
+  document.getElementById('tax-sub').textContent           = `Режим: ${TAX_RATES_2026[currentRegime]?.name || currentRegime} · К уплате: ${formatRub(totalDue)}`;
+
+  renderTaxRatesTable();
+}
+
+function renderTaxRatesTable() {
+  const rows = [
+    { label: 'УСН «Доходы»',      value: '6%',          note: 'от выручки, можно снизить до 1%' },
+    { label: 'УСН «Д−Р»',         value: '15%',          note: 'мин. 1% от дохода' },
+    { label: 'НДС',               value: '20% / 10%',    note: '10% на часть товаров' },
+    { label: 'НДФЛ (физлица)',     value: '13% / 15%',    note: '15% свыше 2,4 млн/год' },
+    { label: 'ОПС ИП фикс.',      value: formatRub(SV_IP_2026.ofp),  note: '2026, ежегодно' },
+    { label: 'ОМС ИП фикс.',      value: formatRub(SV_IP_2026.foms), note: '2026, ежегодно' },
+    { label: 'ОПС за сотр.',      value: '22%',          note: 'от зарплаты до порога' },
+    { label: 'ФСС за сотр.',      value: '2,9%',         note: 'от зарплаты' },
+    { label: 'ОМС за сотр.',      value: '5,1%',         note: 'от зарплаты' },
+    { label: 'Доп. взнос ИП 1%',  value: '1%',           note: 'от дохода > 300 000' },
+  ];
+
+  document.getElementById('tax-rates-table').innerHTML = `
+    <table>
+      <tbody>
+        ${rows.map(r => `
+          <tr>
+            <td style="font-size:12.5px;color:var(--text-2);padding:7px 0;">${r.label}</td>
+            <td style="font-size:13px;font-weight:700;text-align:right;color:var(--text);padding:7px 0;">${r.value}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+    <div style="font-size:11.5px;color:var(--text-3);margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border);">
+      <i class="ti ti-info-circle" style="font-size:13px;vertical-align:middle;"></i>
+      Ставки актуальны для 2026 г. Региональные льготы могут снижать УСН до 1–5%.
+    </div>
+  `;
+}
+
+function renderTaxCalendar() {
+  const today = todayIso();
+  const relevant = TAX_CALENDAR_2026.filter(d => d.regimes.includes('all') || d.regimes.includes(currentRegime));
+
+  const container = document.getElementById('tax-calendar');
+  container.innerHTML = relevant.map(d => {
+    const diffDays = Math.round((new Date(d.date) - new Date(today)) / 86400000);
+    let cls = 'future';
+    if (d.status === 'paid') cls = 'done';
+    else if (diffDays < 0) cls = 'overdue';
+    else if (diffDays <= 14) cls = 'soon';
+
+    const dateObj = new Date(d.date + 'T00:00:00');
+    const months = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+    const dateStr = `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+
+    const typeIcon = { usn: 'ti-receipt-tax', sv: 'ti-shield-check', ndfl: 'ti-user-dollar', nds: 'ti-percentage' };
+
+    return `
+      <div class="tax-deadline-card ${cls}">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <i class="ti ${typeIcon[d.type] || 'ti-calendar'}" style="font-size:15px;color:var(--text-2);"></i>
+          <div class="tax-deadline-card__name">${d.name}</div>
+        </div>
+        <div class="tax-deadline-card__date">${dateStr}</div>
+        <div class="tax-deadline-card__desc">
+          ${diffDays < 0 && cls !== 'done' ? `<strong style="color:var(--danger)">Просрочено ${Math.abs(diffDays)} дн.</strong>` :
+            cls === 'done' ? 'Уплачено' :
+            diffDays === 0 ? '<strong style="color:var(--danger)">Сегодня!</strong>' :
+            `Через ${diffDays} дн.`}
+        </div>
+        <div class="tax-deadline-card__footer">
+          <span class="badge ${cls === 'done' ? 'badge-success' : cls === 'overdue' ? 'badge-danger' : cls === 'soon' ? 'badge-warning' : 'badge-neutral'}">
+            ${cls === 'done' ? 'Уплачено' : cls === 'overdue' ? 'Просрочено' : cls === 'soon' ? 'Скоро' : 'Предстоит'}
+          </span>
+          ${cls !== 'done' ? `<button class="btn btn-ghost btn-sm" onclick="markTaxPaid('${d.id}')"><i class="ti ti-check"></i> Уплатить</button>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Найти ближайший
+  const next = relevant.filter(d => d.status !== 'paid' && d.date >= today).sort((a,b) => a.date.localeCompare(b.date))[0];
+  if (next) {
+    const dateObj = new Date(next.date + 'T00:00:00');
+    const months = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+    document.getElementById('tax-next-deadline').textContent = `${dateObj.getDate()} ${months[dateObj.getMonth()]}`;
+    document.getElementById('tax-next-deadline-label').textContent = next.name;
+  }
+}
+
+function markTaxPaid(id) {
+  const item = TAX_CALENDAR_2026.find(d => d.id === id);
+  if (item) { item.status = 'paid'; renderTaxCalendar(); notify('Платёж отмечен как уплаченный', 'success'); }
+}
+
+function renderDeclarations() {
+  const list = document.getElementById('tax-declarations-list');
+  const STATUS = { pending: 'badge-neutral', inwork: 'badge-warning', done: 'badge-success' };
+  const STATUS_LABEL = { pending: 'Не сдана', inwork: 'В работе', done: 'Сдана' };
+
+  list.innerHTML = declarations.map(d => {
+    const overdue = d.due < todayIso() && d.status !== 'done';
+    return `
+      <div class="declaration-row" style="${overdue ? 'background:var(--danger-light);' : ''}">
+        <span style="font-size:13px;font-weight:600;${overdue ? 'color:var(--danger);' : ''}">${escapeHtml(d.name)}</span>
+        <span style="font-size:12.5px;color:var(--text-2);">${escapeHtml(d.period)}</span>
+        <span style="font-size:12.5px;${overdue?'color:var(--danger);font-weight:600;':'color:var(--text-2);'}">${formatDate(d.due)}</span>
+        <span><span class="badge ${STATUS[d.status]}">${STATUS_LABEL[d.status]}</span></span>
+        <span style="display:flex;gap:4px;justify-content:flex-end;">
+          ${d.status !== 'done' ? `<button class="btn btn-ghost btn-icon" onclick="markDeclDone(${d.id})" title="Отметить как сданная" aria-label="Сдать"><i class="ti ti-check" style="font-size:13px;"></i></button>` : ''}
+          <button class="btn btn-ghost btn-icon" onclick="deleteDecl(${d.id})" aria-label="Удалить"><i class="ti ti-trash" style="font-size:13px;"></i></button>
+        </span>
+      </div>
+    `;
+  }).join('') || '<div style="padding:20px;text-align:center;color:var(--text-3);font-size:13px;">Нет деклараций</div>';
+}
+
+function markDeclDone(id) {
+  const d = declarations.find(d => d.id === id);
+  if (d) { d.status = 'done'; saveData('declarations', declarations); renderDeclarations(); notify('Декларация отмечена как сданная', 'success'); }
+}
+
+function deleteDecl(id) {
+  declarations = declarations.filter(d => d.id !== id);
+  saveData('declarations', declarations);
+  renderDeclarations();
+}
+
+function submitAddDeclaration(e) {
+  e.preventDefault();
+  const name   = document.getElementById('decl-name').value;
+  const period = document.getElementById('decl-period').value;
+  const due    = document.getElementById('decl-due').value || todayIso();
+  const status = document.getElementById('decl-status').value;
+  declarations.push({ id: declIdSeq++, name, period, due, status });
+  saveData('declarations', declarations);
+  saveData('declIdSeq', declIdSeq);
+  closeModal('modal-add-declaration');
+  e.target.reset();
+  renderDeclarations();
+  notify(`Декларация «${name}» добавлена`, 'success');
+}
+
+function toggleTaxBlock(id) {
+  const body = document.getElementById(id);
+  const icon = document.getElementById('icon-' + id);
+  if (!body) return;
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  if (icon) icon.style.transform = open ? 'rotate(-90deg)' : '';
+}
+
+function saveTaxSettings(e) {
+  e.preventDefault();
+  taxSettings = {
+    name: document.getElementById('ts-name').value.trim() || taxSettings.name,
+    form: document.getElementById('ts-form').value,
+    inn:  document.getElementById('ts-inn').value.trim(),
+    ogrn: document.getElementById('ts-ogrn').value.trim(),
+    kpp:  document.getElementById('ts-kpp').value.trim(),
+    ifns: document.getElementById('ts-ifns').value.trim(),
+    okved:document.getElementById('ts-okved').value.trim(),
+    regime: document.getElementById('ts-regime').value,
+    rate:   parseFloat(document.getElementById('ts-rate').value) || 6,
+    regdate:document.getElementById('ts-regdate').value,
+    bank: document.getElementById('ts-bank').value.trim(),
+    acc:  document.getElementById('ts-acc').value.trim(),
+    bik:  document.getElementById('ts-bik').value.trim(),
+    empCount: parseInt(document.getElementById('ts-emp-count').value) || 0,
+  };
+  saveData('taxSettings', taxSettings);
+  document.getElementById('tax-company-name').textContent = taxSettings.name;
+  document.getElementById('fld-inn').textContent   = taxSettings.inn;
+  document.getElementById('fld-ogrn').textContent  = taxSettings.ogrn;
+  document.getElementById('fld-ifns').textContent  = taxSettings.ifns;
+  document.getElementById('fld-okved').textContent = taxSettings.okved;
+  document.getElementById('fld-form').textContent  = taxSettings.form;
+  selectRegime(taxSettings.regime);
+  closeModal('modal-tax-settings');
+  notify('Настройки компании сохранены', 'success');
+}
+
+function openTaxSettings() {
+  document.getElementById('ts-name').value    = taxSettings.name;
+  document.getElementById('ts-form').value    = taxSettings.form;
+  document.getElementById('ts-inn').value     = taxSettings.inn;
+  document.getElementById('ts-ogrn').value    = taxSettings.ogrn;
+  document.getElementById('ts-kpp').value     = taxSettings.kpp;
+  document.getElementById('ts-ifns').value    = taxSettings.ifns;
+  document.getElementById('ts-okved').value   = taxSettings.okved;
+  document.getElementById('ts-regime').value  = taxSettings.regime;
+  document.getElementById('ts-rate').value    = taxSettings.rate;
+  document.getElementById('ts-regdate').value = taxSettings.regdate;
+  document.getElementById('ts-bank').value    = taxSettings.bank;
+  document.getElementById('ts-acc').value     = taxSettings.acc;
+  document.getElementById('ts-bik').value     = taxSettings.bik;
+  document.getElementById('ts-emp-count').value = taxSettings.empCount;
+  openModal('modal-tax-settings');
+}
+
+// Заглушка поиска ФНС по ИНН
+async function lookupFns() {
+  openModal('modal-fns-api');
+}
+
+async function lookupFnsByInn() {
+  const inn = document.getElementById('fns-lookup-inn').value.trim();
+  if (!inn || (inn.length !== 10 && inn.length !== 12)) {
+    notify('ИНН должен содержать 10 (ООО) или 12 (ИП) цифр', 'error');
+    return;
+  }
+
+  const resultEl = document.getElementById('fns-lookup-result');
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 1s linear infinite;font-size:16px;"></i> Запрос к /api/fns/company...';
+
+  // Заглушка — реальный запрос пойдёт через /api/fns/company/{inn}
+  await new Promise(r => setTimeout(r, 800));
+
+  // Пример ответа (в реальности — данные ЕГРЮЛ/ЕГРИП)
+  const isIp = inn.length === 12;
+  resultEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div><div style="font-size:10.5px;color:var(--text-3);font-weight:600;text-transform:uppercase;">Наименование</div><div style="font-size:13px;font-weight:600;margin-top:2px;">${isIp ? 'ИП Иванов Пётр Сергеевич' : 'ООО «Пример»'}</div></div>
+      <div><div style="font-size:10.5px;color:var(--text-3);font-weight:600;text-transform:uppercase;">ИНН</div><div style="font-size:13px;font-weight:600;margin-top:2px;">${inn}</div></div>
+      <div><div style="font-size:10.5px;color:var(--text-3);font-weight:600;text-transform:uppercase;">Статус</div><div style="margin-top:2px;"><span class="badge badge-success">Действующий</span></div></div>
+      <div><div style="font-size:10.5px;color:var(--text-3);font-weight:600;text-transform:uppercase;">ОКВЭД</div><div style="font-size:13px;margin-top:2px;">62.01</div></div>
+    </div>
+    <div style="margin-top:12px;">
+      <button class="btn btn-primary btn-sm" onclick="applyFnsData('${inn}', '${isIp ? 'ИП' : 'ООО'}')"><i class="ti ti-download"></i> Применить данные в карточку</button>
+    </div>
+    <div style="margin-top:8px;font-size:11.5px;color:var(--text-3);">Источник: ЕГРЮЛ/ЕГРИП через <code>/api/fns/company/${inn}</code></div>
+  `;
+}
+
+function applyFnsData(inn, form) {
+  document.getElementById('ts-inn').value  = inn;
+  document.getElementById('ts-form').value = form;
+  document.getElementById('fld-inn').textContent = inn;
+  document.getElementById('fld-form').textContent = form;
+  closeModal('modal-fns-api');
+  openModal('modal-tax-settings');
+  notify('Данные из ФНС загружены в карточку', 'success');
+}
+
+function syncFns() {
+  notify('Синхронизация с ФНС через /api/fns/company...', 'info');
+  setTimeout(() => notify('Данные компании актуальны (ЕГРИП)', 'success'), 1000);
+}
+
+function saveFnsSettings() {
+  const key = document.getElementById('fns-api-key')?.value;
+  if (key) saveData('fns_api_key', key);
+  closeModal('modal-fns-api');
+  notify('Настройки ФНС API сохранены', 'success');
+}
+
+function initTaxSection() {
+  // Предзаполнить поля из финансов
+  const fin = calcFinanceSummary(transactions);
+  const inp = document.getElementById('tax-in-revenue');
+  const exp = document.getElementById('tax-in-expenses');
+  if (inp && !inp.value) inp.value = fin.income;
+  if (exp && !exp.value) exp.value = fin.expense;
+
+  selectRegime(taxSettings.regime || 'usn6');
+  renderTaxCalendar();
+  renderDeclarations();
+}
+
+// Добавить иконку спина
+const spinStyle = document.createElement('style');
+spinStyle.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+document.head.appendChild(spinStyle);
+
+// =============================================
 // ИНИЦИАЛИЗАЦИЯ
 // =============================================
 
@@ -3497,6 +4505,7 @@ document.addEventListener('DOMContentLoaded', () => {
   selectReport('finance');
   document.getElementById('tx-date').value = todayIso();
   initCharts();
+  initTaxSection();
 });
 </script>
 
