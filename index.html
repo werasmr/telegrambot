@@ -1,0 +1,2382 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proto — Бизнес-платформа</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* === ПЕРЕМЕННЫЕ И СБРОС === */
+    :root {
+      --bg: #f8f9fa;
+      --surface: #ffffff;
+      --surface-2: #f1f3f5;
+      --border: #e5e7eb;
+      --text: #111827;
+      --text-2: #6b7280;
+      --text-3: #9ca3af;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --accent-hover: #1d4ed8;
+      --danger: #dc2626;
+      --danger-light: #fef2f2;
+      --success: #16a34a;
+      --success-light: #f0fdf4;
+      --warning: #d97706;
+      --warning-light: #fffbeb;
+      --sidebar-w: 220px;
+      --topbar-h: 52px;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1117;
+        --surface: #1a1d24;
+        --surface-2: #22262f;
+        --border: #2d3240;
+        --text: #f0f2f5;
+        --text-2: #9ca3af;
+        --text-3: #6b7280;
+        --accent-light: #1e3a5f;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* === LAYOUT === */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* === SIDEBAR === */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 0.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .sidebar__logo {
+      height: var(--topbar-h);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      border-bottom: 0.5px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .sidebar__logo-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar__logo-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.2px;
+    }
+
+    .sidebar__nav {
+      flex: 1;
+      padding: 8px 8px;
+      overflow-y: auto;
+    }
+
+    .sidebar__section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 12px 8px 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 8px;
+      border-radius: var(--radius-md);
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+      user-select: none;
+      font-size: 13.5px;
+      font-weight: 500;
+    }
+
+    .nav-item:hover { background: var(--surface-2); color: var(--text); }
+    .nav-item.active { background: var(--accent-light); color: var(--accent); }
+    .nav-item .ti { font-size: 16px; flex-shrink: 0; }
+
+    .sidebar__footer {
+      padding: 12px 8px;
+      border-top: 0.5px solid var(--border);
+    }
+
+    .sidebar__user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+    }
+
+    .sidebar__user:hover { background: var(--surface-2); }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .sidebar__user-info { flex: 1; min-width: 0; }
+    .sidebar__user-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar__user-role { font-size: 11px; color: var(--text-3); }
+
+    /* === MAIN AREA === */
+    .main-wrap {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* === TOPBAR === */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--surface);
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      gap: 12px;
+    }
+
+    .topbar__title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .topbar__actions { display: flex; align-items: center; gap: 8px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 0.5px solid transparent;
+      transition: background 0.1s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+    .btn-ghost { background: transparent; color: var(--text-2); border-color: var(--border); }
+    .btn-ghost:hover { background: var(--surface-2); color: var(--text); }
+    .btn-danger { background: var(--danger-light); color: var(--danger); border-color: transparent; }
+    .btn-danger:hover { background: #fee2e2; }
+    .btn .ti { font-size: 15px; }
+    .btn-icon { padding: 6px; gap: 0; }
+
+    /* === CONTENT === */
+    .content {
+      padding: 24px;
+      flex: 1;
+    }
+
+    /* === SECTIONS === */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* === CARDS === */
+    .card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+
+    .card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .card__title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    /* === DASHBOARD GRID === */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .metric-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+    }
+
+    .metric-card__label {
+      font-size: 12px;
+      color: var(--text-2);
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .metric-card__label .ti { font-size: 14px; }
+
+    .metric-card__value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .metric-card__delta {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .delta-up { color: var(--success); }
+    .delta-down { color: var(--danger); }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 12px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 240px;
+    }
+
+    /* === TABLE === */
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      text-align: left;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 12px 10px;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    tbody td {
+      padding: 11px 12px;
+      border-bottom: 0.5px solid var(--border);
+      color: var(--text);
+      font-size: 13.5px;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--surface-2); }
+
+    /* === BADGES === */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-size: 11.5px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .badge-success { background: var(--success-light); color: var(--success); }
+    .badge-warning { background: var(--warning-light); color: var(--warning); }
+    .badge-danger  { background: var(--danger-light);  color: var(--danger); }
+    .badge-neutral { background: var(--surface-2); color: var(--text-2); }
+    .badge-accent  { background: var(--accent-light); color: var(--accent); }
+
+    /* === FORM ELEMENTS === */
+    .form-row { display: flex; gap: 12px; margin-bottom: 12px; }
+    .form-row:last-child { margin-bottom: 0; }
+
+    .form-group { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+
+    label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 7px 10px;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      color: var(--text);
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.1s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    .search-input {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0 10px;
+    }
+
+    .search-input .ti { color: var(--text-3); font-size: 15px; flex-shrink: 0; }
+    .search-input input { border: none; padding: 7px 0; flex: 1; }
+    .search-input input:focus { border: none; }
+
+    /* === MODAL === */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      width: 480px;
+      max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
+    }
+
+    .modal__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .modal__title { font-size: 15px; font-weight: 600; }
+
+    .modal__footer {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    /* === NOTIFICATION === */
+    .notification-area {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .notification {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 260px;
+      animation: slideIn 0.2s ease;
+    }
+
+    .notification-success { border-left: 3px solid var(--success); }
+    .notification-error   { border-left: 3px solid var(--danger); }
+    .notification-info    { border-left: 3px solid var(--accent); }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(16px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* === CRM === */
+    .crm-filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .client-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .client-name-cell { display: flex; align-items: center; gap: 10px; }
+
+    /* === FINANCE === */
+    .finance-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .finance-summary-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+    }
+
+    .finance-summary-card__label {
+      font-size: 12px;
+      color: var(--text-2);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .finance-summary-card__value {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .tx-type-income { color: var(--success); }
+    .tx-type-expense { color: var(--danger); }
+
+    /* === TASKS === */
+    .tasks-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .task-col {
+      background: var(--surface-2);
+      border-radius: var(--radius-lg);
+      border: 0.5px solid var(--border);
+      padding: 12px;
+    }
+
+    .task-col__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .task-col__title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .task-col__count {
+      font-size: 11px;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 100px;
+      padding: 1px 7px;
+      color: var(--text-3);
+    }
+
+    .task-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .task-card:hover { border-color: var(--accent); }
+    .task-card:last-child { margin-bottom: 0; }
+
+    .task-card__title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .task-card__meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .task-card__date {
+      font-size: 11.5px;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .task-card__date .ti { font-size: 13px; }
+
+    /* === AI ASSISTANT === */
+    .ai-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 16px;
+      height: calc(100vh - var(--topbar-h) - 48px);
+    }
+
+    .chat-area {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .chat-msg {
+      display: flex;
+      gap: 10px;
+      max-width: 80%;
+    }
+
+    .chat-msg--user { align-self: flex-end; flex-direction: row-reverse; }
+    .chat-msg--ai   { align-self: flex-start; }
+
+    .chat-msg__avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .chat-msg--user .chat-msg__avatar { background: var(--accent); color: #fff; }
+    .chat-msg--ai  .chat-msg__avatar { background: var(--surface-2); color: var(--text-2); border: 0.5px solid var(--border); }
+
+    .chat-msg__bubble {
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+
+    .chat-msg--user .chat-msg__bubble { background: var(--accent); color: #fff; border-radius: var(--radius-md) 4px var(--radius-md) var(--radius-md); }
+    .chat-msg--ai   .chat-msg__bubble { background: var(--surface-2); color: var(--text); border: 0.5px solid var(--border); border-radius: 4px var(--radius-md) var(--radius-md) var(--radius-md); }
+
+    .chat-input-area {
+      padding: 12px 16px;
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .chat-input-area textarea {
+      flex: 1;
+      min-height: 38px;
+      max-height: 120px;
+      resize: none;
+      font-size: 13.5px;
+    }
+
+    .chat-suggestions {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .chat-suggestions__title {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .suggestion-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: var(--surface-2);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 9px 12px;
+      font-size: 12.5px;
+      color: var(--text-2);
+      cursor: pointer;
+      margin-bottom: 6px;
+      transition: background 0.1s, color 0.1s;
+      font-family: inherit;
+    }
+
+    .suggestion-btn:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+    .suggestion-btn:last-child { margin-bottom: 0; }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 14px;
+    }
+
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-3);
+      animation: bounce 1.4s infinite both;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+      40% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* === INTEGRATIONS === */
+    .integrations-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .integration-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .integration-card__head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .integration-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border);
+      background: var(--surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .integration-card__name { font-size: 14px; font-weight: 600; }
+    .integration-card__desc { font-size: 12.5px; color: var(--text-2); line-height: 1.45; flex: 1; }
+
+    .integration-card__footer { display: flex; align-items: center; justify-content: space-between; }
+
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .toggle input { display: none; }
+
+    .toggle__track {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 100px;
+      transition: background 0.2s;
+    }
+
+    .toggle input:checked + .toggle__track { background: var(--accent); }
+
+    .toggle__thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.2s;
+    }
+
+    .toggle input:checked ~ .toggle__thumb { transform: translateX(16px); }
+
+    /* === EMPTY STATE === */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: var(--text-3);
+      gap: 10px;
+    }
+
+    .empty-state .ti { font-size: 40px; }
+    .empty-state__text { font-size: 14px; font-weight: 500; color: var(--text-2); }
+    .empty-state__sub  { font-size: 12.5px; color: var(--text-3); }
+
+    /* === PAGE HEADER === */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .page-header__title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+    .page-header__sub   { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+
+    /* === DIVIDER === */
+    .divider { height: 0.5px; background: var(--border); margin: 16px 0; }
+
+    /* === ACTIVITY LIST === */
+    .activity-list { display: flex; flex-direction: column; gap: 0; }
+
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .activity-item:last-child { border-bottom: none; }
+
+    .activity-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .activity-icon .ti { font-size: 13px; color: var(--text-2); }
+
+    .activity-text { font-size: 13px; color: var(--text); flex: 1; }
+    .activity-text span { color: var(--text-2); font-weight: 600; }
+    .activity-time { font-size: 11.5px; color: var(--text-3); white-space: nowrap; }
+
+    /* === SCROLLBAR === */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* === MINI TABLE inside card === */
+    .mini-table { width: 100%; }
+    .mini-table td { padding: 7px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+    .mini-table tr:last-child td { border-bottom: none; }
+    .mini-table td:last-child { text-align: right; }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- === SIDEBAR === -->
+  <aside class="sidebar" role="navigation" aria-label="Основная навигация">
+    <div class="sidebar__logo">
+      <div class="sidebar__logo-mark">P</div>
+      <span class="sidebar__logo-name">Proto</span>
+    </div>
+
+    <nav class="sidebar__nav">
+      <div class="sidebar__section-label">Главное</div>
+
+      <div class="nav-item active" onclick="nav(this, 'dashboard')" aria-label="Дашборд">
+        <i class="ti ti-layout-dashboard"></i>
+        <span>Дашборд</span>
+      </div>
+      <div class="nav-item" onclick="nav(this, 'crm')" aria-label="CRM">
+        <i class="ti ti-users"></i>
+        <span>CRM</span>
+      </div>
+      <div class="nav-item" onclick="nav(this, 'finance')" aria-label="Финансы">
+        <i class="ti ti-report-money"></i>
+        <span>Финансы</span>
+      </div>
+      <div class="nav-item" onclick="nav(this, 'tasks')" aria-label="Задачи">
+        <i class="ti ti-checkbox"></i>
+        <span>Задачи</span>
+      </div>
+
+      <div class="sidebar__section-label">Инструменты</div>
+
+      <div class="nav-item" onclick="nav(this, 'ai')" aria-label="AI-ассистент">
+        <i class="ti ti-sparkles"></i>
+        <span>AI-ассистент</span>
+      </div>
+      <div class="nav-item" onclick="nav(this, 'integrations')" aria-label="Интеграции">
+        <i class="ti ti-plug-connected"></i>
+        <span>Интеграции</span>
+      </div>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="sidebar__user">
+        <div class="avatar">ИП</div>
+        <div class="sidebar__user-info">
+          <div class="sidebar__user-name">Иванов П.С.</div>
+          <div class="sidebar__user-role">Владелец</div>
+        </div>
+        <i class="ti ti-dots-vertical" style="color: var(--text-3); font-size: 15px;"></i>
+      </div>
+    </div>
+  </aside>
+
+  <!-- === MAIN WRAP === -->
+  <div class="main-wrap">
+
+    <!-- === TOPBAR === -->
+    <header class="topbar">
+      <span class="topbar__title" id="topbar-title">Дашборд</span>
+      <div class="topbar__actions">
+        <div class="search-input" style="width: 220px;">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Поиск..." aria-label="Поиск" id="global-search" />
+        </div>
+        <button class="btn btn-ghost btn-icon" aria-label="Уведомления">
+          <i class="ti ti-bell"></i>
+        </button>
+        <button class="btn btn-ghost btn-icon" aria-label="Настройки">
+          <i class="ti ti-settings"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- === CONTENT === -->
+    <main class="content">
+
+      <!-- ============================
+           РАЗДЕЛ: ДАШБОРД
+           ============================ -->
+      <section id="dashboard" class="section active">
+        <div class="page-header">
+          <div>
+            <div class="page-header__title">Дашборд</div>
+            <div class="page-header__sub">Обзор за июнь 2026</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost"><i class="ti ti-calendar"></i> Июнь 2026</button>
+            <button class="btn btn-primary"><i class="ti ti-download"></i> Экспорт</button>
+          </div>
+        </div>
+
+        <!-- Метрики -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-cash"></i> Выручка</div>
+            <div class="metric-card__value">₽ 847 500</div>
+            <div class="metric-card__delta delta-up"><i class="ti ti-trending-up" style="font-size:12px"></i> +12% к прошлому месяцу</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-users"></i> Клиенты</div>
+            <div class="metric-card__value">124</div>
+            <div class="metric-card__delta delta-up"><i class="ti ti-trending-up" style="font-size:12px"></i> +8 новых</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-checkbox"></i> Задачи</div>
+            <div class="metric-card__value">18</div>
+            <div class="metric-card__delta delta-down"><i class="ti ti-clock" style="font-size:12px"></i> 5 просрочено</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-receipt"></i> Расходы</div>
+            <div class="metric-card__value">₽ 312 000</div>
+            <div class="metric-card__delta delta-up" style="color:var(--text-2)"><i class="ti ti-minus" style="font-size:12px"></i> −3% к прошлому</div>
+          </div>
+        </div>
+
+        <!-- Графики + активность -->
+        <div class="dashboard-grid">
+          <div class="card">
+            <div class="card__header">
+              <span class="card__title">Выручка по месяцам</span>
+              <select style="width:auto;padding:4px 8px;font-size:12px;" aria-label="Период">
+                <option>2026</option>
+                <option>2025</option>
+              </select>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="revenueChart" aria-label="График выручки по месяцам"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__header">
+              <span class="card__title">Последняя активность</span>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon"><i class="ti ti-user-plus"></i></div>
+                <div style="flex:1">
+                  <div class="activity-text">Добавлен клиент <span>ООО «Ромашка»</span></div>
+                  <div class="activity-time">10 мин назад</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon"><i class="ti ti-receipt"></i></div>
+                <div style="flex:1">
+                  <div class="activity-text">Оплата <span>₽ 45 000</span> от Петров А.</div>
+                  <div class="activity-time">1 ч назад</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon"><i class="ti ti-checkbox"></i></div>
+                <div style="flex:1">
+                  <div class="activity-text">Задача <span>Подготовить КП</span> закрыта</div>
+                  <div class="activity-time">2 ч назад</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon"><i class="ti ti-file-invoice"></i></div>
+                <div style="flex:1">
+                  <div class="activity-text">Выставлен счёт <span>№ 84</span> на ₽ 120 000</div>
+                  <div class="activity-time">вчера</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon"><i class="ti ti-plug-connected"></i></div>
+                <div style="flex:1">
+                  <div class="activity-text">Подключена интеграция <span>Telegram Bot</span></div>
+                  <div class="activity-time">вчера</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Топ клиентов + структура расходов -->
+        <div class="dashboard-grid" style="margin-top:12px;">
+          <div class="card">
+            <div class="card__header">
+              <span class="card__title">Топ клиентов</span>
+              <button class="btn btn-ghost" style="font-size:12px;padding:4px 8px;" onclick="nav(document.querySelector('[onclick*=crm]'),'crm')">Все клиенты →</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Клиент</th>
+                    <th>Сумма сделок</th>
+                    <th>Статус</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><div class="client-name-cell"><div class="client-avatar">РК</div> ООО «РосКапитал»</div></td>
+                    <td>₽ 240 000</td>
+                    <td><span class="badge badge-success">Активен</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="client-name-cell"><div class="client-avatar">СТ</div> ИП Семёнов Т.</div></td>
+                    <td>₽ 185 000</td>
+                    <td><span class="badge badge-success">Активен</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="client-name-cell"><div class="client-avatar">ТЛ</div> ООО «ТехЛогика»</div></td>
+                    <td>₽ 130 000</td>
+                    <td><span class="badge badge-warning">На паузе</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="client-name-cell"><div class="client-avatar">ПА</div> Петрова А.В.</div></td>
+                    <td>₽ 98 500</td>
+                    <td><span class="badge badge-success">Активен</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__header">
+              <span class="card__title">Структура расходов</span>
+            </div>
+            <div class="chart-wrap" style="height:180px;">
+              <canvas id="expensesChart" aria-label="Структура расходов по категориям"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================
+           РАЗДЕЛ: CRM
+           ============================ -->
+      <section id="crm" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-header__title">CRM</div>
+            <div class="page-header__sub" id="crm-count">124 клиента</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost"><i class="ti ti-file-export"></i> Экспорт</button>
+            <button class="btn btn-primary" onclick="openModal('modal-add-client')"><i class="ti ti-plus"></i> Новый клиент</button>
+          </div>
+        </div>
+
+        <div class="crm-filters">
+          <div class="search-input" style="flex:1;max-width:320px;">
+            <i class="ti ti-search"></i>
+            <input type="text" id="crm-search" placeholder="Поиск по имени, компании..." aria-label="Поиск клиентов" oninput="filterClients()" />
+          </div>
+          <select style="width:auto;" id="crm-status-filter" aria-label="Фильтр по статусу" onchange="filterClients()">
+            <option value="">Все статусы</option>
+            <option value="Активен">Активен</option>
+            <option value="На паузе">На паузе</option>
+            <option value="Архив">Архив</option>
+          </select>
+          <select style="width:auto;" id="crm-sort" aria-label="Сортировка" onchange="filterClients()">
+            <option value="name">По имени</option>
+            <option value="amount">По сумме</option>
+            <option value="date">По дате</option>
+          </select>
+        </div>
+
+        <div class="card" style="padding:0;">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Клиент</th>
+                  <th>Телефон</th>
+                  <th>Email</th>
+                  <th>Сумма сделок</th>
+                  <th>Добавлен</th>
+                  <th>Статус</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="crm-table-body">
+                <!-- JS render -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================
+           РАЗДЕЛ: ФИНАНСЫ
+           ============================ -->
+      <section id="finance" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-header__title">Финансы</div>
+            <div class="page-header__sub">Учёт доходов и расходов</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost"><i class="ti ti-file-export"></i> Экспорт</button>
+            <button class="btn btn-primary" onclick="openModal('modal-add-tx')"><i class="ti ti-plus"></i> Операция</button>
+          </div>
+        </div>
+
+        <div class="finance-grid">
+          <div class="finance-summary-card">
+            <div class="finance-summary-card__label">Баланс</div>
+            <div class="finance-summary-card__value" id="finance-balance">₽ 0</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:4px;">Текущий период</div>
+          </div>
+          <div class="finance-summary-card">
+            <div class="finance-summary-card__label">Доходы</div>
+            <div class="finance-summary-card__value tx-type-income" id="finance-income">₽ 0</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:4px;" id="finance-income-count">0 операций</div>
+          </div>
+          <div class="finance-summary-card">
+            <div class="finance-summary-card__label">Расходы</div>
+            <div class="finance-summary-card__value tx-type-expense" id="finance-expense">₽ 0</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:4px;" id="finance-expense-count">0 операций</div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:0;">
+          <div class="card__header" style="padding:16px 20px 0;">
+            <span class="card__title">Операции</span>
+            <div style="display:flex;gap:8px;">
+              <div class="search-input" style="width:220px;">
+                <i class="ti ti-search"></i>
+                <input type="text" placeholder="Поиск..." aria-label="Поиск операций" id="finance-search" oninput="filterTransactions()" />
+              </div>
+              <select style="width:auto;" id="finance-type-filter" aria-label="Тип операции" onchange="filterTransactions()">
+                <option value="">Все</option>
+                <option value="income">Доход</option>
+                <option value="expense">Расход</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap" style="margin-top:12px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Описание</th>
+                  <th>Категория</th>
+                  <th>Тип</th>
+                  <th>Сумма</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="finance-table-body">
+                <!-- JS render -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================
+           РАЗДЕЛ: ЗАДАЧИ
+           ============================ -->
+      <section id="tasks" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-header__title">Задачи</div>
+            <div class="page-header__sub" id="tasks-sub">0 активных задач</div>
+          </div>
+          <button class="btn btn-primary" onclick="openModal('modal-add-task')"><i class="ti ti-plus"></i> Новая задача</button>
+        </div>
+
+        <div class="tasks-columns">
+          <div class="task-col">
+            <div class="task-col__header">
+              <span class="task-col__title"><i class="ti ti-circle" style="color:var(--text-3)"></i> К выполнению</span>
+              <span class="task-col__count" id="count-todo">0</span>
+            </div>
+            <div id="col-todo"></div>
+          </div>
+          <div class="task-col">
+            <div class="task-col__header">
+              <span class="task-col__title"><i class="ti ti-circle-half-2" style="color:var(--warning)"></i> В процессе</span>
+              <span class="task-col__count" id="count-inprogress">0</span>
+            </div>
+            <div id="col-inprogress"></div>
+          </div>
+          <div class="task-col">
+            <div class="task-col__header">
+              <span class="task-col__title"><i class="ti ti-circle-check" style="color:var(--success)"></i> Готово</span>
+              <span class="task-col__count" id="count-done">0</span>
+            </div>
+            <div id="col-done"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================
+           РАЗДЕЛ: AI-АССИСТЕНТ
+           ============================ -->
+      <section id="ai" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-header__title">AI-ассистент</div>
+            <div class="page-header__sub">Powered by Claude — задавайте вопросы о вашем бизнесе</div>
+          </div>
+          <button class="btn btn-ghost" onclick="clearChat()"><i class="ti ti-trash"></i> Очистить чат</button>
+        </div>
+
+        <div class="ai-layout">
+          <div class="chat-area">
+            <div class="chat-messages" id="chat-messages">
+              <div class="chat-msg chat-msg--ai">
+                <div class="chat-msg__avatar"><i class="ti ti-sparkles"></i></div>
+                <div class="chat-msg__bubble">Привет! Я ваш бизнес-ассистент. Помогу с анализом, советами по управлению, составлением текстов и ответами на вопросы о вашем бизнесе. Чем могу помочь?</div>
+              </div>
+            </div>
+            <div class="chat-input-area">
+              <textarea id="chat-input" placeholder="Напишите вопрос..." aria-label="Сообщение ассистенту" rows="1" onkeydown="handleChatKey(event)"></textarea>
+              <button class="btn btn-primary btn-icon" onclick="sendMessage()" aria-label="Отправить сообщение">
+                <i class="ti ti-send"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="chat-suggestions">
+            <div class="chat-suggestions__title">Быстрые вопросы</div>
+            <button class="suggestion-btn" onclick="useSuggestion(this)">Как увеличить конверсию в продажи?</button>
+            <button class="suggestion-btn" onclick="useSuggestion(this)">Составь шаблон коммерческого предложения</button>
+            <button class="suggestion-btn" onclick="useSuggestion(this)">Какие ключевые метрики отслеживать малому бизнесу?</button>
+            <button class="suggestion-btn" onclick="useSuggestion(this)">Как снизить дебиторскую задолженность?</button>
+            <button class="suggestion-btn" onclick="useSuggestion(this)">Советы по удержанию клиентов</button>
+            <button class="suggestion-btn" onclick="useSuggestion(this)">Как автоматизировать рутинные задачи?</button>
+            <button class="suggestion-btn" onclick="useSuggestion(this)">Помоги составить регламент работы</button>
+
+            <div class="divider"></div>
+            <div class="chat-suggestions__title" style="margin-top:4px;">История</div>
+            <div id="chat-history-list" style="color:var(--text-3);font-size:12.5px;padding:8px 0;">Нет сохранённых чатов</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================
+           РАЗДЕЛ: ИНТЕГРАЦИИ
+           ============================ -->
+      <section id="integrations" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-header__title">Интеграции</div>
+            <div class="page-header__sub">Подключите внешние сервисы к платформе</div>
+          </div>
+        </div>
+
+        <div class="integrations-grid">
+
+          <div class="integration-card">
+            <div class="integration-card__head">
+              <div class="integration-logo">1С</div>
+              <div>
+                <div class="integration-card__name">1С: Бухгалтерия</div>
+                <span class="badge badge-neutral">Доступно</span>
+              </div>
+            </div>
+            <div class="integration-card__desc">Синхронизация счетов, актов и накладных. Автоматический импорт данных из 1С в разделе «Финансы».</div>
+            <div class="integration-card__footer">
+              <label class="toggle" aria-label="Включить 1С">
+                <input type="checkbox" onchange="toggleIntegration(this,'1с')" />
+                <div class="toggle__track"></div>
+                <div class="toggle__thumb"></div>
+              </label>
+              <button class="btn btn-ghost" style="font-size:12px;" onclick="showIntegrationSettings('1с')"><i class="ti ti-settings"></i> Настроить</button>
+            </div>
+          </div>
+
+          <div class="integration-card">
+            <div class="integration-card__head">
+              <div class="integration-logo" style="font-size:14px;font-weight:700;color:var(--accent);">amo</div>
+              <div>
+                <div class="integration-card__name">AmoCRM</div>
+                <span class="badge badge-neutral">Доступно</span>
+              </div>
+            </div>
+            <div class="integration-card__desc">Импорт сделок и контактов из AmoCRM. Двусторонняя синхронизация клиентской базы.</div>
+            <div class="integration-card__footer">
+              <label class="toggle" aria-label="Включить AmoCRM">
+                <input type="checkbox" onchange="toggleIntegration(this,'amocrm')" />
+                <div class="toggle__track"></div>
+                <div class="toggle__thumb"></div>
+              </label>
+              <button class="btn btn-ghost" style="font-size:12px;" onclick="showIntegrationSettings('amocrm')"><i class="ti ti-settings"></i> Настроить</button>
+            </div>
+          </div>
+
+          <div class="integration-card">
+            <div class="integration-card__head">
+              <div class="integration-logo"><i class="ti ti-credit-card" style="color:#7b61ff;"></i></div>
+              <div>
+                <div class="integration-card__name">ЮКасса</div>
+                <span class="badge badge-neutral">Доступно</span>
+              </div>
+            </div>
+            <div class="integration-card__desc">Приём онлайн-платежей. Автоматическая фиксация оплат в разделе «Финансы».</div>
+            <div class="integration-card__footer">
+              <label class="toggle" aria-label="Включить ЮКасса">
+                <input type="checkbox" onchange="toggleIntegration(this,'yukassa')" />
+                <div class="toggle__track"></div>
+                <div class="toggle__thumb"></div>
+              </label>
+              <button class="btn btn-ghost" style="font-size:12px;" onclick="showIntegrationSettings('yukassa')"><i class="ti ti-settings"></i> Настроить</button>
+            </div>
+          </div>
+
+          <div class="integration-card">
+            <div class="integration-card__head">
+              <div class="integration-logo"><i class="ti ti-shopping-bag" style="color:#f60;"></i></div>
+              <div>
+                <div class="integration-card__name">Wildberries</div>
+                <span class="badge badge-neutral">Доступно</span>
+              </div>
+            </div>
+            <div class="integration-card__desc">Выгрузка статистики продаж и остатков со склада Wildberries. Мониторинг заказов.</div>
+            <div class="integration-card__footer">
+              <label class="toggle" aria-label="Включить Wildberries">
+                <input type="checkbox" onchange="toggleIntegration(this,'wildberries')" />
+                <div class="toggle__track"></div>
+                <div class="toggle__thumb"></div>
+              </label>
+              <button class="btn btn-ghost" style="font-size:12px;" onclick="showIntegrationSettings('wildberries')"><i class="ti ti-settings"></i> Настроить</button>
+            </div>
+          </div>
+
+          <div class="integration-card">
+            <div class="integration-card__head">
+              <div class="integration-logo"><i class="ti ti-shopping-cart" style="color:#005bff;"></i></div>
+              <div>
+                <div class="integration-card__name">Ozon</div>
+                <span class="badge badge-neutral">Доступно</span>
+              </div>
+            </div>
+            <div class="integration-card__desc">Синхронизация товаров и заказов с Ozon Seller. Статистика продаж в реальном времени.</div>
+            <div class="integration-card__footer">
+              <label class="toggle" aria-label="Включить Ozon">
+                <input type="checkbox" onchange="toggleIntegration(this,'ozon')" />
+                <div class="toggle__track"></div>
+                <div class="toggle__thumb"></div>
+              </label>
+              <button class="btn btn-ghost" style="font-size:12px;" onclick="showIntegrationSettings('ozon')"><i class="ti ti-settings"></i> Настроить</button>
+            </div>
+          </div>
+
+          <div class="integration-card">
+            <div class="integration-card__head">
+              <div class="integration-logo"><i class="ti ti-brand-vk" style="color:#0077ff;"></i></div>
+              <div>
+                <div class="integration-card__name">ВКонтакте Ads</div>
+                <span class="badge badge-neutral">Доступно</span>
+              </div>
+            </div>
+            <div class="integration-card__desc">Импорт статистики рекламных кампаний ВКонтакте. Анализ ROI и стоимости лида.</div>
+            <div class="integration-card__footer">
+              <label class="toggle" aria-label="Включить ВКонтакте Ads">
+                <input type="checkbox" onchange="toggleIntegration(this,'vkads')" />
+                <div class="toggle__track"></div>
+                <div class="toggle__thumb"></div>
+              </label>
+              <button class="btn btn-ghost" style="font-size:12px;" onclick="showIntegrationSettings('vkads')"><i class="ti ti-settings"></i> Настроить</button>
+            </div>
+          </div>
+
+          <div class="integration-card">
+            <div class="integration-card__head">
+              <div class="integration-logo"><i class="ti ti-brand-telegram" style="color:#229ed9;"></i></div>
+              <div>
+                <div class="integration-card__name">Telegram Bot</div>
+                <span class="badge badge-success">Подключён</span>
+              </div>
+            </div>
+            <div class="integration-card__desc">Уведомления о новых заказах, задачах и платежах в Telegram. Чат-бот для клиентов.</div>
+            <div class="integration-card__footer">
+              <label class="toggle" aria-label="Включить Telegram Bot">
+                <input type="checkbox" checked onchange="toggleIntegration(this,'telegram')" />
+                <div class="toggle__track"></div>
+                <div class="toggle__thumb"></div>
+              </label>
+              <button class="btn btn-ghost" style="font-size:12px;" onclick="showIntegrationSettings('telegram')"><i class="ti ti-settings"></i> Настроить</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============================
+     МОДАЛЬНЫЕ ОКНА
+     ============================ -->
+
+<!-- Добавить клиента -->
+<div class="modal-overlay" id="modal-add-client" role="dialog" aria-modal="true" aria-label="Добавить клиента">
+  <div class="modal">
+    <div class="modal__header">
+      <span class="modal__title">Новый клиент</span>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-add-client')" aria-label="Закрыть"><i class="ti ti-x"></i></button>
+    </div>
+    <form onsubmit="submitAddClient(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Имя / Компания *</label>
+          <input type="text" id="client-name" placeholder="ООО «Ромашка» или Иванов П.С." required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Телефон</label>
+          <input type="tel" id="client-phone" placeholder="+7 (999) 000-00-00" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="client-email" placeholder="mail@company.ru" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Статус</label>
+          <select id="client-status">
+            <option value="Активен">Активен</option>
+            <option value="На паузе">На паузе</option>
+            <option value="Архив">Архив</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Сумма сделок, ₽</label>
+          <input type="number" id="client-amount" placeholder="0" min="0" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Комментарий</label>
+          <textarea id="client-comment" placeholder="Дополнительная информация..."></textarea>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('modal-add-client')">Отмена</button>
+        <button type="submit" class="btn btn-primary"><i class="ti ti-check"></i> Добавить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Добавить операцию -->
+<div class="modal-overlay" id="modal-add-tx" role="dialog" aria-modal="true" aria-label="Добавить операцию">
+  <div class="modal">
+    <div class="modal__header">
+      <span class="modal__title">Новая операция</span>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-add-tx')" aria-label="Закрыть"><i class="ti ti-x"></i></button>
+    </div>
+    <form onsubmit="submitAddTx(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Тип *</label>
+          <select id="tx-type" required>
+            <option value="income">Доход</option>
+            <option value="expense">Расход</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Сумма, ₽ *</label>
+          <input type="number" id="tx-amount" placeholder="0" min="1" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Описание *</label>
+          <input type="text" id="tx-desc" placeholder="Оплата по договору №..." required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Категория</label>
+          <select id="tx-category">
+            <option value="Продажи">Продажи</option>
+            <option value="Услуги">Услуги</option>
+            <option value="Аренда">Аренда</option>
+            <option value="Зарплата">Зарплата</option>
+            <option value="Маркетинг">Маркетинг</option>
+            <option value="Прочее">Прочее</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Дата</label>
+          <input type="date" id="tx-date" />
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('modal-add-tx')">Отмена</button>
+        <button type="submit" class="btn btn-primary"><i class="ti ti-check"></i> Добавить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Добавить задачу -->
+<div class="modal-overlay" id="modal-add-task" role="dialog" aria-modal="true" aria-label="Добавить задачу">
+  <div class="modal">
+    <div class="modal__header">
+      <span class="modal__title">Новая задача</span>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-add-task')" aria-label="Закрыть"><i class="ti ti-x"></i></button>
+    </div>
+    <form onsubmit="submitAddTask(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Название *</label>
+          <input type="text" id="task-title" placeholder="Что нужно сделать?" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Описание</label>
+          <textarea id="task-desc" placeholder="Подробности задачи..."></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Статус</label>
+          <select id="task-status">
+            <option value="todo">К выполнению</option>
+            <option value="inprogress">В процессе</option>
+            <option value="done">Готово</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Приоритет</label>
+          <select id="task-priority">
+            <option value="normal">Обычный</option>
+            <option value="high">Высокий</option>
+            <option value="low">Низкий</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Срок</label>
+          <input type="date" id="task-due" />
+        </div>
+        <div class="form-group">
+          <label>Исполнитель</label>
+          <input type="text" id="task-assignee" placeholder="Имя исполнителя" />
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('modal-add-task')">Отмена</button>
+        <button type="submit" class="btn btn-primary"><i class="ti ti-check"></i> Добавить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Настройки интеграции (заглушка) -->
+<div class="modal-overlay" id="modal-integration" role="dialog" aria-modal="true" aria-label="Настройки интеграции">
+  <div class="modal">
+    <div class="modal__header">
+      <span class="modal__title" id="modal-integration-title">Настройки интеграции</span>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-integration')" aria-label="Закрыть"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="modal-integration-body"></div>
+    <div class="modal__footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-integration')">Закрыть</button>
+      <button class="btn btn-primary" onclick="saveIntegrationSettings()"><i class="ti ti-check"></i> Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Уведомления -->
+<div class="notification-area" id="notification-area"></div>
+
+<script>
+// === НАВИГАЦИЯ ===
+
+const SECTION_TITLES = {
+  dashboard:    'Дашборд',
+  crm:          'CRM',
+  finance:      'Финансы',
+  tasks:        'Задачи',
+  ai:           'AI-ассистент',
+  integrations: 'Интеграции',
+};
+
+function nav(el, sectionId) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const section = document.getElementById(sectionId);
+  if (section) section.classList.add('active');
+  document.getElementById('topbar-title').textContent = SECTION_TITLES[sectionId] || '';
+}
+
+// === МОДАЛЬНЫЕ ОКНА ===
+
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+// === УВЕДОМЛЕНИЯ ===
+
+function notify(message, type = 'info') {
+  const area = document.getElementById('notification-area');
+  const n = document.createElement('div');
+  n.className = `notification notification-${type}`;
+  const icons = { success: 'ti-circle-check', error: 'ti-circle-x', info: 'ti-info-circle' };
+  n.innerHTML = `<i class="ti ${icons[type] || 'ti-info-circle'}" style="font-size:16px;color:var(--${type === 'info' ? 'accent' : type})"></i> ${message}`;
+  area.appendChild(n);
+  setTimeout(() => n.remove(), 4000);
+}
+
+// === ФОРМАТИРОВАНИЕ ===
+
+function formatRub(n) {
+  return '₽ ' + Number(n).toLocaleString('ru-RU');
+}
+
+function formatDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  const months = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+  return `${d.getDate()} ${months[d.getMonth()]}`;
+}
+
+function todayIso() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// === ИНИЦИАЛЫ ===
+
+function initials(name) {
+  return name.trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+}
+
+// === ДАННЫЕ (LocalStorage) ===
+
+function loadData(key, defaults) {
+  try { return JSON.parse(localStorage.getItem('proto_' + key)) || defaults; }
+  catch { return defaults; }
+}
+
+function saveData(key, data) {
+  localStorage.setItem('proto_' + key, JSON.stringify(data));
+}
+
+// =============================================
+// CRM
+// =============================================
+
+let clients = loadData('clients', [
+  { id: 1, name: 'ООО «РосКапитал»',  phone: '+7 (495) 123-45-67', email: 'info@roskap.ru',   amount: 240000, status: 'Активен',  date: '2026-01-15' },
+  { id: 2, name: 'ИП Семёнов Т.',      phone: '+7 (912) 345-67-89', email: 'semenov@mail.ru', amount: 185000, status: 'Активен',  date: '2026-02-20' },
+  { id: 3, name: 'ООО «ТехЛогика»',    phone: '+7 (499) 876-54-32', email: 'tech@logika.ru',  amount: 130000, status: 'На паузе', date: '2026-03-05' },
+  { id: 4, name: 'Петрова А.В.',        phone: '+7 (926) 555-11-22', email: 'petrova@gm.com', amount: 98500,  status: 'Активен',  date: '2026-04-10' },
+  { id: 5, name: 'ЗАО «МедиаГрупп»',   phone: '+7 (495) 222-33-44', email: 'media@mg.ru',    amount: 75000,  status: 'Архив',    date: '2025-11-01' },
+  { id: 6, name: 'ИП Козлов Д.Р.',      phone: '+7 (903) 444-55-66', email: 'kozlov@biz.ru', amount: 55000,  status: 'Активен',  date: '2026-05-18' },
+]);
+
+let clientIdSeq = loadData('clientIdSeq', 7);
+
+function renderClients(list) {
+  const tbody = document.getElementById('crm-table-body');
+  const statusBadge = {
+    'Активен':  'badge-success',
+    'На паузе': 'badge-warning',
+    'Архив':    'badge-neutral',
+  };
+  tbody.innerHTML = list.map(c => `
+    <tr>
+      <td><div class="client-name-cell"><div class="client-avatar">${initials(c.name)}</div>${c.name}</div></td>
+      <td>${c.phone || '—'}</td>
+      <td>${c.email || '—'}</td>
+      <td>${formatRub(c.amount || 0)}</td>
+      <td>${formatDate(c.date)}</td>
+      <td><span class="badge ${statusBadge[c.status] || 'badge-neutral'}">${c.status}</span></td>
+      <td style="text-align:right;">
+        <button class="btn btn-ghost btn-icon" onclick="deleteClient(${c.id})" aria-label="Удалить клиента"><i class="ti ti-trash" style="font-size:14px;"></i></button>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="7"><div class="empty-state"><i class="ti ti-users"></i><div class="empty-state__text">Клиенты не найдены</div></div></td></tr>';
+  document.getElementById('crm-count').textContent = `${list.length} клиент${plural(list.length, ['', 'а', 'ов'])}`;
+}
+
+function filterClients() {
+  const q      = document.getElementById('crm-search').value.toLowerCase();
+  const status = document.getElementById('crm-status-filter').value;
+  const sort   = document.getElementById('crm-sort').value;
+
+  let list = clients.filter(c => {
+    const matchQ = !q || c.name.toLowerCase().includes(q) || (c.email||'').toLowerCase().includes(q) || (c.phone||'').includes(q);
+    const matchS = !status || c.status === status;
+    return matchQ && matchS;
+  });
+
+  if (sort === 'amount') list.sort((a,b) => (b.amount||0) - (a.amount||0));
+  else if (sort === 'date') list.sort((a,b) => new Date(b.date) - new Date(a.date));
+  else list.sort((a,b) => a.name.localeCompare(b.name, 'ru'));
+
+  renderClients(list);
+}
+
+function deleteClient(id) {
+  clients = clients.filter(c => c.id !== id);
+  saveData('clients', clients);
+  filterClients();
+  notify('Клиент удалён', 'info');
+}
+
+function submitAddClient(e) {
+  e.preventDefault();
+  const name   = document.getElementById('client-name').value.trim();
+  const phone  = document.getElementById('client-phone').value.trim();
+  const email  = document.getElementById('client-email').value.trim();
+  const status = document.getElementById('client-status').value;
+  const amount = parseFloat(document.getElementById('client-amount').value) || 0;
+
+  const client = { id: clientIdSeq++, name, phone, email, amount, status, date: todayIso() };
+  clients.unshift(client);
+  saveData('clients', clients);
+  saveData('clientIdSeq', clientIdSeq);
+  closeModal('modal-add-client');
+  e.target.reset();
+  filterClients();
+  notify(`Клиент «${name}» добавлен`, 'success');
+}
+
+// =============================================
+// ФИНАНСЫ
+// =============================================
+
+let transactions = loadData('transactions', [
+  { id: 1, type: 'income',  amount: 240000, desc: 'Оплата по договору №12 — ООО «РосКапитал»', category: 'Продажи',   date: '2026-06-01' },
+  { id: 2, type: 'expense', amount: 45000,  desc: 'Аренда офиса июнь 2026',                    category: 'Аренда',    date: '2026-06-01' },
+  { id: 3, type: 'income',  amount: 185000, desc: 'Оплата услуг — ИП Семёнов',                  category: 'Услуги',    date: '2026-06-05' },
+  { id: 4, type: 'expense', amount: 120000, desc: 'Зарплата сотрудников',                       category: 'Зарплата',  date: '2026-06-10' },
+  { id: 5, type: 'income',  amount: 98500,  desc: 'Оплата Петрова А.В.',                        category: 'Услуги',    date: '2026-06-15' },
+  { id: 6, type: 'expense', amount: 55000,  desc: 'Рекламная кампания ВКонтакте',               category: 'Маркетинг', date: '2026-06-18' },
+  { id: 7, type: 'income',  amount: 130000, desc: 'Оплата ООО «ТехЛогика»',                    category: 'Продажи',   date: '2026-06-20' },
+  { id: 8, type: 'expense', amount: 22000,  desc: 'Канцтовары и расходники',                   category: 'Прочее',    date: '2026-06-22' },
+]);
+
+let txIdSeq = loadData('txIdSeq', 9);
+
+function calcFinanceSummary(list) {
+  let income = 0, expense = 0;
+  list.forEach(t => {
+    if (t.type === 'income')  income  += t.amount;
+    if (t.type === 'expense') expense += t.amount;
+  });
+  return { income, expense, balance: income - expense };
+}
+
+function renderTransactions(list) {
+  const tbody = document.getElementById('finance-table-body');
+  tbody.innerHTML = list.map(t => `
+    <tr>
+      <td>${formatDate(t.date)}</td>
+      <td>${t.desc}</td>
+      <td><span class="badge badge-neutral">${t.category}</span></td>
+      <td>${t.type === 'income'
+        ? '<span class="badge badge-success">Доход</span>'
+        : '<span class="badge badge-danger">Расход</span>'}</td>
+      <td class="${t.type === 'income' ? 'tx-type-income' : 'tx-type-expense'}" style="font-weight:600;">
+        ${t.type === 'income' ? '+' : '−'} ${formatRub(t.amount)}
+      </td>
+      <td style="text-align:right;">
+        <button class="btn btn-ghost btn-icon" onclick="deleteTx(${t.id})" aria-label="Удалить операцию"><i class="ti ti-trash" style="font-size:14px;"></i></button>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="6"><div class="empty-state"><i class="ti ti-report-money"></i><div class="empty-state__text">Нет операций</div></div></td></tr>';
+
+  const all = calcFinanceSummary(transactions);
+  document.getElementById('finance-balance').textContent  = formatRub(all.balance);
+  document.getElementById('finance-income').textContent   = formatRub(all.income);
+  document.getElementById('finance-expense').textContent  = formatRub(all.expense);
+  document.getElementById('finance-income-count').textContent  = transactions.filter(t => t.type === 'income').length  + ' операций';
+  document.getElementById('finance-expense-count').textContent = transactions.filter(t => t.type === 'expense').length + ' операций';
+}
+
+function filterTransactions() {
+  const q    = document.getElementById('finance-search').value.toLowerCase();
+  const type = document.getElementById('finance-type-filter').value;
+  let list = transactions.filter(t => {
+    const matchQ = !q || t.desc.toLowerCase().includes(q) || t.category.toLowerCase().includes(q);
+    const matchT = !type || t.type === type;
+    return matchQ && matchT;
+  });
+  list = [...list].sort((a,b) => new Date(b.date) - new Date(a.date));
+  renderTransactions(list);
+}
+
+function deleteTx(id) {
+  transactions = transactions.filter(t => t.id !== id);
+  saveData('transactions', transactions);
+  filterTransactions();
+  notify('Операция удалена', 'info');
+}
+
+function submitAddTx(e) {
+  e.preventDefault();
+  const type     = document.getElementById('tx-type').value;
+  const amount   = parseFloat(document.getElementById('tx-amount').value);
+  const desc     = document.getElementById('tx-desc').value.trim();
+  const category = document.getElementById('tx-category').value;
+  const date     = document.getElementById('tx-date').value || todayIso();
+
+  const tx = { id: txIdSeq++, type, amount, desc, category, date };
+  transactions.unshift(tx);
+  saveData('transactions', transactions);
+  saveData('txIdSeq', txIdSeq);
+  closeModal('modal-add-tx');
+  e.target.reset();
+  filterTransactions();
+  notify(`Операция добавлена`, 'success');
+}
+
+// =============================================
+// ЗАДАЧИ
+// =============================================
+
+let tasks = loadData('tasks', [
+  { id: 1, title: 'Подготовить коммерческое предложение для ТехЛогика', desc: '', status: 'todo',       priority: 'high',   due: '2026-06-28', assignee: 'Иванов П.С.' },
+  { id: 2, title: 'Созвониться с РосКапитал по счёту',                  desc: '', status: 'inprogress', priority: 'high',   due: '2026-06-26', assignee: 'Иванов П.С.' },
+  { id: 3, title: 'Обновить прайс-лист',                                desc: '', status: 'todo',       priority: 'normal', due: '2026-07-01', assignee: '' },
+  { id: 4, title: 'Отправить закрывающие документы — Петрова',          desc: '', status: 'inprogress', priority: 'normal', due: '2026-06-27', assignee: '' },
+  { id: 5, title: 'Настроить Telegram-бот уведомления',                 desc: '', status: 'done',       priority: 'low',    due: '2026-06-20', assignee: '' },
+  { id: 6, title: 'Провести анализ конкурентов',                        desc: '', status: 'done',       priority: 'normal', due: '2026-06-15', assignee: '' },
+]);
+
+let taskIdSeq = loadData('taskIdSeq', 7);
+
+const PRIORITY_BADGE = {
+  high:   '<span class="badge badge-danger">Высокий</span>',
+  normal: '<span class="badge badge-neutral">Обычный</span>',
+  low:    '<span class="badge badge-accent">Низкий</span>',
+};
+
+function renderTasks() {
+  const cols = { todo: [], inprogress: [], done: [] };
+  tasks.forEach(t => { if (cols[t.status]) cols[t.status].push(t); });
+
+  ['todo', 'inprogress', 'done'].forEach(status => {
+    const col = document.getElementById('col-' + status);
+    const cnt = document.getElementById('count-' + status);
+    cnt.textContent = cols[status].length;
+    col.innerHTML = cols[status].map(t => `
+      <div class="task-card" onclick="openTaskEdit(${t.id})">
+        <div class="task-card__title">${t.title}</div>
+        <div class="task-card__meta">
+          ${PRIORITY_BADGE[t.priority] || ''}
+          ${t.due ? `<div class="task-card__date"><i class="ti ti-calendar"></i> ${formatDate(t.due)}</div>` : ''}
+          ${t.assignee ? `<div class="task-card__date"><i class="ti ti-user"></i> ${t.assignee}</div>` : ''}
+        </div>
+      </div>
+    `).join('') || '<div style="color:var(--text-3);font-size:12.5px;padding:8px 4px;">Нет задач</div>';
+  });
+
+  const active = tasks.filter(t => t.status !== 'done').length;
+  document.getElementById('tasks-sub').textContent = `${active} активных задач`;
+}
+
+function submitAddTask(e) {
+  e.preventDefault();
+  const title    = document.getElementById('task-title').value.trim();
+  const desc     = document.getElementById('task-desc').value.trim();
+  const status   = document.getElementById('task-status').value;
+  const priority = document.getElementById('task-priority').value;
+  const due      = document.getElementById('task-due').value;
+  const assignee = document.getElementById('task-assignee').value.trim();
+
+  tasks.unshift({ id: taskIdSeq++, title, desc, status, priority, due, assignee });
+  saveData('tasks', tasks);
+  saveData('taskIdSeq', taskIdSeq);
+  closeModal('modal-add-task');
+  e.target.reset();
+  renderTasks();
+  notify(`Задача «${title}» добавлена`, 'success');
+}
+
+function openTaskEdit(id) {
+  const t = tasks.find(t => t.id === id);
+  if (!t) return;
+  const statuses = [
+    { v: 'todo',       l: 'К выполнению' },
+    { v: 'inprogress', l: 'В процессе' },
+    { v: 'done',       l: 'Готово' },
+  ];
+  document.getElementById('modal-integration-title').textContent = t.title;
+  document.getElementById('modal-integration-body').innerHTML = `
+    <div class="form-row">
+      <div class="form-group">
+        <label>Статус</label>
+        <select id="edit-task-status">
+          ${statuses.map(s => `<option value="${s.v}" ${t.status===s.v?'selected':''}>${s.l}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Приоритет</label>
+        <select id="edit-task-priority">
+          <option value="high" ${t.priority==='high'?'selected':''}>Высокий</option>
+          <option value="normal" ${t.priority==='normal'?'selected':''}>Обычный</option>
+          <option value="low" ${t.priority==='low'?'selected':''}>Низкий</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Срок</label>
+        <input type="date" id="edit-task-due" value="${t.due||''}" />
+      </div>
+      <div class="form-group">
+        <label>Исполнитель</label>
+        <input type="text" id="edit-task-assignee" value="${t.assignee||''}" />
+      </div>
+    </div>
+    <div class="form-row" style="margin-top:4px;">
+      <button class="btn btn-danger" style="margin-right:auto;" onclick="deleteTask(${t.id})"><i class="ti ti-trash"></i> Удалить задачу</button>
+    </div>
+  `;
+  document.querySelector('#modal-integration .btn-primary').onclick = () => saveTaskEdit(t.id);
+  openModal('modal-integration');
+}
+
+function saveTaskEdit(id) {
+  const t = tasks.find(t => t.id === id);
+  if (!t) return;
+  t.status   = document.getElementById('edit-task-status').value;
+  t.priority = document.getElementById('edit-task-priority').value;
+  t.due      = document.getElementById('edit-task-due').value;
+  t.assignee = document.getElementById('edit-task-assignee').value.trim();
+  saveData('tasks', tasks);
+  closeModal('modal-integration');
+  renderTasks();
+  notify('Задача обновлена', 'success');
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  saveData('tasks', tasks);
+  closeModal('modal-integration');
+  renderTasks();
+  notify('Задача удалена', 'info');
+}
+
+// =============================================
+// AI-АССИСТЕНТ
+// =============================================
+
+let chatHistory = [];
+
+function appendMessage(role, text) {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `chat-msg chat-msg--${role === 'user' ? 'user' : 'ai'}`;
+
+  const avatarText = role === 'user' ? 'ИП' : '<i class="ti ti-sparkles"></i>';
+  div.innerHTML = `
+    <div class="chat-msg__avatar">${avatarText}</div>
+    <div class="chat-msg__bubble">${escapeHtml(text).replace(/\n/g, '<br>')}</div>
+  `;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function appendTyping() {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg chat-msg--ai';
+  div.id = 'typing-indicator';
+  div.innerHTML = `
+    <div class="chat-msg__avatar"><i class="ti ti-sparkles"></i></div>
+    <div class="chat-msg__bubble">
+      <div class="typing-indicator">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+  `;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  appendMessage('user', text);
+  chatHistory.push({ role: 'user', content: text });
+
+  appendTyping();
+
+  try {
+    const response = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: 'Ты бизнес-ассистент для малого бизнеса в России. Отвечай кратко, по делу, на русском языке. Давай конкретные практические советы.',
+        messages: chatHistory,
+      }),
+    });
+
+    removeTyping();
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const reply = data.content?.[0]?.text || 'Нет ответа';
+    chatHistory.push({ role: 'assistant', content: reply });
+    appendMessage('assistant', reply);
+  } catch (err) {
+    removeTyping();
+    appendMessage('assistant', `Ошибка соединения с сервером. Проверьте, что прокси /api/claude настроен.\n\nТехнические детали: ${err.message}`);
+  }
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function useSuggestion(btn) {
+  const input = document.getElementById('chat-input');
+  input.value = btn.textContent;
+  input.focus();
+}
+
+function clearChat() {
+  chatHistory = [];
+  const container = document.getElementById('chat-messages');
+  container.innerHTML = `
+    <div class="chat-msg chat-msg--ai">
+      <div class="chat-msg__avatar"><i class="ti ti-sparkles"></i></div>
+      <div class="chat-msg__bubble">Привет! Я ваш бизнес-ассистент. Помогу с анализом, советами по управлению, составлением текстов и ответами на вопросы о вашем бизнесе. Чем могу помочь?</div>
+    </div>
+  `;
+  notify('Чат очищен', 'info');
+}
+
+// Автоматическое увеличение textarea
+document.getElementById('chat-input').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+
+// =============================================
+// ИНТЕГРАЦИИ
+// =============================================
+
+const INTEGRATION_SETTINGS = {
+  '1с': {
+    title: '1С: Бухгалтерия — Настройки',
+    fields: [
+      { label: 'Путь к базе 1С', id: 'f-1c-path', placeholder: '\\\\server\\1c_base' },
+      { label: 'Логин', id: 'f-1c-login', placeholder: 'admin' },
+      { label: 'Пароль', id: 'f-1c-pass',  placeholder: '••••••••', type: 'password' },
+    ],
+  },
+  amocrm: {
+    title: 'AmoCRM — Настройки',
+    fields: [
+      { label: 'Поддомен (subdomain)', id: 'f-amo-sub', placeholder: 'mycompany' },
+      { label: 'API-токен', id: 'f-amo-token', placeholder: 'Вставьте токен из настроек AmoCRM', type: 'password' },
+    ],
+  },
+  yukassa: {
+    title: 'ЮКасса — Настройки',
+    fields: [
+      { label: 'shopId', id: 'f-yk-shop', placeholder: '123456' },
+      { label: 'Секретный ключ', id: 'f-yk-secret', placeholder: 'live_...', type: 'password' },
+    ],
+  },
+  wildberries: {
+    title: 'Wildberries — Настройки',
+    fields: [
+      { label: 'API-ключ', id: 'f-wb-key', placeholder: 'Вставьте токен из кабинета WB', type: 'password' },
+    ],
+  },
+  ozon: {
+    title: 'Ozon — Настройки',
+    fields: [
+      { label: 'Client ID', id: 'f-oz-id',     placeholder: '123456' },
+      { label: 'API Key',   id: 'f-oz-key',    placeholder: 'Вставьте API-ключ из Ozon Seller', type: 'password' },
+    ],
+  },
+  vkads: {
+    title: 'ВКонтакте Ads — Настройки',
+    fields: [
+      { label: 'Access Token', id: 'f-vk-token', placeholder: 'vk1.a.…', type: 'password' },
+      { label: 'ID аккаунта',  id: 'f-vk-acc',   placeholder: '123456789' },
+    ],
+  },
+  telegram: {
+    title: 'Telegram Bot — Настройки',
+    fields: [
+      { label: 'Bot Token',   id: 'f-tg-token',   placeholder: '123456789:AAF…', type: 'password' },
+      { label: 'Chat ID для уведомлений', id: 'f-tg-chat', placeholder: '-100123456789' },
+    ],
+  },
+};
+
+function showIntegrationSettings(key) {
+  const cfg = INTEGRATION_SETTINGS[key];
+  if (!cfg) return;
+  document.getElementById('modal-integration-title').textContent = cfg.title;
+  const saved = loadData('integration_' + key, {});
+  document.getElementById('modal-integration-body').innerHTML = cfg.fields.map(f => `
+    <div class="form-row">
+      <div class="form-group">
+        <label>${f.label}</label>
+        <input type="${f.type || 'text'}" id="${f.id}" placeholder="${f.placeholder}" value="${saved[f.id] || ''}" />
+      </div>
+    </div>
+  `).join('') + `
+    <div style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:var(--radius-md);padding:10px 14px;font-size:12.5px;color:var(--text-2);margin-top:4px;">
+      <i class="ti ti-info-circle" style="font-size:14px;vertical-align:middle;margin-right:4px;"></i>
+      API-запросы к внешним сервисам проходят через прокси <code>/api/integrations/${key}</code>
+    </div>
+  `;
+  document.querySelector('#modal-integration .btn-primary').onclick = () => saveIntegrationSettings(key, cfg.fields);
+  openModal('modal-integration');
+}
+
+function saveIntegrationSettings(key, fields) {
+  if (!key || !fields) { closeModal('modal-integration'); return; }
+  const data = {};
+  fields.forEach(f => { data[f.id] = document.getElementById(f.id)?.value || ''; });
+  saveData('integration_' + key, data);
+  closeModal('modal-integration');
+  notify('Настройки сохранены', 'success');
+}
+
+function toggleIntegration(checkbox, key) {
+  const enabled = checkbox.checked;
+  notify(`Интеграция ${key} ${enabled ? 'включена' : 'отключена'}`, enabled ? 'success' : 'info');
+}
+
+// =============================================
+// ГРАФИКИ (Chart.js)
+// =============================================
+
+function initCharts() {
+  const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border').trim();
+  const textColor2  = getComputedStyle(document.documentElement).getPropertyValue('--text-2').trim();
+  const accent      = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+
+  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+  Chart.defaults.font.size   = 12;
+  Chart.defaults.color       = textColor2;
+
+  // График выручки
+  const revenueCtx = document.getElementById('revenueChart');
+  new Chart(revenueCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Янв','Фев','Мар','Апр','Май','Июн'],
+      datasets: [
+        {
+          label: 'Доходы',
+          data: [620000, 540000, 710000, 680000, 790000, 847500],
+          backgroundColor: accent,
+          borderRadius: 4,
+          borderSkipped: false,
+        },
+        {
+          label: 'Расходы',
+          data: [280000, 310000, 290000, 320000, 295000, 312000],
+          backgroundColor: borderColor,
+          borderRadius: 4,
+          borderSkipped: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', align: 'end', labels: { boxWidth: 10, padding: 16 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ₽ ${ctx.parsed.y.toLocaleString('ru-RU')}`,
+          },
+        },
+      },
+      scales: {
+        x: { grid: { display: false }, border: { display: false } },
+        y: {
+          grid: { color: borderColor },
+          border: { display: false },
+          ticks: { callback: v => '₽ ' + (v/1000) + 'к' },
+        },
+      },
+    },
+  });
+
+  // Пончиковый график расходов
+  const expensesCtx = document.getElementById('expensesChart');
+  new Chart(expensesCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Аренда','Зарплата','Маркетинг','Прочее'],
+      datasets: [{
+        data: [45000, 120000, 55000, 22000],
+        backgroundColor: ['#2563eb','#7c3aed','#db2777','#d97706'],
+        borderWidth: 0,
+        hoverOffset: 4,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '68%',
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { boxWidth: 10, padding: 12, font: { size: 11 } },
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.label}: ₽ ${ctx.parsed.toLocaleString('ru-RU')}`,
+          },
+        },
+      },
+    },
+  });
+}
+
+// =============================================
+// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+// =============================================
+
+function plural(n, forms) {
+  const mod10 = n % 10, mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return forms[0];
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return forms[1];
+  return forms[2];
+}
+
+// === УСТАНОВКА ДЕФОЛТНЫХ ДАТ ===
+
+function setDefaultDates() {
+  const today = todayIso();
+  const txDate = document.getElementById('tx-date');
+  if (txDate) txDate.value = today;
+}
+
+// =============================================
+// ИНИЦИАЛИЗАЦИЯ
+// =============================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  filterClients();
+  filterTransactions();
+  renderTasks();
+  setDefaultDates();
+  initCharts();
+});
+</script>
+
+</body>
+</html>
