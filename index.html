@@ -577,11 +577,11 @@
 
       <div class="stat-grid">
         <div class="stat-card">
-          <div class="stat-lbl">Прибыль</div>
+          <div class="stat-lbl">Прибыль (USDT)</div>
           <div class="stat-val" id="st-profit">—</div>
         </div>
         <div class="stat-card">
-          <div class="stat-lbl">Объём</div>
+          <div class="stat-lbl">Выручка (₽)</div>
           <div class="stat-val" id="st-vol">—</div>
         </div>
         <div class="stat-card">
@@ -610,31 +610,23 @@
 
       <!-- Purchase -->
       <div class="fsec">
-        <div class="fsec-ttl">Покупка</div>
-
-        <div class="frow keep2">
+        <div class="fsec-ttl">Покупка (репленишмент)</div>
+        <div class="frow full">
           <div class="fg">
             <label class="flbl">Курс покупки (₽/USDT)</label>
             <input type="number" class="finp" id="f-buyRate"
                    placeholder="78.00" min="0" step="any"
                    oninput="onPurchaseInput()" />
           </div>
-          <div class="fg">
-            <label class="flbl">Сумма покупки (₽)</label>
-            <input type="number" class="finp" id="f-amount"
-                   placeholder="100 000.00" min="0" step="any"
-                   oninput="onPurchaseInput()" />
-          </div>
         </div>
-
         <div class="frow keep2">
           <div class="fg">
-            <label class="flbl">Получено USDT</label>
-            <div class="fcalc" id="fc-usdt">—</div>
+            <label class="flbl">Ср. плановый курс продажи</label>
+            <div class="fcalc" id="fc-plan">—</div>
           </div>
           <div class="fg">
-            <label class="flbl">Ср. плановый курс продажи</label>
-            <div class="fcalc" id="fc-cost">—</div>
+            <label class="flbl">Продано USDT</label>
+            <div class="fcalc" id="fc-sold">—</div>
           </div>
         </div>
       </div>
@@ -642,10 +634,6 @@
       <!-- Sell orders -->
       <div class="fsec">
         <div class="fsec-ttl">Ордера продажи</div>
-        <div class="warn-banner" id="warn-over">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 .875a6.125 6.125 0 100 12.25A6.125 6.125 0 007 .875zm.656 3.5v3.85a.656.656 0 01-1.312 0V4.375a.656.656 0 011.312 0zM7 10.281a.875.875 0 110-1.75.875.875 0 010 1.75z"/></svg>
-          Суммарно продано USDT больше, чем куплено!
-        </div>
         <div class="sell-list" id="sell-list"></div>
         <button class="btn-add-sell" onclick="addSell()">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6.75 1.25a.75.75 0 00-1.5 0V5.25H1.25a.75.75 0 000 1.5H5.25v4a.75.75 0 001.5 0v-4h4a.75.75 0 000-1.5h-4V1.25z"/></svg>
@@ -656,12 +644,12 @@
       <!-- Live summary -->
       <div class="lsummary">
         <div class="lsummary-ttl">Итого</div>
-        <div class="sr"><span class="sr-lbl">Общая выручка</span>           <span class="sr-val" id="fs-rev">—</span></div>
-        <div class="sr"><span class="sr-lbl">Прибыль (₽)</span>             <span class="sr-val" id="fs-prof">—</span></div>
-        <div class="sr"><span class="sr-lbl">Маржа</span>                   <span class="sr-val" id="fs-marg">—</span></div>
-        <div class="sr"><span class="sr-lbl">Плановая прибыль (USDT)</span> <span class="sr-val" id="fs-planned-profit">—</span></div>
-        <div class="sr"><span class="sr-lbl">Откл. от плана (₽)</span>      <span class="sr-val" id="fs-slip">—</span></div>
-        <div class="sr"><span class="sr-lbl">Остаток USDT</span>            <span class="sr-val" id="fs-rem">—</span></div>
+        <div class="sr"><span class="sr-lbl">Продано USDT</span>            <span class="sr-val" id="fs-sold">—</span></div>
+        <div class="sr"><span class="sr-lbl">Выручка (₽)</span>             <span class="sr-val" id="fs-rev">—</span></div>
+        <div class="sr"><span class="sr-lbl">Прибыль факт. (USDT)</span>    <span class="sr-val" id="fs-prof">—</span></div>
+        <div class="sr"><span class="sr-lbl">Прибыль план. (USDT)</span>    <span class="sr-val" id="fs-plan">—</span></div>
+        <div class="sr"><span class="sr-lbl">Откл. факт/план (USDT)</span>  <span class="sr-val" id="fs-dev">—</span></div>
+        <div class="sr"><span class="sr-lbl">Средняя маржа %</span>         <span class="sr-val" id="fs-marg">—</span></div>
       </div>
 
       <!-- Actions -->
@@ -761,46 +749,51 @@ function esc(s) {
 
 /* ════════════════════════════════════════════════
    CALCULATIONS
+   Profit model: sell USDT → get RUB → buy back at buyRate
+   Profit (USDT) = totalRevenue / buyRate − totalSold
 ════════════════════════════════════════════════ */
 function calc(o) {
-  const buyRate        = +o.buyRate        || 0;
-  const purchaseAmount = +o.purchaseAmount || 0;
-  const usdtReceived   = buyRate > 0 ? purchaseAmount / buyRate : 0;
+  const buyRate = +o.buyRate || 0;
 
   const sells = (o.sells || []).map(s => {
     const usdtAmount      = +s.usdtAmount || 0;
     const sellRate        = +s.sellRate   || 0;
     const profitPct       = +s.profitPct  || 0;
-    // planned sell rate: buyRate × (1 + profitPct/100)
-    const plannedSellRate  = buyRate > 0 ? buyRate * (1 + profitPct / 100) : 0;
-    const revenue          = usdtAmount * sellRate;
-    const plannedRevenue   = usdtAmount * plannedSellRate;
-    // slippage (RUB): positive = sold below plan
-    const slippage         = plannedRevenue - revenue;
-    // profit per sell formula: ((sellAmount*(1+pct/100))/sellRate) - (sellCost/buyRate)
-    // = usdtAmount*(1+pct/100) - usdtAmount = usdtAmount*pct/100
-    const sellAmount       = revenue;                          // RUB from this sell
-    const sellCost         = usdtAmount * buyRate;             // RUB cost of this USDT
-    const formulaProfit    = sellRate > 0
-      ? (sellAmount * (1 + profitPct / 100)) / sellRate - sellCost / buyRate
-      : 0;                                                     // USDT
-    return { ...s, usdtAmount, sellRate, profitPct, plannedSellRate,
-             revenue, plannedRevenue, slippage, formulaProfit };
+    // Planned sell rate to hit profitPct
+    const plannedSellRate = buyRate > 0 ? buyRate * (1 + profitPct / 100) : 0;
+    // Revenue in RUB
+    const revenue         = usdtAmount * sellRate;
+    // Actual profit in USDT: bought back − sold
+    // = revenue/buyRate − usdtAmount = usdtAmount*(sellRate/buyRate − 1)
+    const profitUsdt      = buyRate > 0 ? revenue / buyRate - usdtAmount : 0;
+    // Planned profit in USDT (formula): usdtAmount × profitPct/100
+    const plannedProfitUsdt = usdtAmount * profitPct / 100;
+    // Deviation: actual − planned (positive = better than plan)
+    const devUsdt         = profitUsdt - plannedProfitUsdt;
+    return {
+      ...s, usdtAmount, sellRate, profitPct, plannedSellRate,
+      revenue, profitUsdt, plannedProfitUsdt, devUsdt,
+    };
   });
 
-  const totalRevenue        = sells.reduce((a,s) => a + s.revenue,       0);
-  const totalSlippage       = sells.reduce((a,s) => a + s.slippage,      0);
-  const totalSold           = sells.reduce((a,s) => a + s.usdtAmount,    0);
-  const totalPlannedProfit  = sells.reduce((a,s) => a + s.formulaProfit, 0);
-  const profit              = totalRevenue - purchaseAmount;
-  const margin              = purchaseAmount > 0 ? profit / purchaseAmount * 100 : 0;
-  const remaining           = usdtReceived - totalSold;
+  const totalRevenue       = sells.reduce((a,s) => a + s.revenue,          0);
+  const totalSold          = sells.reduce((a,s) => a + s.usdtAmount,        0);
+  const totalProfitUsdt    = buyRate > 0 ? totalRevenue / buyRate - totalSold : 0;
+  const totalPlannedProfit = sells.reduce((a,s) => a + s.plannedProfitUsdt, 0);
+  const totalDevUsdt       = totalProfitUsdt - totalPlannedProfit;
+  // Weighted average planned sell rate
+  const wtdPlan            = totalSold > 0
+    ? sells.reduce((a,s) => a + s.plannedSellRate * s.usdtAmount, 0) / totalSold : 0;
+  // Average margin %: (avgSellRate/buyRate − 1)*100
+  const avgSellRate        = totalSold > 0 ? totalRevenue / totalSold : 0;
+  const avgMarginPct       = buyRate > 0 && avgSellRate > 0
+    ? (avgSellRate / buyRate - 1) * 100 : 0;
 
   return {
-    buyRate, purchaseAmount, usdtReceived,
-    sells, totalRevenue, totalSlippage, totalSold,
-    totalPlannedProfit, profit, margin, remaining,
-    oversold: usdtReceived > 0 && totalSold > usdtReceived + 1e-9,
+    buyRate,
+    sells, totalRevenue, totalSold,
+    totalProfitUsdt, totalPlannedProfit, totalDevUsdt,
+    wtdPlan, avgSellRate, avgMarginPct,
   };
 }
 
@@ -856,22 +849,28 @@ function renderList() {
   const sorted = [...orders].sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
 
   /* cumulative stats */
-  let totProfit = 0, totVol = 0;
+  let totProfit = 0, totVol = 0, totSold = 0;
   sorted.forEach(o => {
     const c = calc(o);
-    totProfit += c.profit;
-    totVol    += c.purchaseAmount;
+    totProfit += c.totalProfitUsdt;
+    totVol    += c.totalRevenue;
+    totSold   += c.totalSold;
   });
-  const totMargin = totVol > 0 ? totProfit / totVol * 100 : NaN;
+  const totMargin = totSold > 0 && totVol > 0
+    ? sorted.reduce((a,o) => {
+        const c = calc(o);
+        return a + c.avgMarginPct * c.totalSold;
+      }, 0) / totSold
+    : NaN;
   const hasOrders = sorted.length > 0;
 
   const profEl  = document.getElementById('st-profit');
   const volEl   = document.getElementById('st-vol');
   const margEl  = document.getElementById('st-margin');
 
-  profEl.textContent = hasOrders ? fRub(totProfit)  : '—';
+  profEl.textContent = hasOrders ? (totProfit >= 0 ? '+' : '') + fmtUsdt.format(totProfit) + '\u00a0USDT' : '—';
   profEl.className   = 'stat-val' + (hasOrders ? (totProfit >= 0 ? ' ok' : ' bad') : '');
-  volEl.textContent  = hasOrders ? fRub(totVol)     : '—';
+  volEl.textContent  = hasOrders ? fRub(totVol) : '—';
   margEl.textContent = isFinite(totMargin) ? fPct(totMargin) : '—';
   margEl.className   = 'stat-val' + (isFinite(totMargin) ? (totMargin >= 0 ? ' ok' : ' bad') : '');
   document.getElementById('st-count').textContent = sorted.length;
@@ -902,8 +901,6 @@ function renderList() {
   container.innerHTML = sorted.map(o => {
     const c   = calc(o);
     const lbl = o.name || ('Ордер от ' + fDate(o.createdAt));
-    const pp  = c.profit >= 0;
-    const pm  = c.margin >= 0;
     return `
       <div class="ocard"
            onclick="viewOrder('${o.id}')"
@@ -931,23 +928,22 @@ function renderList() {
             <div class="oc-meta-val">${fRate(c.buyRate)}&nbsp;₽</div>
           </div>
           <div>
-            <div class="oc-meta-lbl">Куплено USDT</div>
-            <div class="oc-meta-val">${fmtUsdt.format(c.usdtReceived)}</div>
-          </div>
-          <div>
             <div class="oc-meta-lbl">Продано USDT</div>
             <div class="oc-meta-val">${fmtUsdt.format(c.totalSold)}</div>
           </div>
           <div>
-            <div class="oc-meta-lbl">Объём покупки</div>
-            <div class="oc-meta-val">${fmtRub.format(c.purchaseAmount)}&nbsp;₽</div>
+            <div class="oc-meta-lbl">Выручка</div>
+            <div class="oc-meta-val">${fmtRub.format(c.totalRevenue)}&nbsp;₽</div>
+          </div>
+          <div>
+            <div class="oc-meta-lbl">Продаж</div>
+            <div class="oc-meta-val">${o.sells ? o.sells.length : 0}</div>
           </div>
         </div>
 
         <div class="oc-foot">
-          <span class="oc-profit ${pp?'ok':'bad'}">${pp?'+':''}${fRub(c.profit)}</span>
-          <span class="oc-margin ${pm?'ok':'bad'}">${pm?'+':''}${fPct(c.margin)}</span>
-          ${c.remaining > 1e-7 ? `<span class="oc-rem">Остаток: ${fmtUsdt.format(c.remaining)}&nbsp;USDT</span>` : ''}
+          <span class="oc-profit ${c.totalProfitUsdt >= 0 ? 'ok' : 'bad'}">${c.totalProfitUsdt >= 0 ? '+' : ''}${fmtUsdt.format(c.totalProfitUsdt)}&nbsp;USDT</span>
+          <span class="oc-margin ${c.avgMarginPct >= 0 ? 'ok' : 'bad'}">${c.avgMarginPct >= 0 ? '+' : ''}${fPct(c.avgMarginPct)}</span>
         </div>
       </div>`;
   }).join('');
@@ -982,12 +978,11 @@ function tsEnd() {
 function newOrder() {
   editId = null;
   draft = {
-    id:             genId(),
-    createdAt:      new Date().toISOString(),
-    name:           '',
-    buyRate:        '',
-    purchaseAmount: '',
-    sells:          [],
+    id:        genId(),
+    createdAt: new Date().toISOString(),
+    name:      '',
+    buyRate:   '',
+    sells:     [],
   };
   fillForm();
   showView('form');
@@ -1020,9 +1015,8 @@ function viewOrder(id) {
 ════════════════════════════════════════════════ */
 function fillForm() {
   const nv = v => (v !== '' && v != null) ? v : '';
-  document.getElementById('f-name').value    = draft.name           || '';
+  document.getElementById('f-name').value    = draft.name  || '';
   document.getElementById('f-buyRate').value = nv(draft.buyRate);
-  document.getElementById('f-amount').value  = nv(draft.purchaseAmount);
   renderSells();
   recalc();
 }
@@ -1031,9 +1025,8 @@ function fillForm() {
    FORM — INPUT HANDLERS
 ════════════════════════════════════════════════ */
 function onPurchaseInput() {
-  draft.name           = document.getElementById('f-name').value;
-  draft.buyRate        = document.getElementById('f-buyRate').value;
-  draft.purchaseAmount = document.getElementById('f-amount').value;
+  draft.name    = document.getElementById('f-name').value;
+  draft.buyRate = document.getElementById('f-buyRate').value;
   recalc();
   schedAutoSave();
 }
@@ -1047,58 +1040,50 @@ function onSellInput(sid, field, val) {
    FORM — LIVE RECALCULATION
 ════════════════════════════════════════════════ */
 function recalc() {
-  const c = calc(draft);
+  const c   = calc(draft);
+  const has = c.sells.some(s => s.usdtAmount > 0 && s.sellRate > 0);
 
-  /* Calculated purchase fields */
-  document.getElementById('fc-usdt').textContent = c.usdtReceived > 0 ? fUsdt(c.usdtReceived) : '—';
-  /* Show avg planned sell rate weighted by USDT amount */
-  const totalSoldW = c.sells.reduce((a,s) => a + s.usdtAmount, 0);
-  const wtdPlanned = totalSoldW > 0
-    ? c.sells.reduce((a,s) => a + s.plannedSellRate * s.usdtAmount, 0) / totalSoldW
-    : 0;
-  document.getElementById('fc-cost').textContent = wtdPlanned > 0
-    ? fRate(wtdPlanned) + '\u00a0₽/USDT (план)'
-    : (c.buyRate > 0 ? fRate(c.buyRate) + '\u00a0₽/USDT' : '—');
+  /* Purchase block calculated fields */
+  document.getElementById('fc-plan').textContent = c.wtdPlan > 0
+    ? fRate(c.wtdPlan) + '\u00a0₽/USDT' : '—';
+  document.getElementById('fc-sold').textContent = c.totalSold > 0
+    ? fmtUsdt.format(c.totalSold) + '\u00a0USDT' : '—';
 
-  /* Per-sell row calcs (update spans only, don't re-render) */
+  /* Per-sell row span updates (no re-render, preserves focus) */
   c.sells.forEach(s => {
-    const revEl  = document.getElementById('rv-' + s.id);
-    const planEl = document.getElementById('pl-' + s.id);
-    const devEl  = document.getElementById('dv-' + s.id);
-    if (revEl)  revEl.textContent  = s.revenue > 0 ? fRub(s.revenue) : '—';
-    if (planEl) planEl.textContent = s.plannedSellRate > 0 ? fRate(s.plannedSellRate) + '\u00a0₽' : '—';
-    if (devEl) {
+    const active = s.usdtAmount > 0 && s.sellRate > 0;
+    const rvEl = document.getElementById('rv-' + s.id);
+    const plEl = document.getElementById('pl-' + s.id);
+    const dvEl = document.getElementById('dv-' + s.id);
+    const prEl = document.getElementById('pr-' + s.id);
+    if (rvEl) rvEl.textContent = active ? fRub(s.revenue) : '—';
+    if (plEl) plEl.textContent = active ? fRate(s.plannedSellRate) + '\u00a0₽' : '—';
+    if (dvEl) {
       const dev = s.sellRate - s.plannedSellRate;
-      devEl.textContent = s.revenue > 0 ? (dev >= 0 ? '+' : '') + fRate(dev) + '\u00a0₽' : '—';
-      devEl.className   = 'scalc-val ' + (s.revenue > 0 ? (dev >= 0 ? 'slip-ok' : 'slip-pos') : '');
+      dvEl.textContent = active ? (dev >= 0 ? '+' : '') + fRate(dev) + '\u00a0₽' : '—';
+      dvEl.className   = 'scalc-val ' + (active ? (dev >= 0 ? 'slip-ok' : 'slip-pos') : '');
+    }
+    if (prEl) {
+      prEl.textContent = active
+        ? (s.profitUsdt >= 0 ? '+' : '') + fmtUsdt.format(s.profitUsdt) + '\u00a0USDT' : '—';
+      prEl.className   = 'scalc-val ' + (active ? (s.profitUsdt >= 0 ? 'slip-ok' : 'slip-pos') : '');
     }
   });
 
-  /* Oversell warning */
-  document.getElementById('warn-over').classList.toggle('on', c.oversold);
+  /* Summary */
+  setEl('fs-sold', has ? fmtUsdt.format(c.totalSold) + '\u00a0USDT' : '—', '');
+  setEl('fs-rev',  has ? fRub(c.totalRevenue) : '—', '');
+  setEl('fs-prof', has ? (c.totalProfitUsdt >= 0 ? '+' : '') + fmtUsdt.format(c.totalProfitUsdt) + '\u00a0USDT' : '—',
+        has ? (c.totalProfitUsdt >= 0 ? 'ok' : 'bad') : '');
+  setEl('fs-plan', has ? '+' + fmtUsdt.format(c.totalPlannedProfit) + '\u00a0USDT' : '—', '');
+  setEl('fs-dev',
+        has ? (c.totalDevUsdt >= 0 ? '+' : '') + fmtUsdt.format(c.totalDevUsdt) + '\u00a0USDT' : '—',
+        has ? (c.totalDevUsdt >= 0 ? 'ok' : 'bad') : '');
+  setEl('fs-marg', has ? (c.avgMarginPct >= 0 ? '+' : '') + fPct(c.avgMarginPct) : '—',
+        has ? (c.avgMarginPct >= 0 ? 'ok' : 'bad') : '');
 
-  /* Live summary */
-  const hasSells = c.sells.some(s => s.revenue > 0);
-
-  setEl('fs-rev',  hasSells ? fRub(c.totalRevenue) : '—', '');
-  setEl('fs-prof', hasSells ? (c.profit >= 0 ? '+' : '') + fRub(c.profit) : '—',
-        hasSells ? (c.profit >= 0 ? 'ok' : 'bad') : '');
-  setEl('fs-marg', hasSells ? (c.margin >= 0 ? '+' : '') + fPct(c.margin) : '—',
-        hasSells ? (c.margin >= 0 ? 'ok' : 'bad') : '');
-  /* totalSlippage in RUB vs plan */
-  /* slippage: positive = shortfall (bad), negative = above plan (good) */
-  setEl('fs-slip', hasSells ? fRub(c.totalSlippage) : '—',
-        hasSells ? (c.totalSlippage > 1e-4 ? 'bad' : (c.totalSlippage < -1e-4 ? 'ok' : '')) : '');
-  setEl('fs-rem',
-        c.usdtReceived > 0 ? fUsdt(c.remaining) : '—',
-        c.remaining > 1e-7 ? 'warn' : '');
-
-  /* planned profit in USDT (per formula) */
-  setEl('fs-planned-profit',
-        hasSells ? fUsdt(c.totalPlannedProfit) : '—', '');
-
-  /* Save button */
-  document.getElementById('btn-save').disabled = !(c.buyRate > 0 && c.purchaseAmount > 0);
+  /* Save button: only needs buyRate */
+  document.getElementById('btn-save').disabled = !(c.buyRate > 0);
 }
 
 function setEl(id, text, modClass) {
@@ -1121,7 +1106,8 @@ function renderSells() {
     const vUsdt = s.usdtAmount !== '' && s.usdtAmount != null ? s.usdtAmount : '';
     const vRate = s.sellRate   !== '' && s.sellRate   != null ? s.sellRate   : '';
     const vPct  = s.profitPct  !== '' && s.profitPct  != null ? s.profitPct  : '';
-    const dev   = (cs.sellRate || 0) - (cs.plannedSellRate || 0);
+    const active = (cs.usdtAmount || 0) > 0 && (cs.sellRate || 0) > 0;
+    const dev    = (cs.sellRate || 0) - (cs.plannedSellRate || 0);
     return `
       <div class="srow" id="sr-${s.id}">
         <div class="srow-idx">Продажа ${i + 1}</div>
@@ -1156,15 +1142,19 @@ function renderSells() {
         <div class="srow-calcs">
           <div class="scalc">
             <span class="scalc-lbl">Выручка:</span>
-            <span class="scalc-val" id="rv-${s.id}">${cs.revenue > 0 ? fRub(cs.revenue) : '—'}</span>
+            <span class="scalc-val" id="rv-${s.id}">${active ? fRub(cs.revenue) : '—'}</span>
           </div>
           <div class="scalc">
             <span class="scalc-lbl">Плановый курс:</span>
-            <span class="scalc-val" id="pl-${s.id}">${cs.plannedSellRate > 0 ? fRate(cs.plannedSellRate) + '\u00a0₽' : '—'}</span>
+            <span class="scalc-val" id="pl-${s.id}">${active ? fRate(cs.plannedSellRate) + '\u00a0₽' : '—'}</span>
           </div>
           <div class="scalc">
             <span class="scalc-lbl">Откл.:</span>
-            <span class="scalc-val ${cs.revenue > 0 ? (dev >= 0 ? 'slip-ok' : 'slip-pos') : ''}" id="dv-${s.id}">${cs.revenue > 0 ? (dev >= 0 ? '+' : '') + fRate(dev) + '\u00a0₽' : '—'}</span>
+            <span class="scalc-val ${active ? (dev >= 0 ? 'slip-ok' : 'slip-pos') : ''}" id="dv-${s.id}">${active ? (dev >= 0 ? '+' : '') + fRate(dev) + '\u00a0₽' : '—'}</span>
+          </div>
+          <div class="scalc">
+            <span class="scalc-lbl">Прибыль:</span>
+            <span class="scalc-val ${active ? (cs.profitUsdt >= 0 ? 'slip-ok' : 'slip-pos') : ''}" id="pr-${s.id}">${active ? (cs.profitUsdt >= 0 ? '+' : '') + fmtUsdt.format(cs.profitUsdt) + '\u00a0USDT' : '—'}</span>
           </div>
         </div>
       </div>`;
@@ -1203,9 +1193,8 @@ function saveOrder() {
   if (!draft) return;
 
   /* coerce all numeric fields */
-  draft.name           = document.getElementById('f-name').value.trim();
-  draft.buyRate        = +document.getElementById('f-buyRate').value || 0;
-  draft.purchaseAmount = +document.getElementById('f-amount').value  || 0;
+  draft.name    = document.getElementById('f-name').value.trim();
+  draft.buyRate = +document.getElementById('f-buyRate').value || 0;
   draft.sells = draft.sells.map(s => ({
     ...s,
     usdtAmount: +s.usdtAmount || 0,
@@ -1232,8 +1221,8 @@ function saveOrder() {
 function renderDetail(o) {
   const c   = calc(o);
   const lbl = o.name || ('Ордер от ' + fDate(o.createdAt));
-  const pp  = c.profit >= 0;
-  const pm  = c.margin >= 0;
+  const pp  = c.totalProfitUsdt >= 0;
+  const pm  = c.avgMarginPct >= 0;
 
   document.getElementById('detail-body').innerHTML = `
     <div class="fsec">
@@ -1242,12 +1231,12 @@ function renderDetail(o) {
     </div>
 
     <div class="fsec">
-      <div class="fsec-ttl">Покупка</div>
+      <div class="fsec-ttl">Покупка (репленишмент)</div>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px 18px">
-        <div class="df"><div class="df-lbl">Курс покупки</div>  <div class="df-val">${fRate(c.buyRate)}&nbsp;₽/USDT</div></div>
-        <div class="df"><div class="df-lbl">Сумма покупки</div> <div class="df-val">${fRub(c.purchaseAmount)}</div></div>
-        <div class="df"><div class="df-lbl">Получено USDT</div> <div class="df-val">${fUsdt(c.usdtReceived)}</div></div>
-        <div class="df"><div class="df-lbl">Продано USDT</div>  <div class="df-val">${fUsdt(c.totalSold)}</div></div>
+        <div class="df"><div class="df-lbl">Курс покупки</div>         <div class="df-val">${fRate(c.buyRate)}&nbsp;₽/USDT</div></div>
+        <div class="df"><div class="df-lbl">Продано USDT</div>         <div class="df-val">${fmtUsdt.format(c.totalSold)}&nbsp;USDT</div></div>
+        <div class="df"><div class="df-lbl">Выручка</div>              <div class="df-val">${fRub(c.totalRevenue)}</div></div>
+        <div class="df"><div class="df-lbl">Ср. плановый курс продажи</div><div class="df-val">${c.wtdPlan > 0 ? fRate(c.wtdPlan) + '&nbsp;₽' : '—'}</div></div>
       </div>
     </div>
 
@@ -1260,16 +1249,19 @@ function renderDetail(o) {
         <div class="dsrow">
           <div class="dsrow-idx">Продажа ${i+1}</div>
           <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px">
-            <div class="df"><div class="df-lbl">USDT</div>              <div class="df-val">${fUsdt(s.usdtAmount)}</div></div>
-            <div class="df"><div class="df-lbl">Курс продажи</div>      <div class="df-val">${fRate(s.sellRate)}&nbsp;₽</div></div>
-            <div class="df"><div class="df-lbl">Прибыль %</div>         <div class="df-val">${fPct(s.profitPct)}</div></div>
-            <div class="df"><div class="df-lbl">Плановый курс</div>     <div class="df-val">${fRate(s.plannedSellRate)}&nbsp;₽</div></div>
-            <div class="df"><div class="df-lbl">Выручка</div>           <div class="df-val">${fRub(s.revenue)}</div></div>
-            <div class="df">
-              <div class="df-lbl">Откл. от плана</div>
-              <div class="df-val" style="color:${dev >= 0 ? 'var(--ok)' : 'var(--bad)'}">
-                ${dev >= 0 ? '+' : ''}${fRate(dev)}&nbsp;₽
-              </div>
+            <div class="df"><div class="df-lbl">USDT</div>          <div class="df-val">${fmtUsdt.format(s.usdtAmount)}&nbsp;USDT</div></div>
+            <div class="df"><div class="df-lbl">Курс продажи</div>  <div class="df-val">${fRate(s.sellRate)}&nbsp;₽</div></div>
+            <div class="df"><div class="df-lbl">Прибыль %</div>     <div class="df-val">${fPct(s.profitPct)}</div></div>
+            <div class="df"><div class="df-lbl">Плановый курс</div> <div class="df-val">${fRate(s.plannedSellRate)}&nbsp;₽</div></div>
+            <div class="df"><div class="df-lbl">Выручка</div>       <div class="df-val">${fRub(s.revenue)}</div></div>
+            <div class="df"><div class="df-lbl">Откл. от плана</div>
+              <div class="df-val" style="color:${dev >= 0 ? 'var(--ok)' : 'var(--bad)'}">${dev >= 0 ? '+' : ''}${fRate(dev)}&nbsp;₽</div>
+            </div>
+            <div class="df"><div class="df-lbl">Прибыль факт.</div>
+              <div class="df-val" style="color:${s.profitUsdt >= 0 ? 'var(--ok)' : 'var(--bad)'}">${s.profitUsdt >= 0 ? '+' : ''}${fmtUsdt.format(s.profitUsdt)}&nbsp;USDT</div>
+            </div>
+            <div class="df"><div class="df-lbl">Прибыль план.</div>
+              <div class="df-val">+${fmtUsdt.format(s.plannedProfitUsdt)}&nbsp;USDT</div>
             </div>
           </div>
         </div>`; }).join('')}
@@ -1277,12 +1269,12 @@ function renderDetail(o) {
 
     <div class="lsummary">
       <div class="lsummary-ttl">Итого</div>
-      <div class="sr"><span class="sr-lbl">Общая выручка</span>           <span class="sr-val">${fRub(c.totalRevenue)}</span></div>
-      <div class="sr"><span class="sr-lbl">Прибыль (₽)</span>             <span class="sr-val" style="color:${pp?'var(--ok)':'var(--bad)'}">${pp?'+':''}${fRub(c.profit)}</span></div>
-      <div class="sr"><span class="sr-lbl">Маржа</span>                   <span class="sr-val" style="color:${pm?'var(--ok)':'var(--bad)'}">${pm?'+':''}${fPct(c.margin)}</span></div>
-      <div class="sr"><span class="sr-lbl">Плановая прибыль (USDT)</span> <span class="sr-val">${fUsdt(c.totalPlannedProfit)}</span></div>
-      <div class="sr"><span class="sr-lbl">Откл. от плана (₽)</span>      <span class="sr-val" style="color:${c.totalSlippage > 1e-4 ? 'var(--bad)' : c.totalSlippage < -1e-4 ? 'var(--ok)' : 'inherit'}">${fRub(c.totalSlippage)}</span></div>
-      <div class="sr"><span class="sr-lbl">Остаток USDT</span>            <span class="sr-val" style="color:${c.remaining > 1e-7 ? 'var(--warn)':'inherit'}">${fUsdt(c.remaining)}</span></div>
+      <div class="sr"><span class="sr-lbl">Продано USDT</span>            <span class="sr-val">${fmtUsdt.format(c.totalSold)}&nbsp;USDT</span></div>
+      <div class="sr"><span class="sr-lbl">Выручка (₽)</span>             <span class="sr-val">${fRub(c.totalRevenue)}</span></div>
+      <div class="sr"><span class="sr-lbl">Прибыль факт. (USDT)</span>    <span class="sr-val" style="color:${pp?'var(--ok)':'var(--bad)'}">${pp?'+':''}${fmtUsdt.format(c.totalProfitUsdt)}&nbsp;USDT</span></div>
+      <div class="sr"><span class="sr-lbl">Прибыль план. (USDT)</span>    <span class="sr-val">+${fmtUsdt.format(c.totalPlannedProfit)}&nbsp;USDT</span></div>
+      <div class="sr"><span class="sr-lbl">Откл. факт/план (USDT)</span>  <span class="sr-val" style="color:${c.totalDevUsdt >= 0 ? 'var(--ok)' : 'var(--bad)'}">${c.totalDevUsdt >= 0 ? '+' : ''}${fmtUsdt.format(c.totalDevUsdt)}&nbsp;USDT</span></div>
+      <div class="sr"><span class="sr-lbl">Средняя маржа %</span>         <span class="sr-val" style="color:${pm?'var(--ok)':'var(--bad)'}">${pm?'+':''}${fPct(c.avgMarginPct)}</span></div>
     </div>
 
     <div class="form-acts">
