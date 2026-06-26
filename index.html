@@ -370,6 +370,7 @@
         <div class="sr"><span class="sr-lbl">Куплено USDT (pokupkausdt)</span>   <span class="sr-val" id="fs-bought">—</span></div>
         <div class="sr"><span class="sr-lbl">USDT клиентам (prodajausdt)</span>  <span class="sr-val" id="fs-prodaja">—</span></div>
         <div class="sr"><span class="sr-lbl">Выручка (₽)</span>                  <span class="sr-val" id="fs-rev">—</span></div>
+        <div class="sr"><span class="sr-lbl">Доплат из своих (₽)</span>          <span class="sr-val warn" id="fs-topup">—</span></div>
         <div class="sr"><span class="sr-lbl">Прибыль (USDT)</span>               <span class="sr-val" id="fs-profit">—</span></div>
       </div>
 
@@ -485,8 +486,9 @@ function calc(o) {
              stavka, prodajausdt, topUpUsdt, adjustment, effectiveRate };
   });
 
-  const totalProdaja  = sells.reduce((a,s) => a + s.adjustment, 0);
+  const totalProdaja  = sells.reduce((a,s) => a + s.adjustment,  0);
   const totalRevenue  = sells.reduce((a,s) => a + s.orderAmount, 0);
+  const totalTopUp    = sells.reduce((a,s) => a + s.topUp,       0);
   const profit        = pokupkausdt - totalProdaja;  // positive = profit
 
   // weighted avg planned sell rate
@@ -496,7 +498,7 @@ function calc(o) {
 
   return {
     buyRate, paymentAmount, pokupkausdt,
-    sells, totalProdaja, totalRevenue, profit, wtdEffRate,
+    sells, totalProdaja, totalRevenue, totalTopUp, profit, wtdEffRate,
   };
 }
 
@@ -692,6 +694,7 @@ function recalc() {
   sv('fs-bought',  c.pokupkausdt > 0 ? fmtUsdt.format(c.pokupkausdt) + '\u00a0USDT' : '—');
   sv('fs-prodaja', has ? fmtUsdt.format(c.totalProdaja) + '\u00a0USDT' : '—');
   sv('fs-rev',     has ? fRub(c.totalRevenue) : '—');
+  sv('fs-topup',   c.totalTopUp > 0 ? '−\u00a0' + fRub(c.totalTopUp) : has ? '0\u00a0₽' : '—', c.totalTopUp > 0 ? 'warn' : '');
   sv('fs-profit',  has || c.pokupkausdt > 0
     ? (c.profit >= 0 ? '+' : '') + fmtUsdt.format(c.profit) + '\u00a0USDT' : '—',
     c.profit >= 0 ? 'ok' : 'bad');
@@ -734,7 +737,7 @@ function renderSells() {
                    oninput="onSellInput('${s.id}','profitPct',this.value)">
           </div>
           <div class="fg">
-            <label class="flbl" style="font-size:11px">Доплата (₽)</label>
+            <label class="flbl" style="font-size:11px">Доплата со своих (₽)</label>
             <input type="number" class="sinp" value="${esc(String(nv(s.topUp)))}"
                    placeholder="0" min="0" step="any"
                    oninput="onSellInput('${s.id}','topUp',this.value)">
@@ -859,10 +862,11 @@ function renderDetail(o) {
 
     <div class="lsummary">
       <div class="lsummary-ttl">Итого</div>
-      <div class="sr"><span class="sr-lbl">pokupkausdt</span>           <span class="sr-val">${fmtUsdt.format(c.pokupkausdt)}&nbsp;USDT</span></div>
-      <div class="sr"><span class="sr-lbl">USDT клиентам (prodaja)</span><span class="sr-val">${fmtUsdt.format(c.totalProdaja)}&nbsp;USDT</span></div>
-      <div class="sr"><span class="sr-lbl">Выручка (₽)</span>           <span class="sr-val">${fRub(c.totalRevenue)}</span></div>
-      <div class="sr"><span class="sr-lbl">Прибыль (USDT)</span>        <span class="sr-val" style="color:${pp?'var(--ok)':'var(--bad)'}">${pp?'+':''}${fmtUsdt.format(c.profit)}&nbsp;USDT</span></div>
+      <div class="sr"><span class="sr-lbl">pokupkausdt</span>              <span class="sr-val">${fmtUsdt.format(c.pokupkausdt)}&nbsp;USDT</span></div>
+      <div class="sr"><span class="sr-lbl">USDT клиентам (prodaja)</span> <span class="sr-val">${fmtUsdt.format(c.totalProdaja)}&nbsp;USDT</span></div>
+      <div class="sr"><span class="sr-lbl">Выручка (₽)</span>             <span class="sr-val">${fRub(c.totalRevenue)}</span></div>
+      <div class="sr"><span class="sr-lbl">Доплат из своих (₽)</span>     <span class="sr-val" style="color:${c.totalTopUp > 0 ? 'var(--warn)' : 'inherit'}">${c.totalTopUp > 0 ? '−\u00a0' + fRub(c.totalTopUp) : '0\u00a0₽'}</span></div>
+      <div class="sr"><span class="sr-lbl">Прибыль (USDT)</span>          <span class="sr-val" style="color:${pp?'var(--ok)':'var(--bad)'}">${pp?'+':''}${fmtUsdt.format(c.profit)}&nbsp;USDT</span></div>
     </div>
 
     <div class="form-acts">
