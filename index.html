@@ -8,35 +8,32 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ═══════════════════════════════════════
-       DESIGN TOKENS
-    ═══════════════════════════════════════ */
+    /* ══════════════════════════════════
+       TOKENS
+    ══════════════════════════════════ */
     :root {
-      --bg:            #F3F4F6;
-      --surface:       #FFFFFF;
-      --header:        #111418;
-      --accent:        #3D82F6;
-      --accent-lt:     #EFF6FF;
-      --accent-hv:     #2563EB;
-      --ok:            #22C55E;
-      --ok-lt:         #F0FDF4;
-      --bad:           #EF4444;
-      --bad-lt:        #FEF2F2;
-      --warn:          #F59E0B;
-      --warn-lt:       #FFFBEB;
-      --border:        #E5E7EB;
-      --in-border:     #D1D5DB;
-      --txt:           #111418;
-      --txt2:          #6B7280;
-      --txt3:          #9CA3AF;
-      --r:             12px;
-      --r-md:           8px;
-      --r-sm:           6px;
+      --bg:       #F3F4F6;
+      --surface:  #FFFFFF;
+      --hdr:      #111418;
+      --accent:   #3D82F6;
+      --acc-lt:   #EFF6FF;
+      --acc-hv:   #2563EB;
+      --ok:       #22C55E;
+      --ok-lt:    #F0FDF4;
+      --bad:      #EF4444;
+      --bad-lt:   #FEF2F2;
+      --warn:     #F59E0B;
+      --border:   #E5E7EB;
+      --in-bdr:   #D1D5DB;
+      --txt:      #111418;
+      --txt2:     #6B7280;
+      --txt3:     #9CA3AF;
+      --r:        12px;
+      --r-md:      8px;
     }
-
-    /* ═══════════════════════════════════════
+    /* ══════════════════════════════════
        RESET
-    ═══════════════════════════════════════ */
+    ══════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { height: 100%; }
     body {
@@ -53,509 +50,254 @@
     input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
     button { font-family: inherit; cursor: pointer; }
 
-    /* ═══════════════════════════════════════
-       APP SHELL
-    ═══════════════════════════════════════ */
+    /* ══════════════════════════════════
+       SHELL
+    ══════════════════════════════════ */
     .app { min-height: 100dvh; display: flex; flex-direction: column; }
 
-    /* ── HEADER ── */
     .hdr {
-      background: var(--header);
-      color: #fff;
-      height: 56px;
-      padding: 0 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      flex-shrink: 0;
+      background: var(--hdr); color: #fff;
+      height: 56px; padding: 0 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      position: sticky; top: 0; z-index: 100; flex-shrink: 0;
     }
-
     .hdr-logo {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      white-space: nowrap;
+      display: flex; align-items: center; gap: 9px;
+      font-size: 16px; font-weight: 700; letter-spacing: -.3px; white-space: nowrap;
     }
-
     .hdr-logo-icon {
       width: 30px; height: 30px;
-      background: var(--accent);
-      border-radius: 8px;
+      background: var(--accent); border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 800;
-      flex-shrink: 0;
-      letter-spacing: -0.5px;
+      font-size: 11px; font-weight: 800; flex-shrink: 0; letter-spacing: -.5px;
     }
-
-    .hdr-title {
-      font-size: 15px; font-weight: 600;
-      flex: 1; text-align: center;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-
+    .hdr-title { font-size: 15px; font-weight: 600; flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .hdr-back {
-      background: rgba(255,255,255,.13);
-      border: none; color: #fff;
-      padding: 0 12px; height: 32px;
-      border-radius: var(--r-sm);
+      background: rgba(255,255,255,.13); border: none; color: #fff;
+      padding: 0 12px; height: 32px; border-radius: 6px;
       font-size: 13px; font-weight: 500;
       display: flex; align-items: center; gap: 4px;
-      transition: background .15s;
-      white-space: nowrap; flex-shrink: 0;
+      transition: background .15s; white-space: nowrap; flex-shrink: 0;
     }
     .hdr-back:hover { background: rgba(255,255,255,.22); }
-
-    .hdr-spacer { width: 80px; flex-shrink: 0; }
-
+    .hdr-spc { width: 80px; flex-shrink: 0; }
     .btn-new {
-      background: var(--accent); color: #fff;
-      border: none;
-      padding: 0 14px; height: 34px;
-      border-radius: var(--r-md);
+      background: var(--accent); color: #fff; border: none;
+      padding: 0 14px; height: 34px; border-radius: var(--r-md);
       font-size: 13px; font-weight: 600;
       display: flex; align-items: center; gap: 5px;
-      transition: background .15s;
-      white-space: nowrap; flex-shrink: 0;
+      transition: background .15s; white-space: nowrap; flex-shrink: 0;
     }
-    .btn-new:hover { background: var(--accent-hv); }
+    .btn-new:hover { background: var(--acc-hv); }
 
-    /* ── CONTENT ── */
-    .content {
-      flex: 1;
-      width: 100%;
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-
+    .content { flex: 1; width: 100%; max-width: 720px; margin: 0 auto; padding: 16px; }
     @media (min-width: 640px) { .content { padding: 20px; } }
 
-    /* ── VIEWS ── */
     .view { display: none; }
     .view.active { display: block; }
 
-    /* ═══════════════════════════════════════
-       LIST VIEW
-    ═══════════════════════════════════════ */
-
-    /* Summary bar */
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 12px 14px;
-    }
-
-    .stat-lbl {
-      font-size: 10.5px; font-weight: 600;
-      color: var(--txt3);
-      text-transform: uppercase; letter-spacing: .6px;
-      margin-bottom: 5px;
-    }
-
-    .stat-val {
-      font-size: 15px; font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      line-height: 1.2; color: var(--txt);
-    }
-
+    /* ══════════════════════════════════
+       STAT BAR
+    ══════════════════════════════════ */
+    .stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 14px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px; }
+    .stat-lbl { font-size: 10.5px; font-weight: 600; color: var(--txt3); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 5px; }
+    .stat-val { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; color: var(--txt); }
     .stat-val.ok  { color: var(--ok); }
     .stat-val.bad { color: var(--bad); }
 
-    /* Order cards */
+    /* ══════════════════════════════════
+       ORDER CARDS
+    ══════════════════════════════════ */
     .cards { display: flex; flex-direction: column; gap: 10px; }
-
     .ocard {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 16px;
-      cursor: pointer;
-      position: relative;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 16px; cursor: pointer; position: relative;
       transition: border-color .15s, box-shadow .15s;
-      user-select: none;
-      overflow: hidden;
+      user-select: none; overflow: hidden;
     }
-    .ocard:hover {
-      border-color: #93C5FD;
-      box-shadow: 0 2px 12px rgba(61,130,246,.09);
-    }
+    .ocard:hover { border-color: #93C5FD; box-shadow: 0 2px 12px rgba(61,130,246,.08); }
     .ocard:active { transform: scale(.993); }
 
-    .oc-top {
-      display: flex; align-items: flex-start;
-      justify-content: space-between; gap: 8px;
-      margin-bottom: 12px;
-    }
-
+    .oc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
     .oc-name { font-size: 15px; font-weight: 600; }
     .oc-date { font-size: 12px; color: var(--txt3); margin-top: 2px; }
-
     .oc-del {
-      background: none; border: none;
-      color: var(--txt3);
+      background: none; border: none; color: var(--txt3);
       padding: 4px; border-radius: 5px; line-height: 0;
-      opacity: 0;
-      transition: opacity .15s, color .15s, background .15s;
-      flex-shrink: 0;
+      opacity: 0; transition: opacity .15s, color .15s, background .15s; flex-shrink: 0;
     }
     .ocard:hover .oc-del { opacity: 1; }
     .oc-del:hover { color: var(--bad); background: var(--bad-lt); }
     @media (max-width: 640px) { .oc-del { opacity: 1; } }
 
-    .oc-meta {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 7px 14px;
-      margin-bottom: 12px;
-    }
-    @media (min-width: 480px) { .oc-meta { grid-template-columns: repeat(4, 1fr); } }
-
-    .oc-meta-lbl {
-      font-size: 10.5px; font-weight: 600;
-      color: var(--txt3);
-      text-transform: uppercase; letter-spacing: .4px;
-      margin-bottom: 2px;
-    }
+    .oc-meta { display: grid; grid-template-columns: repeat(2,1fr); gap: 7px 14px; margin-bottom: 12px; }
+    @media (min-width: 480px) { .oc-meta { grid-template-columns: repeat(4,1fr); } }
+    .oc-meta-lbl { font-size: 10.5px; font-weight: 600; color: var(--txt3); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 2px; }
     .oc-meta-val { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
-    .oc-foot {
-      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-
+    .oc-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--border); }
     .oc-profit { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
     .oc-profit.ok  { color: var(--ok); }
     .oc-profit.bad { color: var(--bad); }
+    .oc-pill { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 100px; font-variant-numeric: tabular-nums; }
+    .oc-pill.ok  { background: var(--ok-lt);  color: var(--ok); }
+    .oc-pill.bad { background: var(--bad-lt); color: var(--bad); }
 
-    .oc-margin {
-      font-size: 12px; font-weight: 600;
-      padding: 2px 9px; border-radius: 100px;
-      font-variant-numeric: tabular-nums;
-    }
-    .oc-margin.ok  { background: var(--ok-lt);  color: var(--ok); }
-    .oc-margin.bad { background: var(--bad-lt); color: var(--bad); }
-
-    .oc-rem {
-      margin-left: auto;
-      font-size: 11.5px; font-weight: 500;
-      color: var(--warn);
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* Empty state */
-    .empty {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 14px;
-      padding: 56px 20px; text-align: center;
-    }
-    .empty-icon {
-      width: 72px; height: 72px;
-      background: var(--accent-lt);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
+    /* ══════════════════════════════════
+       EMPTY STATE
+    ══════════════════════════════════ */
+    .empty { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 56px 20px; text-align: center; }
+    .empty-icon { width: 72px; height: 72px; background: var(--acc-lt); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     .empty-title { font-size: 17px; font-weight: 600; }
     .empty-sub   { font-size: 13.5px; color: var(--txt2); max-width: 280px; }
 
-    /* ═══════════════════════════════════════
-       FORM / DETAIL SHARED CARDS
-    ═══════════════════════════════════════ */
-    .fsec {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 16px;
-      margin-bottom: 10px;
-    }
+    /* ══════════════════════════════════
+       FORM SECTIONS
+    ══════════════════════════════════ */
+    .fsec { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 10px; }
+    .fsec-ttl { font-size: 10.5px; font-weight: 700; color: var(--txt3); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 14px; }
 
-    .fsec-ttl {
-      font-size: 10.5px; font-weight: 700;
-      color: var(--txt3);
-      text-transform: uppercase; letter-spacing: .7px;
-      margin-bottom: 14px;
-    }
-
-    /* ── Grid rows ── */
-    .frow {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
+    .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
     .frow.full { grid-template-columns: 1fr; }
+    .frow.tri  { grid-template-columns: 1fr 1fr 1fr; }
     .frow:last-child { margin-bottom: 0; }
-
     @media (max-width: 480px) {
-      .frow { grid-template-columns: 1fr; }
-      .frow.keep2 { grid-template-columns: 1fr 1fr; }
+      .frow      { grid-template-columns: 1fr; }
+      .frow.keep2{ grid-template-columns: 1fr 1fr; }
     }
 
     .fg { display: flex; flex-direction: column; gap: 4px; }
-
     .flbl { font-size: 11.5px; font-weight: 500; color: var(--txt2); }
 
     .finp {
-      height: 40px; width: 100%;
-      padding: 0 12px;
-      background: var(--surface);
-      border: 1px solid var(--in-border);
-      border-radius: var(--r-md);
-      font-size: 14px; font-family: inherit; color: var(--txt);
-      outline: none;
+      height: 40px; width: 100%; padding: 0 12px;
+      background: var(--surface); border: 1px solid var(--in-bdr); border-radius: var(--r-md);
+      font-size: 14px; font-family: inherit; color: var(--txt); outline: none;
       transition: border-color .15s, box-shadow .15s;
       font-variant-numeric: tabular-nums;
     }
-    .finp:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(61,130,246,.15);
-    }
-    .finp.nm {
-      font-size: 15px; font-weight: 500;
-      font-variant-numeric: normal;
-    }
+    .finp:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(61,130,246,.15); }
+    .finp.nm { font-size: 15px; font-weight: 500; font-variant-numeric: normal; }
 
     .fcalc {
-      height: 40px;
-      display: flex; align-items: center;
-      padding: 0 12px;
-      background: #F9FAFB;
-      border: 1px solid var(--border);
-      border-radius: var(--r-md);
-      font-size: 14px; font-weight: 600;
-      font-variant-numeric: tabular-nums;
+      height: 40px; display: flex; align-items: center; padding: 0 12px;
+      background: #F9FAFB; border: 1px solid var(--border); border-radius: var(--r-md);
+      font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums;
     }
 
-    /* ── Sell rows ── */
+    /* ══════════════════════════════════
+       SELL ROWS
+    ══════════════════════════════════ */
     .sell-list { display: flex; flex-direction: column; gap: 8px; }
 
-    .srow {
-      background: #F9FAFB;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-    }
+    .srow { background: #F9FAFB; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+    .srow-idx { font-size: 10px; font-weight: 700; color: var(--txt3); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
 
-    .srow-idx {
-      font-size: 10px; font-weight: 700; color: var(--txt3);
-      text-transform: uppercase; letter-spacing: .5px;
-      margin-bottom: 7px;
+    .srow-top { display: grid; grid-template-columns: 1fr 1fr 80px 80px auto; gap: 7px; align-items: flex-end; margin-bottom: 8px; }
+    @media (max-width: 600px) {
+      .srow-top { grid-template-columns: 1fr 1fr; gap: 7px; }
+      .srow-top .srow-rm { grid-column: 2; justify-self: end; }
     }
-
-    .srow-ins {
-      display: flex; gap: 7px; align-items: flex-end;
-      margin-bottom: 8px;
-    }
-    .srow-ins .fg { flex: 1; }
 
     .sinp {
-      height: 36px; width: 100%;
-      padding: 0 10px;
-      background: var(--surface);
-      border: 1px solid var(--in-border);
-      border-radius: 7px;
-      font-size: 13.5px; font-family: inherit; color: var(--txt);
-      outline: none;
+      height: 36px; width: 100%; padding: 0 10px;
+      background: var(--surface); border: 1px solid var(--in-bdr); border-radius: 7px;
+      font-size: 13.5px; font-family: inherit; color: var(--txt); outline: none;
       font-variant-numeric: tabular-nums;
       transition: border-color .15s, box-shadow .15s;
     }
-    .sinp:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(61,130,246,.14);
-    }
+    .sinp:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(61,130,246,.14); }
 
     .srow-rm {
-      width: 36px; height: 36px;
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      color: var(--txt3);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
+      width: 36px; height: 36px; background: none;
+      border: 1px solid var(--border); border-radius: 7px; color: var(--txt3);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
       transition: color .15s, border-color .15s, background .15s;
     }
     .srow-rm:hover { color: var(--bad); border-color: var(--bad); background: var(--bad-lt); }
 
-    .srow-calcs {
-      display: flex; gap: 14px; flex-wrap: wrap;
-      font-size: 12px;
-    }
+    .srow-calcs { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; }
     .scalc { display: flex; align-items: center; gap: 4px; }
     .scalc-lbl { color: var(--txt3); font-weight: 500; }
-    .scalc-val {
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-    }
-    .scalc-val.slip-pos { color: var(--bad); }
-    .scalc-val.slip-ok  { color: var(--ok); }
+    .scalc-val { font-weight: 600; font-variant-numeric: tabular-nums; }
+    .scalc-val.ok  { color: var(--ok); }
+    .scalc-val.bad { color: var(--bad); }
 
     .btn-add-sell {
       display: flex; align-items: center; justify-content: center; gap: 5px;
-      width: 100%; height: 38px;
-      margin-top: 8px;
-      background: transparent;
-      border: 1.5px dashed var(--in-border);
-      border-radius: 10px;
-      color: var(--accent);
-      font-size: 13px; font-weight: 600;
+      width: 100%; height: 38px; margin-top: 8px;
+      background: transparent; border: 1.5px dashed var(--in-bdr); border-radius: 10px;
+      color: var(--accent); font-size: 13px; font-weight: 600;
       transition: background .15s, border-color .15s;
     }
-    .btn-add-sell:hover { background: var(--accent-lt); border-color: var(--accent); }
+    .btn-add-sell:hover { background: var(--acc-lt); border-color: var(--accent); }
 
-    /* Oversell warning */
-    .warn-banner {
-      display: none;
-      align-items: center; gap: 7px;
-      background: var(--bad-lt);
-      border: 1px solid #FCA5A5;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 12.5px; font-weight: 500;
-      color: var(--bad);
-      margin-bottom: 10px;
-    }
-    .warn-banner.on { display: flex; }
-
-    /* Live summary block */
-    .lsummary {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r);
-      padding: 16px;
-      margin-bottom: 10px;
-    }
-    .lsummary-ttl {
-      font-size: 10.5px; font-weight: 700; color: var(--txt3);
-      text-transform: uppercase; letter-spacing: .7px;
-      margin-bottom: 12px;
-    }
-
-    .sr {
-      display: flex; align-items: center;
-      justify-content: space-between;
-      padding: 7px 0;
-      border-bottom: 1px solid #F3F4F6;
-    }
+    /* ══════════════════════════════════
+       LIVE SUMMARY
+    ══════════════════════════════════ */
+    .lsummary { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 10px; }
+    .lsummary-ttl { font-size: 10.5px; font-weight: 700; color: var(--txt3); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 12px; }
+    .sr { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #F3F4F6; }
     .sr:last-child { border-bottom: none; }
     .sr-lbl { font-size: 13px; color: var(--txt2); }
-    .sr-val {
-      font-size: 14px; font-weight: 600;
-      font-variant-numeric: tabular-nums;
-    }
+    .sr-val { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
     .sr-val.ok   { color: var(--ok); }
     .sr-val.bad  { color: var(--bad); }
     .sr-val.warn { color: var(--warn); }
 
-    /* ── Buttons ── */
+    /* ══════════════════════════════════
+       BUTTONS
+    ══════════════════════════════════ */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      height: 40px; padding: 0 18px;
-      border-radius: var(--r-md);
+      height: 40px; padding: 0 18px; border-radius: var(--r-md);
       font-size: 14px; font-weight: 600; border: none;
-      transition: background .15s, opacity .15s;
-      white-space: nowrap;
+      transition: background .15s, opacity .15s; white-space: nowrap;
     }
     .btn:disabled { opacity: .35; cursor: not-allowed; pointer-events: none; }
     .btn-prim { background: var(--accent); color: #fff; }
-    .btn-prim:hover { background: var(--accent-hv); }
+    .btn-prim:hover { background: var(--acc-hv); }
     .btn-sec  { background: var(--surface); color: var(--txt); border: 1px solid var(--border); }
     .btn-sec:hover  { background: #F9FAFB; }
     .btn-dang { background: var(--bad-lt); color: var(--bad); }
     .btn-dang:hover { background: #FEE2E2; }
 
-    .form-acts {
-      display: flex; gap: 8px;
-      padding-bottom: max(16px, env(safe-area-inset-bottom));
-    }
+    .form-acts { display: flex; gap: 8px; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
 
-    /* ═══════════════════════════════════════
-       DETAIL VIEW
-    ═══════════════════════════════════════ */
+    /* ══════════════════════════════════
+       DETAIL
+    ══════════════════════════════════ */
     .df { display: flex; flex-direction: column; gap: 3px; }
-    .df-lbl {
-      font-size: 10.5px; font-weight: 600; color: var(--txt3);
-      text-transform: uppercase; letter-spacing: .4px;
-    }
-    .df-val {
-      font-size: 14px; font-weight: 600;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .dsrow {
-      background: #F9FAFB;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-bottom: 7px;
-    }
+    .df-lbl { font-size: 10.5px; font-weight: 600; color: var(--txt3); text-transform: uppercase; letter-spacing: .4px; }
+    .df-val { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .dsrow { background: #F9FAFB; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-bottom: 7px; }
     .dsrow:last-child { margin-bottom: 0; }
-    .dsrow-idx {
-      font-size: 10px; font-weight: 700; color: var(--txt3);
-      text-transform: uppercase; letter-spacing: .5px;
-      margin-bottom: 8px;
-    }
+    .dsrow-idx { font-size: 10px; font-weight: 700; color: var(--txt3); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
 
-    /* ═══════════════════════════════════════
-       CONFIRM MODAL
-    ═══════════════════════════════════════ */
-    .overlay {
-      position: fixed; inset: 0;
-      background: rgba(17,20,24,.55);
-      z-index: 200;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 16px;
-    }
+    /* ══════════════════════════════════
+       MODAL
+    ══════════════════════════════════ */
+    .overlay { position: fixed; inset: 0; background: rgba(17,20,24,.55); z-index: 200; display: none; align-items: flex-end; justify-content: center; padding: 16px; }
     .overlay.on { display: flex; }
     @media (min-width: 480px) { .overlay { align-items: center; } }
-
-    .modal {
-      background: var(--surface);
-      border-radius: 16px;
-      padding: 24px;
-      width: 100%; max-width: 360px;
-      box-shadow: 0 24px 80px rgba(0,0,0,.22);
-      animation: pop-in .18s cubic-bezier(.34,1.56,.64,1);
-    }
-    @keyframes pop-in {
-      from { opacity: 0; transform: scale(.93); }
-      to   { opacity: 1; transform: scale(1); }
-    }
+    .modal { background: var(--surface); border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; box-shadow: 0 24px 80px rgba(0,0,0,.22); animation: pop-in .18s cubic-bezier(.34,1.56,.64,1); }
+    @keyframes pop-in { from { opacity:0; transform:scale(.93); } to { opacity:1; transform:scale(1); } }
     .modal-ttl  { font-size: 16px; font-weight: 700; margin-bottom: 7px; }
     .modal-body { font-size: 13.5px; color: var(--txt2); margin-bottom: 20px; }
     .modal-acts { display: flex; gap: 8px; justify-content: flex-end; }
 
-    /* ═══════════════════════════════════════
+    /* ══════════════════════════════════
        SCROLLBAR
-    ═══════════════════════════════════════ */
+    ══════════════════════════════════ */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
   </style>
 </head>
 <body>
-
 <div class="app">
 
-  <!-- ══════════════════════
-       HEADER (rewritten per view)
-  ══════════════════════ -->
   <header class="hdr" id="hdr">
     <div class="hdr-logo">
       <div class="hdr-logo-icon">P2P</div>
@@ -567,92 +309,70 @@
     </button>
   </header>
 
-  <!-- ══════════════════════
-       CONTENT
-  ══════════════════════ -->
   <main class="content">
 
-    <!-- ▶ LIST VIEW ◀ -->
+    <!-- ▶ LIST ◀ -->
     <section id="view-list" class="view active">
-
       <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-lbl">Прибыль (USDT)</div>
-          <div class="stat-val" id="st-profit">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-lbl">Выручка (₽)</div>
-          <div class="stat-val" id="st-vol">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-lbl">Маржа</div>
-          <div class="stat-val" id="st-margin">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-lbl">Ордеров</div>
-          <div class="stat-val" id="st-count">0</div>
-        </div>
+        <div class="stat-card"><div class="stat-lbl">Прибыль (USDT)</div><div class="stat-val" id="st-profit">—</div></div>
+        <div class="stat-card"><div class="stat-lbl">Выручка (₽)</div>   <div class="stat-val" id="st-vol">—</div></div>
+        <div class="stat-card"><div class="stat-lbl">Ср. маржа</div>     <div class="stat-val" id="st-margin">—</div></div>
+        <div class="stat-card"><div class="stat-lbl">Ордеров</div>       <div class="stat-val" id="st-count">0</div></div>
       </div>
-
       <div class="cards" id="cards"></div>
-
     </section>
 
-    <!-- ▶ FORM VIEW ◀ -->
+    <!-- ▶ FORM ◀ -->
     <section id="view-form" class="view">
 
-      <!-- Name -->
       <div class="fsec">
-        <input type="text" class="finp nm" id="f-name"
-               placeholder="Название ордера (необязательно)"
-               oninput="onPurchaseInput()" />
+        <input type="text" class="finp nm" id="f-name" placeholder="Название ордера (необязательно)" oninput="onBuyInput()">
       </div>
 
-      <!-- Purchase -->
+      <!-- Покупка -->
       <div class="fsec">
-        <div class="fsec-ttl">Покупка (репленишмент)</div>
-        <div class="frow full">
-          <div class="fg">
-            <label class="flbl">Курс покупки (₽/USDT)</label>
-            <input type="number" class="finp" id="f-buyRate"
-                   placeholder="78.00" min="0" step="any"
-                   oninput="onPurchaseInput()" />
-          </div>
-        </div>
+        <div class="fsec-ttl">Покупка</div>
         <div class="frow keep2">
           <div class="fg">
-            <label class="flbl">Ср. плановый курс продажи</label>
-            <div class="fcalc" id="fc-plan">—</div>
+            <label class="flbl">Курс покупки (₽/USDT)</label>
+            <input type="number" class="finp" id="f-buyRate" placeholder="78.00" min="0" step="any" oninput="onBuyInput()">
           </div>
           <div class="fg">
-            <label class="flbl">Продано USDT</label>
-            <div class="fcalc" id="fc-sold">—</div>
+            <label class="flbl">Сумма выплаты (₽)</label>
+            <input type="number" class="finp" id="f-payment" placeholder="7 800.00" min="0" step="any" oninput="onBuyInput()">
+          </div>
+        </div>
+        <div class="frow keep2" style="margin-top:2px">
+          <div class="fg">
+            <label class="flbl">Получено USDT</label>
+            <div class="fcalc" id="fc-bought">—</div>
+          </div>
+          <div class="fg">
+            <label class="flbl">Ср. плановый курс продажи</label>
+            <div class="fcalc" id="fc-planrate">—</div>
           </div>
         </div>
       </div>
 
-      <!-- Sell orders -->
+      <!-- Ордера продажи -->
       <div class="fsec">
         <div class="fsec-ttl">Ордера продажи</div>
-        <div class="sell-list" id="sell-list"></div>
+        <div id="sell-list"></div>
         <button class="btn-add-sell" onclick="addSell()">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6.75 1.25a.75.75 0 00-1.5 0V5.25H1.25a.75.75 0 000 1.5H5.25v4a.75.75 0 001.5 0v-4h4a.75.75 0 000-1.5h-4V1.25z"/></svg>
-          Добавить продажу
+          Добавить ордер продажи
         </button>
       </div>
 
-      <!-- Live summary -->
+      <!-- Итого -->
       <div class="lsummary">
         <div class="lsummary-ttl">Итого</div>
-        <div class="sr"><span class="sr-lbl">Продано USDT</span>            <span class="sr-val" id="fs-sold">—</span></div>
-        <div class="sr"><span class="sr-lbl">Выручка (₽)</span>             <span class="sr-val" id="fs-rev">—</span></div>
-        <div class="sr"><span class="sr-lbl">Прибыль факт. (USDT)</span>    <span class="sr-val" id="fs-prof">—</span></div>
-        <div class="sr"><span class="sr-lbl">Прибыль план. (USDT)</span>    <span class="sr-val" id="fs-plan">—</span></div>
-        <div class="sr"><span class="sr-lbl">Откл. факт/план (USDT)</span>  <span class="sr-val" id="fs-dev">—</span></div>
-        <div class="sr"><span class="sr-lbl">Средняя маржа %</span>         <span class="sr-val" id="fs-marg">—</span></div>
+        <div class="sr"><span class="sr-lbl">Куплено USDT (pokupkausdt)</span>   <span class="sr-val" id="fs-bought">—</span></div>
+        <div class="sr"><span class="sr-lbl">USDT клиентам (prodajausdt)</span>  <span class="sr-val" id="fs-prodaja">—</span></div>
+        <div class="sr"><span class="sr-lbl">Выручка (₽)</span>                  <span class="sr-val" id="fs-rev">—</span></div>
+        <div class="sr"><span class="sr-lbl">Прибыль (USDT)</span>               <span class="sr-val" id="fs-profit">—</span></div>
       </div>
 
-      <!-- Actions -->
       <div class="form-acts">
         <button class="btn btn-prim" id="btn-save" onclick="saveOrder()" disabled>Сохранить</button>
         <button class="btn btn-sec"  onclick="goList()">Отмена</button>
@@ -660,7 +380,7 @@
 
     </section>
 
-    <!-- ▶ DETAIL VIEW ◀ -->
+    <!-- ▶ DETAIL ◀ -->
     <section id="view-detail" class="view">
       <div id="detail-body"></div>
     </section>
@@ -668,9 +388,7 @@
   </main>
 </div>
 
-<!-- ══════════════════════
-     CONFIRM MODAL
-══════════════════════ -->
+<!-- Confirm modal -->
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-ttl"  id="modal-ttl">Удалить ордер?</div>
@@ -685,9 +403,9 @@
 <script>
 'use strict';
 
-/* ════════════════════════════════════════════════
+/* ═══════════════════════════════════
    STATE
-════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 const LS_KEY   = 'p2p_orders';
 const LS_DRAFT = 'p2p_draft';
 
@@ -696,187 +414,147 @@ let draft    = null;
 let editId   = null;
 let saveTimer = null;
 
-/* ════════════════════════════════════════════════
+/* ═══════════════════════════════════
    PERSISTENCE
-════════════════════════════════════════════════ */
-function loadOrders() {
-  try { orders = JSON.parse(localStorage.getItem(LS_KEY)) || []; }
-  catch { orders = []; }
-}
+═══════════════════════════════════ */
+function loadOrders()  { try { orders = JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch { orders = []; } }
+function persOrders()  { localStorage.setItem(LS_KEY, JSON.stringify(orders)); }
+function saveDraftLS() { if (draft) localStorage.setItem(LS_DRAFT, JSON.stringify(draft)); }
+function clearDraftLS(){ localStorage.removeItem(LS_DRAFT); }
 
-function persOrders() {
-  localStorage.setItem(LS_KEY, JSON.stringify(orders));
-}
-
-function saveDraftLS() {
-  if (draft) localStorage.setItem(LS_DRAFT, JSON.stringify(draft));
-}
-
-function clearDraftLS() {
-  localStorage.removeItem(LS_DRAFT);
-}
-
-/* ════════════════════════════════════════════════
-   ID GENERATION
-════════════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   IDs
+═══════════════════════════════════ */
 function genId()  { return 'ord_'  + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
 function genSid() { return 'sell_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
 
-/* ════════════════════════════════════════════════
-   FORMATTING
-════════════════════════════════════════════════ */
-const fmtRub  = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const fmtUsdt = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 6, maximumFractionDigits: 6 });
-const fmtPct  = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const fmtRate = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+/* ═══════════════════════════════════
+   FORMATTERS
+═══════════════════════════════════ */
+const fmtRub  = new Intl.NumberFormat('ru-RU', { minimumFractionDigits:2, maximumFractionDigits:2 });
+const fmtUsdt = new Intl.NumberFormat('ru-RU', { minimumFractionDigits:6, maximumFractionDigits:6 });
+const fmtPct  = new Intl.NumberFormat('ru-RU', { minimumFractionDigits:2, maximumFractionDigits:2 });
+const fmtRate = new Intl.NumberFormat('ru-RU', { minimumFractionDigits:2, maximumFractionDigits:4 });
 
-function fRub(n)  { return ok(n) ? fmtRub.format(n)  + '\u00a0₽'    : '—'; }
-function fUsdt(n) { return ok(n) ? fmtUsdt.format(n) + '\u00a0USDT' : '—'; }
-function fPct(n)  { return ok(n) ? fmtPct.format(n)  + '\u00a0%'    : '—'; }
-function fRate(n) { return ok(n) ? fmtRate.format(n)                 : '—'; }
-function ok(n)    { return typeof n === 'number' && isFinite(n); }
+function fRub(n)  { return fin(n) ? fmtRub.format(n)  + '\u00a0₽'    : '—'; }
+function fUsdt(n) { return fin(n) ? fmtUsdt.format(n) + '\u00a0USDT' : '—'; }
+function fPct(n)  { return fin(n) ? fmtPct.format(n)  + '\u00a0%'    : '—'; }
+function fRate(n) { return fin(n) ? fmtRate.format(n)                 : '—'; }
+function fin(n)   { return typeof n === 'number' && isFinite(n); }
 
 function fDate(iso) {
   if (!iso) return '';
   return new Date(iso).toLocaleDateString('ru-RU', { day:'numeric', month:'short', year:'numeric' });
 }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-function esc(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+/* ═══════════════════════════════════
+   CORE FORMULA
+   (exact translation of Python script)
 
-/* ════════════════════════════════════════════════
-   CALCULATIONS
-   Profit model: sell USDT → get RUB → buy back at buyRate
-   Profit (USDT) = totalRevenue / buyRate − totalSold
-════════════════════════════════════════════════ */
+   pokupkausdt = sumpokupki / kurspokupki
+   prodajausdt = summaprodaji / (kursprodaji * stavka)
+   pribyl = abs((prodajausdt - doplata/kursprodaji) - pokupkausdt)
+
+   For multiple sell orders:
+   pokupkausdt = paymentAmount / buyRate
+   totalProdaja = Σ (prodajausdt_i − doplata_i/sellRate_i)
+   profit = pokupkausdt − totalProdaja   (positive = profit)
+═══════════════════════════════════ */
 function calc(o) {
-  const buyRate = +o.buyRate || 0;
+  const buyRate       = +o.buyRate       || 0;
+  const paymentAmount = +o.paymentAmount || 0;
+
+  // pokupkausdt = сумма выплаты / курс покупки
+  const pokupkausdt = buyRate > 0 ? paymentAmount / buyRate : 0;
 
   const sells = (o.sells || []).map(s => {
-    const usdtAmount      = +s.usdtAmount || 0;
-    const sellRate        = +s.sellRate   || 0;
-    const profitPct       = +s.profitPct  || 0;
-    // Planned sell rate to hit profitPct
-    const plannedSellRate = buyRate > 0 ? buyRate * (1 + profitPct / 100) : 0;
-    // Revenue in RUB
-    const revenue         = usdtAmount * sellRate;
-    // Actual profit in USDT: bought back − sold
-    // = revenue/buyRate − usdtAmount = usdtAmount*(sellRate/buyRate − 1)
-    const profitUsdt      = buyRate > 0 ? revenue / buyRate - usdtAmount : 0;
-    // Planned profit in USDT (formula): usdtAmount × profitPct/100
-    const plannedProfitUsdt = usdtAmount * profitPct / 100;
-    // Deviation: actual − planned (positive = better than plan)
-    const devUsdt         = profitUsdt - plannedProfitUsdt;
-    return {
-      ...s, usdtAmount, sellRate, profitPct, plannedSellRate,
-      revenue, profitUsdt, plannedProfitUsdt, devUsdt,
-    };
+    const sellRate   = +s.sellRate   || 0;
+    const orderAmount= +s.orderAmount|| 0;
+    const profitPct  = +s.profitPct  || 0;
+    const topUp      = +s.topUp      || 0;
+
+    const stavka       = 1 + profitPct / 100;
+    // prodajausdt = сумма ордера / (курс продажи * ставка)
+    const prodajausdt  = (sellRate > 0 && stavka > 0) ? orderAmount / (sellRate * stavka) : 0;
+    const topUpUsdt    = sellRate > 0 ? topUp / sellRate : 0;
+    const adjustment   = prodajausdt - topUpUsdt;   // USDT net "given out" for this sell
+    const effectiveRate = sellRate * stavka;         // actual rate client pays
+
+    return { ...s, sellRate, orderAmount, profitPct, topUp,
+             stavka, prodajausdt, topUpUsdt, adjustment, effectiveRate };
   });
 
-  const totalRevenue       = sells.reduce((a,s) => a + s.revenue,          0);
-  const totalSold          = sells.reduce((a,s) => a + s.usdtAmount,        0);
-  const totalProfitUsdt    = buyRate > 0 ? totalRevenue / buyRate - totalSold : 0;
-  const totalPlannedProfit = sells.reduce((a,s) => a + s.plannedProfitUsdt, 0);
-  const totalDevUsdt       = totalProfitUsdt - totalPlannedProfit;
-  // Weighted average planned sell rate
-  const wtdPlan            = totalSold > 0
-    ? sells.reduce((a,s) => a + s.plannedSellRate * s.usdtAmount, 0) / totalSold : 0;
-  // Average margin %: (avgSellRate/buyRate − 1)*100
-  const avgSellRate        = totalSold > 0 ? totalRevenue / totalSold : 0;
-  const avgMarginPct       = buyRate > 0 && avgSellRate > 0
-    ? (avgSellRate / buyRate - 1) * 100 : 0;
+  const totalProdaja  = sells.reduce((a,s) => a + s.adjustment, 0);
+  const totalRevenue  = sells.reduce((a,s) => a + s.orderAmount, 0);
+  const profit        = pokupkausdt - totalProdaja;  // positive = profit
+
+  // weighted avg planned sell rate
+  const totalOrders   = sells.reduce((a,s) => a + s.orderAmount, 0);
+  const wtdEffRate    = totalOrders > 0
+    ? sells.reduce((a,s) => a + s.effectiveRate * s.orderAmount, 0) / totalOrders : 0;
 
   return {
-    buyRate,
-    sells, totalRevenue, totalSold,
-    totalProfitUsdt, totalPlannedProfit, totalDevUsdt,
-    wtdPlan, avgSellRate, avgMarginPct,
+    buyRate, paymentAmount, pokupkausdt,
+    sells, totalProdaja, totalRevenue, profit, wtdEffRate,
   };
 }
 
-/* ════════════════════════════════════════════════
+/* ═══════════════════════════════════
    VIEW MANAGEMENT
-════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 function showView(name) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + name).classList.add('active');
 
-  const hdr = document.getElementById('hdr');
+  const h = document.getElementById('hdr');
   if (name === 'list') {
-    hdr.innerHTML = `
-      <div class="hdr-logo">
-        <div class="hdr-logo-icon">P2P</div>
-        P2P Калькулятор
-      </div>
+    h.innerHTML = `
+      <div class="hdr-logo"><div class="hdr-logo-icon">P2P</div>P2P Калькулятор</div>
       <button class="btn-new" onclick="newOrder()">
         <svg width="11" height="11" viewBox="0 0 11 11" fill="currentColor"><path d="M5.75 1.25a.75.75 0 00-1.5 0V4.75H.75a.75.75 0 000 1.5H4.25v3.5a.75.75 0 001.5 0V6.25h3.5a.75.75 0 000-1.5H5.75V1.25z"/></svg>
         Новый ордер
       </button>`;
-  } else if (name === 'form') {
-    const ttl = editId ? 'Редактировать ордер' : 'Новый ордер';
-    hdr.innerHTML = `
+  } else {
+    const ttl = name === 'form' ? (editId ? 'Редактировать ордер' : 'Новый ордер') : 'Ордер';
+    h.innerHTML = `
       <button class="hdr-back" onclick="goList()">
         <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1L1 6l5 5"/></svg>
         Назад
       </button>
       <div class="hdr-title">${ttl}</div>
-      <div class="hdr-spacer"></div>`;
-  } else if (name === 'detail') {
-    hdr.innerHTML = `
-      <button class="hdr-back" onclick="goList()">
-        <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1L1 6l5 5"/></svg>
-        Назад
-      </button>
-      <div class="hdr-title">Ордер</div>
-      <div class="hdr-spacer"></div>`;
+      <div class="hdr-spc"></div>`;
   }
-
   window.scrollTo(0, 0);
 }
 
-/* ════════════════════════════════════════════════
+/* ═══════════════════════════════════
    LIST VIEW
-════════════════════════════════════════════════ */
-function goList() {
-  showView('list');
-  renderList();
-}
+═══════════════════════════════════ */
+function goList() { showView('list'); renderList(); }
 
 function renderList() {
   const sorted = [...orders].sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
 
-  /* cumulative stats */
-  let totProfit = 0, totVol = 0, totSold = 0;
-  sorted.forEach(o => {
-    const c = calc(o);
-    totProfit += c.totalProfitUsdt;
-    totVol    += c.totalRevenue;
-    totSold   += c.totalSold;
-  });
-  const totMargin = totSold > 0 && totVol > 0
-    ? sorted.reduce((a,o) => {
-        const c = calc(o);
-        return a + c.avgMarginPct * c.totalSold;
-      }, 0) / totSold
-    : NaN;
-  const hasOrders = sorted.length > 0;
+  let totProfit = 0, totVol = 0;
+  sorted.forEach(o => { const c = calc(o); totProfit += c.profit; totVol += c.totalRevenue; });
+  const has = sorted.length > 0;
 
-  const profEl  = document.getElementById('st-profit');
-  const volEl   = document.getElementById('st-vol');
-  const margEl  = document.getElementById('st-margin');
-
-  profEl.textContent = hasOrders ? (totProfit >= 0 ? '+' : '') + fmtUsdt.format(totProfit) + '\u00a0USDT' : '—';
-  profEl.className   = 'stat-val' + (hasOrders ? (totProfit >= 0 ? ' ok' : ' bad') : '');
-  volEl.textContent  = hasOrders ? fRub(totVol) : '—';
-  margEl.textContent = isFinite(totMargin) ? fPct(totMargin) : '—';
-  margEl.className   = 'stat-val' + (isFinite(totMargin) ? (totMargin >= 0 ? ' ok' : ' bad') : '');
+  const pe = document.getElementById('st-profit');
+  pe.textContent = has ? (totProfit >= 0 ? '+' : '') + fmtUsdt.format(totProfit) + '\u00a0USDT' : '—';
+  pe.className   = 'stat-val' + (has ? (totProfit >= 0 ? ' ok' : ' bad') : '');
+  document.getElementById('st-vol').textContent   = has ? fRub(totVol) : '—';
   document.getElementById('st-count').textContent = sorted.length;
 
-  const container = document.getElementById('cards');
+  // avg margin across all orders
+  const totalSells = sorted.reduce((a,o) => a + (o.sells||[]).length, 0);
+  document.getElementById('st-margin').textContent = totalSells > 0
+    ? fPct(sorted.reduce((a,o) => {
+        return a + (o.sells||[]).reduce((b,s) => b + (+s.profitPct||0), 0);
+      }, 0) / totalSells)
+    : '—';
 
+  const container = document.getElementById('cards');
   if (!sorted.length) {
     container.innerHTML = `
       <div class="empty">
@@ -889,11 +567,8 @@ function renderList() {
           </svg>
         </div>
         <div class="empty-title">Нет ордеров</div>
-        <div class="empty-sub">Создайте первый ордер, чтобы начать отслеживать P2P-сделки</div>
-        <button class="btn btn-prim" onclick="newOrder()">
-          <svg width="11" height="11" viewBox="0 0 11 11" fill="currentColor"><path d="M5.75 1.25a.75.75 0 00-1.5 0V4.75H.75a.75.75 0 000 1.5H4.25v3.5a.75.75 0 001.5 0V6.25h3.5a.75.75 0 000-1.5H5.75V1.25z"/></svg>
-          Новый ордер
-        </button>
+        <div class="empty-sub">Создайте первый ордер для отслеживания P2P-сделок</div>
+        <button class="btn btn-prim" onclick="newOrder()">+ Новый ордер</button>
       </div>`;
     return;
   }
@@ -901,98 +576,55 @@ function renderList() {
   container.innerHTML = sorted.map(o => {
     const c   = calc(o);
     const lbl = o.name || ('Ордер от ' + fDate(o.createdAt));
+    const pp  = c.profit >= 0;
     return `
-      <div class="ocard"
-           onclick="viewOrder('${o.id}')"
-           ontouchstart="tsStart('${o.id}',event)"
-           ontouchend="tsEnd(event)"
-           ontouchmove="tsMove(event)">
-
+      <div class="ocard" onclick="viewOrder('${o.id}')"
+           ontouchstart="tsStart('${o.id}',event)" ontouchend="tsEnd()" ontouchmove="tsMove(event)">
         <div class="oc-top">
           <div>
             <div class="oc-name">${esc(lbl)}</div>
             <div class="oc-date">${fDate(o.createdAt)}</div>
           </div>
-          <button class="oc-del"
-                  onclick="event.stopPropagation();askDel('${o.id}')"
-                  title="Удалить ордер">
+          <button class="oc-del" onclick="event.stopPropagation();askDel('${o.id}')" title="Удалить">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
               <path d="M5.25 1.75a.5.5 0 01.5-.5h2.5a.5.5 0 01.5.5v.75H12a.5.5 0 010 1H2a.5.5 0 010-1h3.25V1.75zM3.1 4.5h7.8l-.638 7.01A1 1 0 019.267 12.5H4.733a1 1 0 01-.994-.99L3.1 4.5zM5.5 6a.5.5 0 011 0v4a.5.5 0 01-1 0V6zm3 0a.5.5 0 011 0v4a.5.5 0 01-1 0V6z"/>
             </svg>
           </button>
         </div>
-
         <div class="oc-meta">
-          <div>
-            <div class="oc-meta-lbl">Курс покупки</div>
-            <div class="oc-meta-val">${fRate(c.buyRate)}&nbsp;₽</div>
-          </div>
-          <div>
-            <div class="oc-meta-lbl">Продано USDT</div>
-            <div class="oc-meta-val">${fmtUsdt.format(c.totalSold)}</div>
-          </div>
-          <div>
-            <div class="oc-meta-lbl">Выручка</div>
-            <div class="oc-meta-val">${fmtRub.format(c.totalRevenue)}&nbsp;₽</div>
-          </div>
-          <div>
-            <div class="oc-meta-lbl">Продаж</div>
-            <div class="oc-meta-val">${o.sells ? o.sells.length : 0}</div>
-          </div>
+          <div><div class="oc-meta-lbl">Курс покупки</div>  <div class="oc-meta-val">${fRate(c.buyRate)}&nbsp;₽</div></div>
+          <div><div class="oc-meta-lbl">Выплата</div>       <div class="oc-meta-val">${fRub(c.paymentAmount)}</div></div>
+          <div><div class="oc-meta-lbl">pokupkausdt</div>   <div class="oc-meta-val">${fmtUsdt.format(c.pokupkausdt)}</div></div>
+          <div><div class="oc-meta-lbl">Продаж</div>        <div class="oc-meta-val">${(o.sells||[]).length}</div></div>
         </div>
-
         <div class="oc-foot">
-          <span class="oc-profit ${c.totalProfitUsdt >= 0 ? 'ok' : 'bad'}">${c.totalProfitUsdt >= 0 ? '+' : ''}${fmtUsdt.format(c.totalProfitUsdt)}&nbsp;USDT</span>
-          <span class="oc-margin ${c.avgMarginPct >= 0 ? 'ok' : 'bad'}">${c.avgMarginPct >= 0 ? '+' : ''}${fPct(c.avgMarginPct)}</span>
+          <span class="oc-profit ${pp?'ok':'bad'}">${pp?'+':''}${fmtUsdt.format(c.profit)}&nbsp;USDT</span>
+          <span class="oc-pill ${pp?'ok':'bad'}">${fRub(c.totalRevenue)}</span>
         </div>
       </div>`;
   }).join('');
 }
 
-/* ════════════════════════════════════════════════
-   TOUCH GESTURES (long-press + swipe-left)
-════════════════════════════════════════════════ */
-let tsId = null, tsX = 0, tsY = 0, tsTmr = null, tsSwiped = false;
+/* ═══════════════════════════════════
+   TOUCH (long-press / swipe-left)
+═══════════════════════════════════ */
+let tsId=null, tsX=0, tsY=0, tsTmr=null;
+function tsStart(id,e){ tsId=id; tsX=e.touches[0].clientX; tsY=e.touches[0].clientY; tsTmr=setTimeout(()=>{tsTmr=null;askDel(id);},620); }
+function tsMove(e){ if(!tsTmr) return; const dx=e.touches[0].clientX-tsX,dy=Math.abs(e.touches[0].clientY-tsY); if(dy>12){clearTimeout(tsTmr);tsTmr=null;return;} if(Math.abs(dx)>10){clearTimeout(tsTmr);tsTmr=null;} if(dx<-60){askDel(tsId);} }
+function tsEnd(){ if(tsTmr){clearTimeout(tsTmr);tsTmr=null;} }
 
-function tsStart(id, e) {
-  tsId = id; tsX = e.touches[0].clientX; tsY = e.touches[0].clientY; tsSwiped = false;
-  tsTmr = setTimeout(() => { tsTmr = null; askDel(id); }, 620);
-}
-
-function tsMove(e) {
-  if (!tsTmr && !tsSwiped) return;
-  const dx = e.touches[0].clientX - tsX;
-  const dy = Math.abs(e.touches[0].clientY - tsY);
-  if (dy > 12) { clearTimeout(tsTmr); tsTmr = null; return; }
-  if (Math.abs(dx) > 10) { clearTimeout(tsTmr); tsTmr = null; }
-  if (dx < -60) { tsSwiped = true; askDel(tsId); }
-}
-
-function tsEnd() {
-  if (tsTmr) { clearTimeout(tsTmr); tsTmr = null; }
-}
-
-/* ════════════════════════════════════════════════
-   NEW ORDER
-════════════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   NEW / EDIT / VIEW
+═══════════════════════════════════ */
 function newOrder() {
   editId = null;
-  draft = {
-    id:        genId(),
-    createdAt: new Date().toISOString(),
-    name:      '',
-    buyRate:   '',
-    sells:     [],
-  };
+  draft  = { id:genId(), createdAt:new Date().toISOString(), name:'', buyRate:'', paymentAmount:'', sells:[] };
   fillForm();
   showView('form');
 }
 
-/* ════════════════════════════════════════════════
-   EDIT ORDER
-════════════════════════════════════════════════ */
 function editOrder(id) {
-  const o = orders.find(x => x.id === id);
+  const o = orders.find(x => x.id===id);
   if (!o) return;
   editId = id;
   draft  = JSON.parse(JSON.stringify(o));
@@ -1000,138 +632,112 @@ function editOrder(id) {
   showView('form');
 }
 
-/* ════════════════════════════════════════════════
-   VIEW ORDER (detail)
-════════════════════════════════════════════════ */
 function viewOrder(id) {
-  const o = orders.find(x => x.id === id);
+  const o = orders.find(x => x.id===id);
   if (!o) return;
   renderDetail(o);
   showView('detail');
 }
 
-/* ════════════════════════════════════════════════
-   FORM — POPULATE
-════════════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   FORM
+═══════════════════════════════════ */
 function fillForm() {
   const nv = v => (v !== '' && v != null) ? v : '';
-  document.getElementById('f-name').value    = draft.name  || '';
+  document.getElementById('f-name').value    = draft.name          || '';
   document.getElementById('f-buyRate').value = nv(draft.buyRate);
+  document.getElementById('f-payment').value = nv(draft.paymentAmount);
   renderSells();
   recalc();
 }
 
-/* ════════════════════════════════════════════════
-   FORM — INPUT HANDLERS
-════════════════════════════════════════════════ */
-function onPurchaseInput() {
-  draft.name    = document.getElementById('f-name').value;
-  draft.buyRate = document.getElementById('f-buyRate').value;
+function onBuyInput() {
+  draft.name          = document.getElementById('f-name').value;
+  draft.buyRate       = document.getElementById('f-buyRate').value;
+  draft.paymentAmount = document.getElementById('f-payment').value;
   recalc();
-  schedAutoSave();
+  schedSave();
 }
 
-function onSellInput(sid, field, val) {
-  const s = draft.sells.find(x => x.id === sid);
-  if (s) { s[field] = val; recalc(); schedAutoSave(); }
-}
-
-/* ════════════════════════════════════════════════
-   FORM — LIVE RECALCULATION
-════════════════════════════════════════════════ */
 function recalc() {
   const c   = calc(draft);
-  const has = c.sells.some(s => s.usdtAmount > 0 && s.sellRate > 0);
+  const has = c.sells.some(s => s.orderAmount > 0 && s.sellRate > 0);
 
-  /* Purchase block calculated fields */
-  document.getElementById('fc-plan').textContent = c.wtdPlan > 0
-    ? fRate(c.wtdPlan) + '\u00a0₽/USDT' : '—';
-  document.getElementById('fc-sold').textContent = c.totalSold > 0
-    ? fmtUsdt.format(c.totalSold) + '\u00a0USDT' : '—';
+  // Purchase calcs
+  document.getElementById('fc-bought').textContent   = c.pokupkausdt > 0 ? fmtUsdt.format(c.pokupkausdt) + '\u00a0USDT' : '—';
+  document.getElementById('fc-planrate').textContent = c.wtdEffRate  > 0 ? fRate(c.wtdEffRate) + '\u00a0₽/USDT' : '—';
 
-  /* Per-sell row span updates (no re-render, preserves focus) */
+  // Per-sell spans (no re-render)
   c.sells.forEach(s => {
-    const active = s.usdtAmount > 0 && s.sellRate > 0;
-    const rvEl = document.getElementById('rv-' + s.id);
-    const plEl = document.getElementById('pl-' + s.id);
-    const dvEl = document.getElementById('dv-' + s.id);
-    const prEl = document.getElementById('pr-' + s.id);
-    if (rvEl) rvEl.textContent = active ? fRub(s.revenue) : '—';
-    if (plEl) plEl.textContent = active ? fRate(s.plannedSellRate) + '\u00a0₽' : '—';
-    if (dvEl) {
-      const dev = s.sellRate - s.plannedSellRate;
-      dvEl.textContent = active ? (dev >= 0 ? '+' : '') + fRate(dev) + '\u00a0₽' : '—';
-      dvEl.className   = 'scalc-val ' + (active ? (dev >= 0 ? 'slip-ok' : 'slip-pos') : '');
-    }
-    if (prEl) {
-      prEl.textContent = active
-        ? (s.profitUsdt >= 0 ? '+' : '') + fmtUsdt.format(s.profitUsdt) + '\u00a0USDT' : '—';
-      prEl.className   = 'scalc-val ' + (active ? (s.profitUsdt >= 0 ? 'slip-ok' : 'slip-pos') : '');
-    }
+    const active = s.orderAmount > 0 && s.sellRate > 0;
+    const setS = (id, txt, cls) => {
+      const el = document.getElementById(id + s.id);
+      if (!el) return;
+      el.textContent = txt;
+      if (cls !== undefined) el.className = 'scalc-val ' + cls;
+    };
+    setS('rv-', active ? fRub(s.orderAmount) : '—');
+    setS('er-', active ? fRate(s.effectiveRate) + '\u00a0₽' : '—');
+    setS('pr-', active ? fmtUsdt.format(s.prodajausdt) + '\u00a0USDT' : '—');
+    setS('tp-', active && s.topUp > 0 ? fmtUsdt.format(s.topUpUsdt) + '\u00a0USDT' : (active ? '0\u00a0USDT' : '—'));
   });
 
-  /* Summary */
-  setEl('fs-sold', has ? fmtUsdt.format(c.totalSold) + '\u00a0USDT' : '—', '');
-  setEl('fs-rev',  has ? fRub(c.totalRevenue) : '—', '');
-  setEl('fs-prof', has ? (c.totalProfitUsdt >= 0 ? '+' : '') + fmtUsdt.format(c.totalProfitUsdt) + '\u00a0USDT' : '—',
-        has ? (c.totalProfitUsdt >= 0 ? 'ok' : 'bad') : '');
-  setEl('fs-plan', has ? '+' + fmtUsdt.format(c.totalPlannedProfit) + '\u00a0USDT' : '—', '');
-  setEl('fs-dev',
-        has ? (c.totalDevUsdt >= 0 ? '+' : '') + fmtUsdt.format(c.totalDevUsdt) + '\u00a0USDT' : '—',
-        has ? (c.totalDevUsdt >= 0 ? 'ok' : 'bad') : '');
-  setEl('fs-marg', has ? (c.avgMarginPct >= 0 ? '+' : '') + fPct(c.avgMarginPct) : '—',
-        has ? (c.avgMarginPct >= 0 ? 'ok' : 'bad') : '');
+  // Summary
+  const sv = (id, txt, cls) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = txt;
+    el.className   = 'sr-val' + (cls ? ' ' + cls : '');
+  };
+  sv('fs-bought',  c.pokupkausdt > 0 ? fmtUsdt.format(c.pokupkausdt) + '\u00a0USDT' : '—');
+  sv('fs-prodaja', has ? fmtUsdt.format(c.totalProdaja) + '\u00a0USDT' : '—');
+  sv('fs-rev',     has ? fRub(c.totalRevenue) : '—');
+  sv('fs-profit',  has || c.pokupkausdt > 0
+    ? (c.profit >= 0 ? '+' : '') + fmtUsdt.format(c.profit) + '\u00a0USDT' : '—',
+    c.profit >= 0 ? 'ok' : 'bad');
 
-  /* Save button: only needs buyRate */
-  document.getElementById('btn-save').disabled = !(c.buyRate > 0);
+  document.getElementById('btn-save').disabled = !(c.buyRate > 0 && c.paymentAmount > 0);
 }
 
-function setEl(id, text, modClass) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = text;
-  el.className   = 'sr-val' + (modClass ? ' ' + modClass : '');
-}
-
-/* ════════════════════════════════════════════════
+/* ═══════════════════════════════════
    SELL ROWS
-════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 function renderSells() {
-  const c = calc(draft);
+  const c  = calc(draft);
   const el = document.getElementById('sell-list');
   if (!el) return;
 
-    el.innerHTML = draft.sells.map((s, i) => {
-    const cs    = c.sells[i] || {};
-    const vUsdt = s.usdtAmount !== '' && s.usdtAmount != null ? s.usdtAmount : '';
-    const vRate = s.sellRate   !== '' && s.sellRate   != null ? s.sellRate   : '';
-    const vPct  = s.profitPct  !== '' && s.profitPct  != null ? s.profitPct  : '';
-    const active = (cs.usdtAmount || 0) > 0 && (cs.sellRate || 0) > 0;
-    const dev    = (cs.sellRate || 0) - (cs.plannedSellRate || 0);
+  el.innerHTML = draft.sells.map((s, i) => {
+    const cs     = c.sells[i] || {};
+    const active = (cs.orderAmount || 0) > 0 && (cs.sellRate || 0) > 0;
+    const nv     = v => (v !== '' && v != null) ? v : '';
     return `
       <div class="srow" id="sr-${s.id}">
-        <div class="srow-idx">Продажа ${i + 1}</div>
-        <div class="srow-ins">
-          <div class="fg">
-            <label class="flbl" style="font-size:11px">USDT</label>
-            <input type="number" class="sinp"
-                   value="${esc(String(vUsdt))}"
-                   placeholder="0.000000" min="0" step="any"
-                   oninput="onSellInput('${s.id}','usdtAmount',this.value)" />
-          </div>
+        <div class="srow-idx">Ордер продажи ${i + 1}</div>
+        <div class="srow-top">
           <div class="fg">
             <label class="flbl" style="font-size:11px">Курс продажи (₽)</label>
-            <input type="number" class="sinp"
-                   value="${esc(String(vRate))}"
-                   placeholder="0.00" min="0" step="any"
-                   oninput="onSellInput('${s.id}','sellRate',this.value)" />
+            <input type="number" class="sinp" value="${esc(String(nv(s.sellRate)))}"
+                   placeholder="85.00" min="0" step="any"
+                   oninput="onSellInput('${s.id}','sellRate',this.value)">
           </div>
-          <div class="fg" style="max-width:80px">
+          <div class="fg">
+            <label class="flbl" style="font-size:11px">Сумма ордера (₽)</label>
+            <input type="number" class="sinp" value="${esc(String(nv(s.orderAmount)))}"
+                   placeholder="8 500.00" min="0" step="any"
+                   oninput="onSellInput('${s.id}','orderAmount',this.value)">
+          </div>
+          <div class="fg">
             <label class="flbl" style="font-size:11px">Прибыль %</label>
-            <input type="number" class="sinp"
-                   value="${esc(String(vPct))}"
+            <input type="number" class="sinp" value="${esc(String(nv(s.profitPct)))}"
                    placeholder="8" min="0" step="any"
-                   oninput="onSellInput('${s.id}','profitPct',this.value)" />
+                   oninput="onSellInput('${s.id}','profitPct',this.value)">
+          </div>
+          <div class="fg">
+            <label class="flbl" style="font-size:11px">Доплата (₽)</label>
+            <input type="number" class="sinp" value="${esc(String(nv(s.topUp)))}"
+                   placeholder="0" min="0" step="any"
+                   oninput="onSellInput('${s.id}','topUp',this.value)">
           </div>
           <button class="srow-rm" onclick="removeSell('${s.id}')" title="Удалить">
             <svg width="11" height="11" viewBox="0 0 11 11" fill="currentColor">
@@ -1140,66 +746,60 @@ function renderSells() {
           </button>
         </div>
         <div class="srow-calcs">
-          <div class="scalc">
-            <span class="scalc-lbl">Выручка:</span>
-            <span class="scalc-val" id="rv-${s.id}">${active ? fRub(cs.revenue) : '—'}</span>
-          </div>
-          <div class="scalc">
-            <span class="scalc-lbl">Плановый курс:</span>
-            <span class="scalc-val" id="pl-${s.id}">${active ? fRate(cs.plannedSellRate) + '\u00a0₽' : '—'}</span>
-          </div>
-          <div class="scalc">
-            <span class="scalc-lbl">Откл.:</span>
-            <span class="scalc-val ${active ? (dev >= 0 ? 'slip-ok' : 'slip-pos') : ''}" id="dv-${s.id}">${active ? (dev >= 0 ? '+' : '') + fRate(dev) + '\u00a0₽' : '—'}</span>
-          </div>
-          <div class="scalc">
-            <span class="scalc-lbl">Прибыль:</span>
-            <span class="scalc-val ${active ? (cs.profitUsdt >= 0 ? 'slip-ok' : 'slip-pos') : ''}" id="pr-${s.id}">${active ? (cs.profitUsdt >= 0 ? '+' : '') + fmtUsdt.format(cs.profitUsdt) + '\u00a0USDT' : '—'}</span>
-          </div>
+          <div class="scalc"><span class="scalc-lbl">Ставка (курс×%):</span>
+            <span class="scalc-val" id="er-${s.id}">${active ? fRate(cs.effectiveRate) + '\u00a0₽' : '—'}</span></div>
+          <div class="scalc"><span class="scalc-lbl">prodajausdt:</span>
+            <span class="scalc-val" id="pr-${s.id}">${active ? fmtUsdt.format(cs.prodajausdt) + '\u00a0USDT' : '—'}</span></div>
+          <div class="scalc"><span class="scalc-lbl">Доплата USDT:</span>
+            <span class="scalc-val" id="tp-${s.id}">${active ? fmtUsdt.format(cs.topUpUsdt) + '\u00a0USDT' : '—'}</span></div>
+          <div class="scalc"><span class="scalc-lbl">Выручка:</span>
+            <span class="scalc-val" id="rv-${s.id}">${active ? fRub(cs.orderAmount) : '—'}</span></div>
         </div>
       </div>`;
   }).join('');
 }
 
 function addSell() {
-  draft.sells.push({ id: genSid(), usdtAmount: '', sellRate: '', profitPct: '' });
+  draft.sells.push({ id:genSid(), sellRate:'', orderAmount:'', profitPct:'', topUp:'' });
   renderSells();
   recalc();
-  schedAutoSave();
-  /* scroll sell list into view */
-  document.getElementById('sell-list').lastElementChild
-    && document.getElementById('sell-list').lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  schedSave();
 }
 
 function removeSell(sid) {
   draft.sells = draft.sells.filter(s => s.id !== sid);
   renderSells();
   recalc();
-  schedAutoSave();
+  schedSave();
 }
 
-/* ════════════════════════════════════════════════
-   AUTO-SAVE (debounced 500ms)
-════════════════════════════════════════════════ */
-function schedAutoSave() {
+function onSellInput(sid, field, val) {
+  const s = draft.sells.find(s => s.id === sid);
+  if (s) { s[field] = val; recalc(); schedSave(); }
+}
+
+/* ═══════════════════════════════════
+   AUTO-SAVE
+═══════════════════════════════════ */
+function schedSave() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => { saveTimer = null; saveDraftLS(); }, 500);
 }
 
-/* ════════════════════════════════════════════════
-   SAVE ORDER (explicit)
-════════════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   SAVE ORDER
+═══════════════════════════════════ */
 function saveOrder() {
   if (!draft) return;
-
-  /* coerce all numeric fields */
-  draft.name    = document.getElementById('f-name').value.trim();
-  draft.buyRate = +document.getElementById('f-buyRate').value || 0;
+  draft.name          = document.getElementById('f-name').value.trim();
+  draft.buyRate       = +document.getElementById('f-buyRate').value || 0;
+  draft.paymentAmount = +document.getElementById('f-payment').value || 0;
   draft.sells = draft.sells.map(s => ({
     ...s,
-    usdtAmount: +s.usdtAmount || 0,
-    sellRate:   +s.sellRate   || 0,
-    profitPct:  +s.profitPct  || 0,
+    sellRate:    +s.sellRate    || 0,
+    orderAmount: +s.orderAmount || 0,
+    profitPct:   +s.profitPct   || 0,
+    topUp:       +s.topUp       || 0,
   }));
 
   if (editId) {
@@ -1208,21 +808,19 @@ function saveOrder() {
   } else {
     orders.unshift({ ...draft });
   }
-
   persOrders();
   clearDraftLS();
   draft = null; editId = null;
   goList();
 }
 
-/* ════════════════════════════════════════════════
+/* ═══════════════════════════════════
    DETAIL VIEW
-════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 function renderDetail(o) {
   const c   = calc(o);
   const lbl = o.name || ('Ордер от ' + fDate(o.createdAt));
-  const pp  = c.totalProfitUsdt >= 0;
-  const pm  = c.avgMarginPct >= 0;
+  const pp  = c.profit >= 0;
 
   document.getElementById('detail-body').innerHTML = `
     <div class="fsec">
@@ -1231,50 +829,40 @@ function renderDetail(o) {
     </div>
 
     <div class="fsec">
-      <div class="fsec-ttl">Покупка (репленишмент)</div>
+      <div class="fsec-ttl">Покупка</div>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px 18px">
-        <div class="df"><div class="df-lbl">Курс покупки</div>         <div class="df-val">${fRate(c.buyRate)}&nbsp;₽/USDT</div></div>
-        <div class="df"><div class="df-lbl">Продано USDT</div>         <div class="df-val">${fmtUsdt.format(c.totalSold)}&nbsp;USDT</div></div>
-        <div class="df"><div class="df-lbl">Выручка</div>              <div class="df-val">${fRub(c.totalRevenue)}</div></div>
-        <div class="df"><div class="df-lbl">Ср. плановый курс продажи</div><div class="df-val">${c.wtdPlan > 0 ? fRate(c.wtdPlan) + '&nbsp;₽' : '—'}</div></div>
+        <div class="df"><div class="df-lbl">Курс покупки</div>    <div class="df-val">${fRate(c.buyRate)}&nbsp;₽/USDT</div></div>
+        <div class="df"><div class="df-lbl">Сумма выплаты</div>   <div class="df-val">${fRub(c.paymentAmount)}</div></div>
+        <div class="df"><div class="df-lbl">pokupkausdt</div>     <div class="df-val">${fmtUsdt.format(c.pokupkausdt)}&nbsp;USDT</div></div>
+        <div class="df"><div class="df-lbl">Ср. курс продажи</div><div class="df-val">${c.wtdEffRate > 0 ? fRate(c.wtdEffRate) + '&nbsp;₽' : '—'}</div></div>
       </div>
     </div>
 
     ${c.sells.length ? `
     <div class="fsec">
       <div class="fsec-ttl">Ордера продажи (${c.sells.length})</div>
-      ${c.sells.map((s,i) => {
-        const dev = s.sellRate - s.plannedSellRate;
-        return `
+      ${c.sells.map((s,i) => `
         <div class="dsrow">
-          <div class="dsrow-idx">Продажа ${i+1}</div>
+          <div class="dsrow-idx">Ордер продажи ${i+1}</div>
           <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px">
-            <div class="df"><div class="df-lbl">USDT</div>          <div class="df-val">${fmtUsdt.format(s.usdtAmount)}&nbsp;USDT</div></div>
-            <div class="df"><div class="df-lbl">Курс продажи</div>  <div class="df-val">${fRate(s.sellRate)}&nbsp;₽</div></div>
-            <div class="df"><div class="df-lbl">Прибыль %</div>     <div class="df-val">${fPct(s.profitPct)}</div></div>
-            <div class="df"><div class="df-lbl">Плановый курс</div> <div class="df-val">${fRate(s.plannedSellRate)}&nbsp;₽</div></div>
-            <div class="df"><div class="df-lbl">Выручка</div>       <div class="df-val">${fRub(s.revenue)}</div></div>
-            <div class="df"><div class="df-lbl">Откл. от плана</div>
-              <div class="df-val" style="color:${dev >= 0 ? 'var(--ok)' : 'var(--bad)'}">${dev >= 0 ? '+' : ''}${fRate(dev)}&nbsp;₽</div>
-            </div>
-            <div class="df"><div class="df-lbl">Прибыль факт.</div>
-              <div class="df-val" style="color:${s.profitUsdt >= 0 ? 'var(--ok)' : 'var(--bad)'}">${s.profitUsdt >= 0 ? '+' : ''}${fmtUsdt.format(s.profitUsdt)}&nbsp;USDT</div>
-            </div>
-            <div class="df"><div class="df-lbl">Прибыль план.</div>
-              <div class="df-val">+${fmtUsdt.format(s.plannedProfitUsdt)}&nbsp;USDT</div>
-            </div>
+            <div class="df"><div class="df-lbl">Курс продажи</div>   <div class="df-val">${fRate(s.sellRate)}&nbsp;₽</div></div>
+            <div class="df"><div class="df-lbl">Прибыль %</div>      <div class="df-val">${fPct(s.profitPct)}</div></div>
+            <div class="df"><div class="df-lbl">Ставка (курс×%)</div><div class="df-val">${fRate(s.effectiveRate)}&nbsp;₽/USDT</div></div>
+            <div class="df"><div class="df-lbl">Сумма ордера</div>   <div class="df-val">${fRub(s.orderAmount)}</div></div>
+            <div class="df"><div class="df-lbl">prodajausdt</div>    <div class="df-val">${fmtUsdt.format(s.prodajausdt)}&nbsp;USDT</div></div>
+            <div class="df"><div class="df-lbl">Доплата</div>        <div class="df-val">${fRub(s.topUp)}</div></div>
+            <div class="df"><div class="df-lbl">Доплата USDT</div>   <div class="df-val">${fmtUsdt.format(s.topUpUsdt)}&nbsp;USDT</div></div>
+            <div class="df"><div class="df-lbl">Вклад (USDT)</div>   <div class="df-val">${fmtUsdt.format(s.adjustment)}&nbsp;USDT</div></div>
           </div>
-        </div>`; }).join('')}
+        </div>`).join('')}
     </div>` : ''}
 
     <div class="lsummary">
       <div class="lsummary-ttl">Итого</div>
-      <div class="sr"><span class="sr-lbl">Продано USDT</span>            <span class="sr-val">${fmtUsdt.format(c.totalSold)}&nbsp;USDT</span></div>
-      <div class="sr"><span class="sr-lbl">Выручка (₽)</span>             <span class="sr-val">${fRub(c.totalRevenue)}</span></div>
-      <div class="sr"><span class="sr-lbl">Прибыль факт. (USDT)</span>    <span class="sr-val" style="color:${pp?'var(--ok)':'var(--bad)'}">${pp?'+':''}${fmtUsdt.format(c.totalProfitUsdt)}&nbsp;USDT</span></div>
-      <div class="sr"><span class="sr-lbl">Прибыль план. (USDT)</span>    <span class="sr-val">+${fmtUsdt.format(c.totalPlannedProfit)}&nbsp;USDT</span></div>
-      <div class="sr"><span class="sr-lbl">Откл. факт/план (USDT)</span>  <span class="sr-val" style="color:${c.totalDevUsdt >= 0 ? 'var(--ok)' : 'var(--bad)'}">${c.totalDevUsdt >= 0 ? '+' : ''}${fmtUsdt.format(c.totalDevUsdt)}&nbsp;USDT</span></div>
-      <div class="sr"><span class="sr-lbl">Средняя маржа %</span>         <span class="sr-val" style="color:${pm?'var(--ok)':'var(--bad)'}">${pm?'+':''}${fPct(c.avgMarginPct)}</span></div>
+      <div class="sr"><span class="sr-lbl">pokupkausdt</span>           <span class="sr-val">${fmtUsdt.format(c.pokupkausdt)}&nbsp;USDT</span></div>
+      <div class="sr"><span class="sr-lbl">USDT клиентам (prodaja)</span><span class="sr-val">${fmtUsdt.format(c.totalProdaja)}&nbsp;USDT</span></div>
+      <div class="sr"><span class="sr-lbl">Выручка (₽)</span>           <span class="sr-val">${fRub(c.totalRevenue)}</span></div>
+      <div class="sr"><span class="sr-lbl">Прибыль (USDT)</span>        <span class="sr-val" style="color:${pp?'var(--ok)':'var(--bad)'}">${pp?'+':''}${fmtUsdt.format(c.profit)}&nbsp;USDT</span></div>
     </div>
 
     <div class="form-acts">
@@ -1283,40 +871,26 @@ function renderDetail(o) {
     </div>`;
 }
 
-/* ════════════════════════════════════════════════
-   DELETE / CONFIRM MODAL
-════════════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   DELETE
+═══════════════════════════════════ */
 let delId = null;
-
 function askDel(id) {
   delId = id;
-  const o   = orders.find(x => x.id === id);
+  const o   = orders.find(x => x.id===id);
   const lbl = o ? (o.name || 'этот ордер') : 'этот ордер';
   document.getElementById('modal-ttl').textContent  = 'Удалить ордер?';
   document.getElementById('modal-body').textContent = `«${lbl}» будет удалён без возможности восстановления.`;
   document.getElementById('modal-ok').onclick = doDel;
   document.getElementById('overlay').classList.add('on');
 }
-
-function doDel() {
-  orders = orders.filter(o => o.id !== delId);
-  persOrders();
-  delId = null;
-  closeModal();
-  goList();
-}
-
-function closeModal() {
-  document.getElementById('overlay').classList.remove('on');
-  delId = null;
-}
-
-/* keyboard: Escape closes modal */
+function doDel() { orders = orders.filter(o => o.id !== delId); persOrders(); delId=null; closeModal(); goList(); }
+function closeModal() { document.getElementById('overlay').classList.remove('on'); delId=null; }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-/* ════════════════════════════════════════════════
+/* ═══════════════════════════════════
    INIT
-════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 loadOrders();
 renderList();
 </script>
