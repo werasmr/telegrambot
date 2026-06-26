@@ -352,6 +352,12 @@
             <div class="fcalc" id="fc-planrate">—</div>
           </div>
         </div>
+        <div class="frow full" style="margin-top:2px">
+          <div class="fg">
+            <label class="flbl">Доплачено из своих (USDT = Σ доплата / курс покупки)</label>
+            <div class="fcalc" id="fc-topup-usdt" style="color:var(--warn);font-weight:700">—</div>
+          </div>
+        </div>
       </div>
 
       <!-- Ордера продажи -->
@@ -486,10 +492,12 @@ function calc(o) {
              stavka, prodajausdt, topUpUsdt, adjustment, effectiveRate };
   });
 
-  const totalProdaja  = sells.reduce((a,s) => a + s.adjustment,  0);
-  const totalRevenue  = sells.reduce((a,s) => a + s.orderAmount, 0);
-  const totalTopUp    = sells.reduce((a,s) => a + s.topUp,       0);
-  const profit        = pokupkausdt - totalProdaja;  // positive = profit
+  const totalProdaja   = sells.reduce((a,s) => a + s.adjustment,  0);
+  const totalRevenue   = sells.reduce((a,s) => a + s.orderAmount, 0);
+  const totalTopUp     = sells.reduce((a,s) => a + s.topUp,       0);
+  // доплата в USDT = Σ doplata / buyRate (курс покупки, без ставки)
+  const totalTopUpUsdt = buyRate > 0 ? totalTopUp / buyRate : 0;
+  const profit         = pokupkausdt - totalProdaja;  // positive = profit
 
   // weighted avg planned sell rate
   const totalOrders   = sells.reduce((a,s) => a + s.orderAmount, 0);
@@ -498,7 +506,7 @@ function calc(o) {
 
   return {
     buyRate, paymentAmount, pokupkausdt,
-    sells, totalProdaja, totalRevenue, totalTopUp, profit, wtdEffRate,
+    sells, totalProdaja, totalRevenue, totalTopUp, totalTopUpUsdt, profit, wtdEffRate,
   };
 }
 
@@ -668,6 +676,8 @@ function recalc() {
   // Purchase calcs
   document.getElementById('fc-bought').textContent   = c.pokupkausdt > 0 ? fmtUsdt.format(c.pokupkausdt) + '\u00a0USDT' : '—';
   document.getElementById('fc-planrate').textContent = c.wtdEffRate  > 0 ? fRate(c.wtdEffRate) + '\u00a0₽/USDT' : '—';
+  document.getElementById('fc-topup-usdt').textContent =
+    c.totalTopUp > 0 ? '\u2212\u00a0' + fmtUsdt.format(c.totalTopUpUsdt) + '\u00a0USDT' : (c.paymentAmount > 0 ? '0\u00a0USDT' : '—');
 
   // Per-sell spans (no re-render)
   c.sells.forEach(s => {
@@ -838,6 +848,10 @@ function renderDetail(o) {
         <div class="df"><div class="df-lbl">Сумма выплаты</div>   <div class="df-val">${fRub(c.paymentAmount)}</div></div>
         <div class="df"><div class="df-lbl">pokupkausdt</div>     <div class="df-val">${fmtUsdt.format(c.pokupkausdt)}&nbsp;USDT</div></div>
         <div class="df"><div class="df-lbl">Ср. курс продажи</div><div class="df-val">${c.wtdEffRate > 0 ? fRate(c.wtdEffRate) + '&nbsp;₽' : '—'}</div></div>
+        ${c.totalTopUp > 0 ? `<div class="df" style="grid-column:1/-1">
+          <div class="df-lbl">Доплачено из своих (USDT = Σ доплата / курс покупки)</div>
+          <div class="df-val" style="color:var(--warn)">\u2212&nbsp;${fmtUsdt.format(c.totalTopUpUsdt)}&nbsp;USDT</div>
+        </div>` : ''}
       </div>
     </div>
 
