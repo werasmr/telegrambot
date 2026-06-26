@@ -816,6 +816,123 @@
     .report-card__desc  { font-size: 12px; color: var(--text-2); }
 
     /* =============================================
+       MOBILE SIDEBAR
+       ============================================= */
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4); z-index: 99;
+    }
+
+    .sidebar-overlay.open { display: block; }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+      }
+
+      .sidebar.open { transform: translateX(0); }
+
+      .main-wrap { margin-left: 0; }
+
+      #sidebar-burger { display: flex !important; }
+
+      .metrics-grid { grid-template-columns: 1fr 1fr; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .two-col, .three-col { grid-template-columns: 1fr; }
+      .tasks-columns { grid-template-columns: 1fr; }
+      .ai-layout { grid-template-columns: 1fr; height: auto; }
+      .chat-suggestions { display: none; }
+      .integrations-grid { grid-template-columns: 1fr; }
+      .tax-regime-selector { grid-template-columns: 1fr 1fr; }
+      .tax-calendar-grid { grid-template-columns: 1fr; }
+      .bank-cards-grid { grid-template-columns: 1fr; }
+      .finance-grid { grid-template-columns: 1fr; }
+      .content { padding: 16px; }
+      .fns-company-fields { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* =============================================
+       MANUAL THEME OVERRIDE
+       ============================================= */
+    [data-theme="light"] {
+      --bg: #f8f9fa; --surface: #ffffff; --surface-2: #f1f3f5;
+      --border: #e5e7eb; --text: #111827; --text-2: #6b7280; --text-3: #9ca3af;
+      --accent-light: #eff6ff;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f1117; --surface: #1a1d24; --surface-2: #22262f;
+      --border: #2d3240; --text: #f0f2f5; --text-2: #9ca3af; --text-3: #6b7280;
+      --accent-light: #1e3a5f;
+    }
+
+    /* =============================================
+       GLOBAL SEARCH DROPDOWN
+       ============================================= */
+    .search-result-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; cursor: pointer;
+      border-bottom: 0.5px solid var(--border);
+      transition: background 0.1s;
+    }
+
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover { background: var(--surface-2); }
+    .search-result-item__icon { width: 28px; height: 28px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+    .search-result-item__title { font-size: 13px; font-weight: 500; color: var(--text); }
+    .search-result-item__sub   { font-size: 11.5px; color: var(--text-3); }
+    .search-no-results { padding: 24px 16px; text-align: center; color: var(--text-3); font-size: 13px; }
+
+    /* =============================================
+       INVOICES
+       ============================================= */
+    .invoice-status-draft    { background: var(--surface-2);    color: var(--text-2); }
+    .invoice-status-sent     { background: var(--accent-light);  color: var(--accent); }
+    .invoice-status-paid     { background: var(--success-light); color: var(--success); }
+    .invoice-status-overdue  { background: var(--danger-light);  color: var(--danger); }
+    .invoice-status-canceled { background: var(--surface-2);    color: var(--text-3); }
+
+    .invoice-preview {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 13px; color: #111;
+      padding: 32px; background: #fff; border-radius: var(--radius-md);
+      border: 0.5px solid var(--border);
+    }
+
+    .invoice-preview__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
+    .invoice-preview__logo   { font-size: 20px; font-weight: 800; color: var(--accent); }
+    .invoice-preview__number { font-size: 18px; font-weight: 700; }
+    .invoice-preview__parties { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+    .invoice-preview__party-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #999; margin-bottom: 4px; }
+    .invoice-preview__party-name  { font-size: 14px; font-weight: 700; }
+    .invoice-preview__party-info  { font-size: 12px; color: #555; margin-top: 3px; }
+    .invoice-preview table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .invoice-preview thead th { background: #f5f5f5; padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #777; }
+    .invoice-preview tbody td { padding: 10px 12px; border-bottom: 1px solid #eee; }
+    .invoice-preview__totals { text-align: right; }
+    .invoice-preview__total-row { display: flex; justify-content: flex-end; gap: 48px; padding: 4px 0; font-size: 13px; }
+    .invoice-preview__grand-total { font-size: 16px; font-weight: 800; border-top: 2px solid #111; padding-top: 8px; margin-top: 4px; }
+
+    /* =============================================
+       SETTINGS
+       ============================================= */
+    .settings-nav { display: flex; flex-direction: column; gap: 2px; }
+    .settings-nav-item { padding: 8px 12px; border-radius: var(--radius-md); cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text-2); display: flex; align-items: center; gap: 8px; }
+    .settings-nav-item:hover { background: var(--surface-2); color: var(--text); }
+    .settings-nav-item.active { background: var(--accent-light); color: var(--accent); }
+    .settings-nav-item .ti { font-size: 15px; }
+
+    .settings-panel { display: none; }
+    .settings-panel.active { display: block; }
+
+    .settings-section-title { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+    .settings-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 0.5px solid var(--border); }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-row__label { font-size: 13.5px; font-weight: 500; }
+    .settings-row__desc  { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+    /* =============================================
        НАЛОГОВЫЙ УЧЁТ
        ============================================= */
     .tax-regime-selector {
@@ -970,6 +1087,7 @@
 
 <div class="layout">
 
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
   <!-- === SIDEBAR === -->
   <aside class="sidebar" role="navigation" aria-label="Основная навигация">
     <div class="sidebar__logo">
@@ -1015,6 +1133,9 @@
       </div>
 
       <div class="sidebar__section-label">Инструменты</div>
+      <div class="nav-item" onclick="nav(this,'invoices')" aria-label="Счета и документы">
+        <i class="ti ti-file-invoice"></i><span>Счета и документы</span>
+      </div>
       <div class="nav-item" onclick="nav(this,'taxes')" aria-label="Налоговый учёт">
         <i class="ti ti-receipt-tax"></i><span>Налоговый учёт</span>
       </div>
@@ -1023,6 +1144,9 @@
       </div>
       <div class="nav-item" onclick="nav(this,'integrations')" aria-label="Интеграции">
         <i class="ti ti-plug-connected"></i><span>Интеграции</span>
+      </div>
+      <div class="nav-item" onclick="nav(this,'settings')" aria-label="Настройки">
+        <i class="ti ti-settings"></i><span>Настройки</span>
       </div>
     </nav>
 
@@ -1042,14 +1166,19 @@
   <div class="main-wrap">
 
     <header class="topbar">
+      <button class="btn btn-ghost btn-icon sidebar-burger" id="sidebar-burger" aria-label="Меню" onclick="toggleSidebar()" style="display:none;">
+        <i class="ti ti-menu-2"></i>
+      </button>
       <span class="topbar__title" id="topbar-title">Дашборд</span>
       <div class="topbar__actions">
-        <div class="search-input" style="width:220px;">
+        <div class="search-input" id="global-search-wrap" style="width:220px;">
           <i class="ti ti-search"></i>
-          <input type="text" placeholder="Поиск..." aria-label="Поиск" id="global-search" />
+          <input type="text" placeholder="Поиск..." aria-label="Глобальный поиск" id="global-search" oninput="globalSearch(this.value)" onfocus="showSearchResults()" />
         </div>
-        <button class="btn btn-ghost btn-icon" aria-label="Уведомления"><i class="ti ti-bell"></i></button>
-        <button class="btn btn-ghost btn-icon" aria-label="Настройки"><i class="ti ti-settings"></i></button>
+        <div id="search-dropdown" style="display:none;position:absolute;top:calc(var(--topbar-h) + 4px);right:24px;width:360px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);z-index:200;max-height:400px;overflow-y:auto;"></div>
+        <button class="btn btn-ghost btn-icon" aria-label="Тема" id="theme-toggle-btn" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-icon"></i></button>
+        <button class="btn btn-ghost btn-icon" aria-label="Уведомления" onclick="showNotificationsPanel()"><i class="ti ti-bell"></i></button>
+        <button class="btn btn-ghost btn-icon" aria-label="Настройки" onclick="navToSettings()"><i class="ti ti-settings"></i></button>
       </div>
     </header>
 
@@ -2137,6 +2266,246 @@
       </section>
 
       <!-- ============================
+           СЧЕТА И ДОКУМЕНТЫ (NEW)
+           ============================ -->
+      <section id="invoices" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-header__title">Счета и документы</div>
+            <div class="page-header__sub" id="inv-sub">Загрузка...</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost" onclick="openModal('modal-add-act')"><i class="ti ti-file-check"></i> Акт</button>
+            <button class="btn btn-primary" onclick="openModal('modal-add-invoice')"><i class="ti ti-plus"></i> Выставить счёт</button>
+          </div>
+        </div>
+
+        <!-- Сводка -->
+        <div class="metrics-grid" style="margin-bottom:20px;">
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-file-invoice"></i> Выставлено</div>
+            <div class="metric-card__value" id="inv-total-count">0</div>
+            <div class="metric-card__delta delta-neu">Счетов за период</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-circle-check" style="color:var(--success)"></i> Оплачено</div>
+            <div class="metric-card__value tx-type-income" id="inv-paid-sum">₽ 0</div>
+            <div class="metric-card__delta delta-up">Получено</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-clock" style="color:var(--warning)"></i> Ожидает оплаты</div>
+            <div class="metric-card__value" id="inv-pending-sum" style="color:var(--warning);">₽ 0</div>
+            <div class="metric-card__delta" style="color:var(--warning);">Выставлено клиентам</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card__label"><i class="ti ti-alert-triangle" style="color:var(--danger)"></i> Просрочено</div>
+            <div class="metric-card__value tx-type-expense" id="inv-overdue-sum">₽ 0</div>
+            <div class="metric-card__delta delta-down">Требует внимания</div>
+          </div>
+        </div>
+
+        <!-- Фильтры и таблица -->
+        <div class="card" style="padding:0;">
+          <div class="card__header" style="padding:16px 20px 0;flex-wrap:wrap;gap:8px;">
+            <span class="card__title">Счета</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;">
+              <div class="search-input" style="width:200px;">
+                <i class="ti ti-search"></i>
+                <input type="text" placeholder="Поиск..." aria-label="Поиск" id="inv-search" oninput="filterInvoices()" />
+              </div>
+              <select style="width:auto;" id="inv-status-filter" aria-label="Статус" onchange="filterInvoices()">
+                <option value="">Все статусы</option>
+                <option value="draft">Черновик</option>
+                <option value="sent">Выставлен</option>
+                <option value="paid">Оплачен</option>
+                <option value="overdue">Просрочен</option>
+                <option value="canceled">Отменён</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap" style="margin-top:12px;">
+            <table>
+              <thead>
+                <tr><th>№</th><th>Клиент</th><th>Дата</th><th>Срок оплаты</th><th>Сумма</th><th>НДС</th><th>Итого</th><th>Статус</th><th></th></tr>
+              </thead>
+              <tbody id="inv-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================
+           НАСТРОЙКИ (NEW)
+           ============================ -->
+      <section id="settings" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-header__title">Настройки</div>
+            <div class="page-header__sub">Профиль компании, внешний вид, данные</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start;">
+          <!-- Боковое меню настроек -->
+          <div class="card" style="padding:12px;">
+            <div class="settings-nav">
+              <div class="settings-nav-item active" onclick="switchSettingsTab('company')" id="stab-company"><i class="ti ti-building"></i> Компания</div>
+              <div class="settings-nav-item" onclick="switchSettingsTab('appearance')" id="stab-appearance"><i class="ti ti-palette"></i> Внешний вид</div>
+              <div class="settings-nav-item" onclick="switchSettingsTab('notifications')" id="stab-notifications"><i class="ti ti-bell"></i> Уведомления</div>
+              <div class="settings-nav-item" onclick="switchSettingsTab('data')" id="stab-data"><i class="ti ti-database"></i> Данные</div>
+              <div class="settings-nav-item" onclick="switchSettingsTab('about')" id="stab-about"><i class="ti ti-info-circle"></i> О платформе</div>
+            </div>
+          </div>
+
+          <!-- Панели настроек -->
+          <div>
+            <!-- Компания -->
+            <div class="settings-panel active card" id="spanel-company">
+              <div class="settings-section-title">Профиль компании</div>
+              <div class="form-row">
+                <div class="form-group"><label>Название / ФИО *</label><input type="text" id="s-company-name" placeholder="ИП Иванов Пётр Сергеевич" /></div>
+                <div class="form-group"><label>Форма</label>
+                  <select id="s-company-form"><option>ИП</option><option>ООО</option><option>АО</option></select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>ИНН</label><input type="text" id="s-company-inn" placeholder="771234567890" /></div>
+                <div class="form-group"><label>ОГРН / ОГРНИП</label><input type="text" id="s-company-ogrn" placeholder="321774600123456" /></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Телефон</label><input type="tel" id="s-company-phone" placeholder="+7 (999) 000-00-00" /></div>
+                <div class="form-group"><label>Email</label><input type="email" id="s-company-email" placeholder="company@example.ru" /></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Юридический адрес</label><input type="text" id="s-company-address" placeholder="г. Москва, ул. Примерная, д. 1" /></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Банк</label><input type="text" id="s-company-bank" placeholder="Точка Банк" /></div>
+                <div class="form-group"><label>Расчётный счёт</label><input type="text" id="s-company-acc" placeholder="40802810100000012345" /></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Логотип (URL)</label><input type="url" id="s-company-logo" placeholder="https://..." /></div>
+              </div>
+              <div style="margin-top:8px;display:flex;gap:8px;">
+                <button class="btn btn-primary" onclick="saveCompanySettings()"><i class="ti ti-check"></i> Сохранить</button>
+              </div>
+            </div>
+
+            <!-- Внешний вид -->
+            <div class="settings-panel card" id="spanel-appearance">
+              <div class="settings-section-title">Внешний вид</div>
+              <div class="settings-row">
+                <div>
+                  <div class="settings-row__label">Тема оформления</div>
+                  <div class="settings-row__desc">Переключение между светлой и тёмной темой</div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn btn-ghost btn-sm" id="btn-theme-light" onclick="setTheme('light')"><i class="ti ti-sun"></i> Светлая</button>
+                  <button class="btn btn-ghost btn-sm" id="btn-theme-auto" onclick="setTheme('auto')"><i class="ti ti-device-desktop"></i> Авто</button>
+                  <button class="btn btn-ghost btn-sm" id="btn-theme-dark" onclick="setTheme('dark')"><i class="ti ti-moon"></i> Тёмная</button>
+                </div>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="settings-row__label">Акцентный цвет</div>
+                  <div class="settings-row__desc">Цвет кнопок и активных элементов</div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <div id="accent-swatches" style="display:flex;gap:6px;">
+                    <button class="btn btn-icon" style="width:28px;height:28px;background:#2563eb;border-radius:50%;border:2px solid transparent;" onclick="setAccent('#2563eb')" aria-label="Синий"></button>
+                    <button class="btn btn-icon" style="width:28px;height:28px;background:#7c3aed;border-radius:50%;border:2px solid transparent;" onclick="setAccent('#7c3aed')" aria-label="Фиолетовый"></button>
+                    <button class="btn btn-icon" style="width:28px;height:28px;background:#16a34a;border-radius:50%;border:2px solid transparent;" onclick="setAccent('#16a34a')" aria-label="Зелёный"></button>
+                    <button class="btn btn-icon" style="width:28px;height:28px;background:#db2777;border-radius:50%;border:2px solid transparent;" onclick="setAccent('#db2777')" aria-label="Розовый"></button>
+                    <button class="btn btn-icon" style="width:28px;height:28px;background:#d97706;border-radius:50%;border:2px solid transparent;" onclick="setAccent('#d97706')" aria-label="Оранжевый"></button>
+                    <button class="btn btn-icon" style="width:28px;height:28px;background:#0891b2;border-radius:50%;border:2px solid transparent;" onclick="setAccent('#0891b2')" aria-label="Голубой"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-row">
+                <div>
+                  <div class="settings-row__label">Компактный режим</div>
+                  <div class="settings-row__desc">Уменьшить отступы и размер шрифта</div>
+                </div>
+                <label class="toggle" aria-label="Компактный режим">
+                  <input type="checkbox" id="toggle-compact" onchange="toggleCompact(this.checked)" />
+                  <div class="toggle__track"></div><div class="toggle__thumb"></div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Уведомления -->
+            <div class="settings-panel card" id="spanel-notifications">
+              <div class="settings-section-title">Уведомления</div>
+              <div class="settings-row">
+                <div><div class="settings-row__label">Просроченные задачи</div><div class="settings-row__desc">Уведомлять при наступлении дедлайна</div></div>
+                <label class="toggle" aria-label="Задачи"><input type="checkbox" checked id="notif-tasks" /><div class="toggle__track"></div><div class="toggle__thumb"></div></label>
+              </div>
+              <div class="settings-row">
+                <div><div class="settings-row__label">Налоговые дедлайны</div><div class="settings-row__desc">За 14 дней до платежа</div></div>
+                <label class="toggle" aria-label="Налоги"><input type="checkbox" checked id="notif-taxes" /><div class="toggle__track"></div><div class="toggle__thumb"></div></label>
+              </div>
+              <div class="settings-row">
+                <div><div class="settings-row__label">Просроченные счета</div><div class="settings-row__desc">При наступлении срока оплаты</div></div>
+                <label class="toggle" aria-label="Счета"><input type="checkbox" checked id="notif-invoices" /><div class="toggle__track"></div><div class="toggle__thumb"></div></label>
+              </div>
+              <div class="settings-row">
+                <div><div class="settings-row__label">Синхронизация банков</div><div class="settings-row__desc">После каждой синхронизации</div></div>
+                <label class="toggle" aria-label="Банки"><input type="checkbox" id="notif-bank" /><div class="toggle__track"></div><div class="toggle__thumb"></div></label>
+              </div>
+              <div style="margin-top:8px;">
+                <button class="btn btn-primary btn-sm" onclick="notify('Настройки уведомлений сохранены','success')"><i class="ti ti-check"></i> Сохранить</button>
+              </div>
+            </div>
+
+            <!-- Данные -->
+            <div class="settings-panel card" id="spanel-data">
+              <div class="settings-section-title">Управление данными</div>
+              <div class="settings-row">
+                <div><div class="settings-row__label">Экспорт всех данных</div><div class="settings-row__desc">Выгрузить всё в JSON (клиенты, задачи, финансы)</div></div>
+                <button class="btn btn-ghost btn-sm" onclick="exportAllData()"><i class="ti ti-download"></i> Экспорт JSON</button>
+              </div>
+              <div class="settings-row">
+                <div><div class="settings-row__label">Импорт данных</div><div class="settings-row__desc">Загрузить ранее экспортированный JSON</div></div>
+                <label class="btn btn-ghost btn-sm" style="cursor:pointer;">
+                  <i class="ti ti-upload"></i> Импорт
+                  <input type="file" accept=".json" style="display:none;" onchange="importAllData(this)" />
+                </label>
+              </div>
+              <div class="settings-row">
+                <div><div class="settings-row__label">Экспорт CRM в CSV</div><div class="settings-row__desc">Выгрузить клиентскую базу</div></div>
+                <button class="btn btn-ghost btn-sm" onclick="exportCsv()"><i class="ti ti-file-text"></i> Экспорт CSV</button>
+              </div>
+              <div class="divider"></div>
+              <div class="settings-row">
+                <div><div class="settings-row__label" style="color:var(--danger);">Сбросить все данные</div><div class="settings-row__desc">Удалить все данные платформы (необратимо)</div></div>
+                <button class="btn btn-danger btn-sm" onclick="confirmReset()"><i class="ti ti-trash"></i> Сбросить</button>
+              </div>
+            </div>
+
+            <!-- О платформе -->
+            <div class="settings-panel card" id="spanel-about">
+              <div class="settings-section-title">О платформе</div>
+              <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+                <div style="width:56px;height:56px;background:var(--accent);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:800;">P</div>
+                <div>
+                  <div style="font-size:18px;font-weight:800;letter-spacing:-0.5px;">Proto</div>
+                  <div style="font-size:13px;color:var(--text-2);">Бизнес-платформа для малого бизнеса (РФ)</div>
+                  <div style="font-size:12px;color:var(--text-3);margin-top:2px;">Версия 1.0.0 · Июнь 2026</div>
+                </div>
+              </div>
+              <div class="settings-row"><div class="settings-row__label">Разделов в платформе</div><div style="font-weight:700;">13</div></div>
+              <div class="settings-row"><div class="settings-row__label">Клиентов в базе</div><div style="font-weight:700;" id="about-clients">—</div></div>
+              <div class="settings-row"><div class="settings-row__label">Задач</div><div style="font-weight:700;" id="about-tasks">—</div></div>
+              <div class="settings-row"><div class="settings-row__label">Финансовых операций</div><div style="font-weight:700;" id="about-txs">—</div></div>
+              <div class="settings-row"><div class="settings-row__label">Сотрудников</div><div style="font-weight:700;" id="about-emps">—</div></div>
+              <div class="settings-row"><div class="settings-row__label">Стек</div><div style="font-size:12px;color:var(--text-2);">Vanilla HTML/CSS/JS · Chart.js · Tabler Icons</div></div>
+              <div class="settings-row"><div class="settings-row__label">Хранение данных</div><div style="font-size:12px;color:var(--text-2);">LocalStorage (клиентская сторона)</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================
            ИНТЕГРАЦИИ
            ============================ -->
       <section id="integrations" class="section">
@@ -2637,6 +3006,91 @@
   </div>
 </div>
 
+<!-- Создать счёт -->
+<div class="modal-overlay" id="modal-add-invoice" role="dialog" aria-modal="true" aria-label="Создать счёт">
+  <div class="modal modal--wide">
+    <div class="modal__header">
+      <span class="modal__title">Новый счёт на оплату</span>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-add-invoice')" aria-label="Закрыть"><i class="ti ti-x"></i></button>
+    </div>
+    <form onsubmit="submitAddInvoice(event)">
+      <div class="form-row">
+        <div class="form-group" style="max-width:120px;"><label>№ счёта</label><input type="text" id="inv-num" placeholder="84" /></div>
+        <div class="form-group"><label>Клиент *</label>
+          <select id="inv-client" required><option value="">Выберите клиента...</option></select>
+        </div>
+        <div class="form-group" style="max-width:140px;"><label>Дата</label><input type="date" id="inv-date" /></div>
+        <div class="form-group" style="max-width:140px;"><label>Срок оплаты</label><input type="date" id="inv-due-date" /></div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr 36px;gap:8px;padding:0 0 6px;border-bottom:0.5px solid var(--border);margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;">Наименование</span>
+          <span style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;">Кол-во</span>
+          <span style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;">Цена, ₽</span>
+          <span style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;">Сумма</span>
+          <span></span>
+        </div>
+        <div id="inv-items-list"></div>
+        <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="addInvoiceItem()"><i class="ti ti-plus"></i> Добавить позицию</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>НДС</label>
+          <select id="inv-vat"><option value="0">Без НДС</option><option value="20">НДС 20%</option><option value="10">НДС 10%</option></select>
+        </div>
+        <div class="form-group"><label>Комментарий</label><input type="text" id="inv-comment" placeholder="Основание: договор №..." /></div>
+      </div>
+      <div style="text-align:right;padding:12px 0;border-top:0.5px solid var(--border);font-size:14px;" id="inv-total-preview">Итого: ₽ 0</div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('modal-add-invoice')">Отмена</button>
+        <button type="submit" name="action" value="draft" class="btn btn-ghost"><i class="ti ti-file"></i> Черновик</button>
+        <button type="submit" name="action" value="sent" class="btn btn-primary"><i class="ti ti-send"></i> Выставить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Создать акт -->
+<div class="modal-overlay" id="modal-add-act" role="dialog" aria-modal="true" aria-label="Создать акт">
+  <div class="modal modal--wide">
+    <div class="modal__header">
+      <span class="modal__title">Акт выполненных работ</span>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-add-act')" aria-label="Закрыть"><i class="ti ti-x"></i></button>
+    </div>
+    <form onsubmit="submitAddAct(event)">
+      <div class="form-row">
+        <div class="form-group" style="max-width:120px;"><label>№ акта</label><input type="text" id="act-num" placeholder="12" /></div>
+        <div class="form-group"><label>Клиент *</label><select id="act-client" required><option value="">Выберите клиента...</option></select></div>
+        <div class="form-group" style="max-width:140px;"><label>Дата</label><input type="date" id="act-date" /></div>
+      </div>
+      <div class="form-row"><div class="form-group"><label>Наименование услуги / работы</label><textarea id="act-desc" placeholder="Разработка сайта по договору №12..."></textarea></div></div>
+      <div class="form-row">
+        <div class="form-group"><label>Сумма без НДС, ₽</label><input type="number" id="act-amount" placeholder="0" /></div>
+        <div class="form-group"><label>НДС</label><select id="act-vat"><option value="0">Без НДС</option><option value="20">НДС 20%</option></select></div>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('modal-add-act')">Отмена</button>
+        <button type="submit" class="btn btn-primary"><i class="ti ti-file-check"></i> Создать акт</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Просмотр счёта -->
+<div class="modal-overlay" id="modal-view-invoice" role="dialog" aria-modal="true" aria-label="Просмотр счёта">
+  <div class="modal modal--wide">
+    <div class="modal__header">
+      <span class="modal__title" id="modal-inv-view-title">Счёт</span>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('modal-view-invoice')" aria-label="Закрыть"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="invoice-preview-content"></div>
+    <div class="modal__footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-view-invoice')">Закрыть</button>
+      <button class="btn btn-ghost" onclick="printInvoice()"><i class="ti ti-printer"></i> Печать</button>
+      <button class="btn btn-primary" id="btn-mark-invoice-paid"><i class="ti ti-check"></i> Отметить оплаченным</button>
+    </div>
+  </div>
+</div>
+
 <!-- Уведомления -->
 <div class="notification-area" id="notification-area"></div>
 
@@ -2656,9 +3110,11 @@ const SECTION_TITLES = {
   reports:      'Отчёты',
   hr:           'Сотрудники',
   marketing:    'Маркетинг & PR',
+  invoices:     'Счета и документы',
   taxes:        'Налоговый учёт',
   ai:           'AI-ассистент',
   integrations: 'Интеграции',
+  settings:     'Настройки',
 };
 
 function nav(el, sectionId) {
@@ -4487,10 +4943,603 @@ spinStyle.textContent = '@keyframes spin { from { transform: rotate(0deg); } to 
 document.head.appendChild(spinStyle);
 
 // =============================================
+// ВСПОМОГАТЕЛЬНЫЕ UI-ФУНКЦИИ
+// =============================================
+
+function navToSettings() {
+  const el = document.querySelector('[onclick*="settings"]');
+  nav(el, 'settings');
+}
+
+function showNotificationsPanel() {
+  const overdue = tasks.filter(t => t.status !== 'done' && t.due && t.due < todayIso());
+  const soonTax = TAX_CALENDAR_2026.filter(d => {
+    if (d.status === 'paid') return false;
+    const days = Math.round((new Date(d.date) - new Date(todayIso())) / 86400000);
+    return days >= 0 && days <= 14;
+  });
+  const overdueInv = invoices.filter(i => i.status !== 'paid' && i.dueDate < todayIso());
+
+  let msg = '';
+  if (overdue.length)    msg += `${overdue.length} просроченных задач. `;
+  if (soonTax.length)    msg += `${soonTax.length} налоговых платежей в ближайшие 14 дней. `;
+  if (overdueInv.length) msg += `${overdueInv.length} просроченных счетов.`;
+
+  if (msg) {
+    notify(msg.trim(), 'error');
+  } else {
+    notify('Нет активных уведомлений', 'info');
+  }
+}
+
+// =============================================
+// ТЕМА И ВНЕШНИЙ ВИД
+// =============================================
+
+let currentTheme = loadData('theme', 'auto');
+let currentAccent = loadData('accent', '#2563eb');
+
+function setTheme(theme) {
+  currentTheme = theme;
+  saveData('theme', theme);
+  applyTheme();
+  ['light','auto','dark'].forEach(t => {
+    const btn = document.getElementById('btn-theme-' + t);
+    if (btn) btn.classList.toggle('btn-primary', t === theme);
+    if (btn) btn.classList.toggle('btn-ghost',   t !== theme);
+  });
+}
+
+function applyTheme() {
+  const root = document.documentElement;
+  if (currentTheme === 'auto') {
+    root.removeAttribute('data-theme');
+  } else {
+    root.setAttribute('data-theme', currentTheme);
+  }
+  const icon = document.getElementById('theme-icon');
+  if (icon) {
+    icon.className = currentTheme === 'dark' ? 'ti ti-moon' : currentTheme === 'light' ? 'ti ti-sun' : 'ti ti-device-desktop';
+  }
+}
+
+function toggleTheme() {
+  const order = ['auto', 'light', 'dark'];
+  const next = order[(order.indexOf(currentTheme) + 1) % order.length];
+  setTheme(next);
+  notify(`Тема: ${next === 'auto' ? 'Авто' : next === 'light' ? 'Светлая' : 'Тёмная'}`, 'info');
+}
+
+function setAccent(color) {
+  currentAccent = color;
+  saveData('accent', color);
+  document.documentElement.style.setProperty('--accent', color);
+  const darker = color; // simplified — in production compute shade
+  document.documentElement.style.setProperty('--accent-hover', color);
+  notify('Акцентный цвет изменён', 'info');
+}
+
+function toggleCompact(on) {
+  document.body.style.fontSize = on ? '13px' : '';
+  saveData('compact', on);
+}
+
+// =============================================
+// МОБИЛЬНЫЙ САЙДБАР
+// =============================================
+
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('open');
+}
+
+// =============================================
+// ГЛОБАЛЬНЫЙ ПОИСК
+// =============================================
+
+const SEARCH_ICONS = {
+  client:   { icon: 'ti-users',       bg: 'var(--accent-light)',   color: 'var(--accent)',   section: 'crm' },
+  task:     { icon: 'ti-checkbox',    bg: 'var(--warning-light)',  color: 'var(--warning)',  section: 'tasks' },
+  tx:       { icon: 'ti-report-money',bg: 'var(--success-light)',  color: 'var(--success)',  section: 'finance' },
+  employee: { icon: 'ti-id-badge',    bg: 'var(--purple-light)',   color: 'var(--purple)',   section: 'hr' },
+  invoice:  { icon: 'ti-file-invoice',bg: 'var(--warning-light)',  color: 'var(--warning)',  section: 'invoices' },
+  campaign: { icon: 'ti-speakerphone',bg: 'var(--pink-light)',     color: 'var(--pink)',     section: 'marketing' },
+  competitor:{ icon: 'ti-tournament', bg: 'var(--danger-light)',   color: 'var(--danger)',   section: 'competitors' },
+};
+
+function globalSearch(q) {
+  const drop = document.getElementById('search-dropdown');
+  if (!q || q.length < 2) { drop.style.display = 'none'; return; }
+  drop.style.display = 'block';
+  const ql = q.toLowerCase();
+
+  const results = [];
+
+  clients.filter(c => c.name.toLowerCase().includes(ql) || (c.email||'').toLowerCase().includes(ql) || (c.phone||'').includes(ql)).slice(0,3)
+    .forEach(c => results.push({ type:'client', title: c.name, sub: c.status + ' · ' + formatRub(c.amount||0) }));
+
+  tasks.filter(t => t.title.toLowerCase().includes(ql) || (t.assignee||'').toLowerCase().includes(ql)).slice(0,3)
+    .forEach(t => results.push({ type:'task', title: t.title, sub: {todo:'К выполнению',inprogress:'В процессе',done:'Готово'}[t.status] }));
+
+  transactions.filter(t => t.desc.toLowerCase().includes(ql) || t.category.toLowerCase().includes(ql)).slice(0,3)
+    .forEach(t => results.push({ type:'tx', title: t.desc, sub: (t.type==='income'?'+':'-') + ' ' + formatRub(t.amount) + ' · ' + formatDate(t.date) }));
+
+  employees.filter(e => e.name.toLowerCase().includes(ql) || e.position.toLowerCase().includes(ql) || e.dept.toLowerCase().includes(ql)).slice(0,2)
+    .forEach(e => results.push({ type:'employee', title: e.name, sub: e.position + ' · ' + e.dept }));
+
+  invoices.filter(i => i.clientName.toLowerCase().includes(ql) || String(i.num).includes(ql)).slice(0,2)
+    .forEach(i => results.push({ type:'invoice', title: 'Счёт №' + i.num + ' — ' + i.clientName, sub: formatRub(i.total) + ' · ' + INV_STATUS_LABEL[i.status] }));
+
+  competitors.filter(c => c.name.toLowerCase().includes(ql)).slice(0,2)
+    .forEach(c => results.push({ type:'competitor', title: c.name, sub: 'Конкурент · ' + c.segment }));
+
+  if (!results.length) {
+    drop.innerHTML = '<div class="search-no-results"><i class="ti ti-search" style="font-size:24px;margin-bottom:8px;display:block;"></i>Ничего не найдено</div>';
+    return;
+  }
+
+  drop.innerHTML = results.map(r => {
+    const cfg = SEARCH_ICONS[r.type] || {};
+    return `
+      <div class="search-result-item" onclick="goToSearchResult('${r.type}')">
+        <div class="search-result-item__icon" style="background:${cfg.bg};color:${cfg.color};">
+          <i class="ti ${cfg.icon}"></i>
+        </div>
+        <div>
+          <div class="search-result-item__title">${escapeHtml(r.title)}</div>
+          <div class="search-result-item__sub">${escapeHtml(r.sub)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function showSearchResults() {
+  const val = document.getElementById('global-search').value;
+  if (val.length >= 2) globalSearch(val);
+}
+
+function goToSearchResult(type) {
+  const section = SEARCH_ICONS[type]?.section;
+  if (section) {
+    const navEl = document.querySelector(`[onclick*="'${section}'"]`);
+    nav(navEl, section);
+  }
+  hideSearch();
+}
+
+function hideSearch() {
+  document.getElementById('search-dropdown').style.display = 'none';
+  document.getElementById('global-search').value = '';
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#global-search-wrap') && !e.target.closest('#search-dropdown')) hideSearch();
+});
+
+// =============================================
+// СЧЕТА И ДОКУМЕНТЫ
+// =============================================
+
+let invoices = loadData('invoices', [
+  { id: 1, num: 81, clientName: 'ООО «РосКапитал»',  date: '2026-05-15', dueDate: '2026-05-30', items: [{ name: 'Консалтинг (40 ч)', qty: 40, price: 3500 }], vat: 0, status: 'paid',     comment: 'Договор №12' },
+  { id: 2, num: 82, clientName: 'ИП Семёнов Т.',      date: '2026-06-01', dueDate: '2026-06-15', items: [{ name: 'Разработка модуля', qty: 1, price: 185000 }], vat: 20, status: 'paid',    comment: 'Счёт по договору' },
+  { id: 3, num: 83, clientName: 'ООО «ТехЛогика»',    date: '2026-06-10', dueDate: '2026-06-25', items: [{ name: 'Техническая поддержка', qty: 1, price: 45000 }, { name: 'Обновление ПО', qty: 1, price: 85000 }], vat: 0, status: 'overdue', comment: '' },
+  { id: 4, num: 84, clientName: 'Петрова А.В.',        date: '2026-06-20', dueDate: '2026-07-05', items: [{ name: 'Услуги дизайна', qty: 1, price: 98500 }], vat: 0, status: 'sent',     comment: 'По ТЗ от 18.06' },
+  { id: 5, num: 85, clientName: 'ИП Козлов Д.Р.',      date: '2026-06-24', dueDate: '2026-07-08', items: [{ name: 'SEO-продвижение (месяц)', qty: 1, price: 35000 }], vat: 0, status: 'draft', comment: '' },
+]);
+
+let invoiceIdSeq = loadData('invoiceIdSeq', 6);
+let invoiceItemCounter = 0;
+let currentViewInvoiceId = null;
+
+const INV_STATUS_LABEL = { draft: 'Черновик', sent: 'Выставлен', paid: 'Оплачен', overdue: 'Просрочен', canceled: 'Отменён' };
+const INV_STATUS_CLS   = { draft: 'invoice-status-draft', sent: 'invoice-status-sent', paid: 'invoice-status-paid', overdue: 'invoice-status-overdue', canceled: 'invoice-status-canceled' };
+
+function calcInvoiceTotal(inv) {
+  const sub = inv.items.reduce((s, i) => s + i.qty * i.price, 0);
+  const vatAmt = sub * (inv.vat / 100);
+  return { sub, vatAmt, total: sub + vatAmt };
+}
+
+function renderInvoices(list) {
+  const tbody = document.getElementById('inv-table-body');
+  tbody.innerHTML = list.map(inv => {
+    const { sub, vatAmt, total } = calcInvoiceTotal(inv);
+    return `
+      <tr>
+        <td style="font-weight:700;">№${inv.num}</td>
+        <td><div class="client-name-cell"><div class="client-avatar">${initials(inv.clientName)}</div>${escapeHtml(inv.clientName)}</div></td>
+        <td>${formatDate(inv.date)}</td>
+        <td style="${inv.status !== 'paid' && inv.dueDate < todayIso() ? 'color:var(--danger);font-weight:600;' : ''}">${formatDate(inv.dueDate)}</td>
+        <td>${formatRub(sub)}</td>
+        <td style="color:var(--text-3);">${inv.vat ? inv.vat + '%' : '—'}</td>
+        <td style="font-weight:700;">${formatRub(total)}</td>
+        <td><span class="badge ${INV_STATUS_CLS[inv.status]}">${INV_STATUS_LABEL[inv.status]}</span></td>
+        <td style="text-align:right;display:flex;gap:4px;justify-content:flex-end;">
+          <button class="btn btn-ghost btn-icon" onclick="viewInvoice(${inv.id})" aria-label="Просмотр"><i class="ti ti-eye" style="font-size:14px;"></i></button>
+          ${inv.status !== 'paid' ? `<button class="btn btn-ghost btn-icon" onclick="markInvoicePaid(${inv.id})" aria-label="Оплачен"><i class="ti ti-check" style="font-size:14px;color:var(--success);"></i></button>` : ''}
+          <button class="btn btn-ghost btn-icon" onclick="deleteInvoice(${inv.id})" aria-label="Удалить"><i class="ti ti-trash" style="font-size:14px;"></i></button>
+        </td>
+      </tr>
+    `;
+  }).join('') || '<tr><td colspan="9"><div class="empty-state"><i class="ti ti-file-invoice"></i><div class="empty-state__text">Нет счетов</div></div></td></tr>';
+}
+
+function filterInvoices() {
+  const q = document.getElementById('inv-search').value.toLowerCase();
+  const st = document.getElementById('inv-status-filter').value;
+  let list = invoices.filter(i => {
+    const mQ = !q || i.clientName.toLowerCase().includes(q) || String(i.num).includes(q);
+    const mS = !st || i.status === st;
+    return mQ && mS;
+  }).sort((a,b) => b.num - a.num);
+  renderInvoices(list);
+  renderInvoiceSummary();
+}
+
+function renderInvoiceSummary() {
+  const paid    = invoices.filter(i => i.status === 'paid');
+  const pending = invoices.filter(i => i.status === 'sent');
+  const overdue = invoices.filter(i => i.status === 'overdue');
+  const sum = arr => arr.reduce((s,i) => s + calcInvoiceTotal(i).total, 0);
+  document.getElementById('inv-total-count').textContent    = invoices.length;
+  document.getElementById('inv-paid-sum').textContent       = formatRub(sum(paid));
+  document.getElementById('inv-pending-sum').textContent    = formatRub(sum(pending));
+  document.getElementById('inv-overdue-sum').textContent    = formatRub(sum(overdue));
+  document.getElementById('inv-sub').textContent = `${invoices.length} документов · Оплачено ${formatRub(sum(paid))}`;
+}
+
+function populateClientSelect(selectId) {
+  const sel = document.getElementById(selectId);
+  if (!sel) return;
+  const opts = clients.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
+  sel.innerHTML = '<option value="">Выберите клиента...</option>' + opts;
+}
+
+function addInvoiceItem(name='', qty=1, price=0) {
+  invoiceItemCounter++;
+  const id = invoiceItemCounter;
+  const row = document.createElement('div');
+  row.id = 'inv-item-' + id;
+  row.style.cssText = 'display:grid;grid-template-columns:3fr 1fr 1fr 1fr 36px;gap:8px;margin-bottom:6px;';
+  row.innerHTML = `
+    <input type="text" placeholder="Наименование услуги/товара" value="${escapeHtml(name)}" class="inv-item-name" oninput="updateInvoiceTotal()" />
+    <input type="number" placeholder="1" value="${qty}" min="0.01" step="0.01" class="inv-item-qty" oninput="updateInvoiceTotal()" />
+    <input type="number" placeholder="0" value="${price||''}" min="0" class="inv-item-price" oninput="updateInvoiceTotal()" />
+    <input type="text" readonly placeholder="₽ 0" class="inv-item-sum" style="background:var(--surface-2);color:var(--text-2);" />
+    <button type="button" class="btn btn-ghost btn-icon" onclick="document.getElementById('inv-item-${id}').remove();updateInvoiceTotal();" aria-label="Удалить строку"><i class="ti ti-x" style="font-size:13px;"></i></button>
+  `;
+  document.getElementById('inv-items-list').appendChild(row);
+  updateInvoiceTotal();
+}
+
+function updateInvoiceTotal() {
+  let sub = 0;
+  document.querySelectorAll('#inv-items-list > div').forEach(row => {
+    const qty   = parseFloat(row.querySelector('.inv-item-qty')?.value) || 0;
+    const price = parseFloat(row.querySelector('.inv-item-price')?.value) || 0;
+    const sum   = qty * price;
+    const sumEl = row.querySelector('.inv-item-sum');
+    if (sumEl) sumEl.value = formatRub(sum);
+    sub += sum;
+  });
+  const vat = parseInt(document.getElementById('inv-vat')?.value) || 0;
+  const vatAmt = sub * vat / 100;
+  const total = sub + vatAmt;
+  const prev = document.getElementById('inv-total-preview');
+  if (prev) prev.innerHTML = `
+    <span style="color:var(--text-3);">Сумма: ${formatRub(sub)}</span>
+    ${vat ? `<span style="color:var(--text-3);margin-left:16px;">НДС ${vat}%: ${formatRub(vatAmt)}</span>` : ''}
+    <span style="font-size:16px;font-weight:700;color:var(--text);margin-left:16px;">Итого: ${formatRub(total)}</span>
+  `;
+}
+
+function submitAddInvoice(e) {
+  e.preventDefault();
+  const clientName = document.getElementById('inv-client').value;
+  if (!clientName) { notify('Выберите клиента', 'error'); return; }
+
+  const items = [];
+  document.querySelectorAll('#inv-items-list > div').forEach(row => {
+    const name  = row.querySelector('.inv-item-name')?.value.trim();
+    const qty   = parseFloat(row.querySelector('.inv-item-qty')?.value) || 1;
+    const price = parseFloat(row.querySelector('.inv-item-price')?.value) || 0;
+    if (name) items.push({ name, qty, price });
+  });
+
+  if (!items.length) { notify('Добавьте хотя бы одну позицию', 'error'); return; }
+
+  const num    = parseInt(document.getElementById('inv-num').value) || (invoices.length + 81);
+  const date   = document.getElementById('inv-date').value || todayIso();
+  const dueDate= document.getElementById('inv-due-date').value || todayIso();
+  const vat    = parseInt(document.getElementById('inv-vat').value) || 0;
+  const comment= document.getElementById('inv-comment').value.trim();
+  const status = e.submitter?.value === 'draft' ? 'draft' : 'sent';
+
+  invoices.unshift({ id: invoiceIdSeq++, num, clientName, date, dueDate, items, vat, comment, status });
+  saveData('invoices', invoices);
+  saveData('invoiceIdSeq', invoiceIdSeq);
+  closeModal('modal-add-invoice');
+  e.target.reset();
+  document.getElementById('inv-items-list').innerHTML = '';
+  filterInvoices();
+  notify(`Счёт №${num} ${status === 'sent' ? 'выставлен' : 'сохранён как черновик'}`, 'success');
+}
+
+function submitAddAct(e) {
+  e.preventDefault();
+  const num    = document.getElementById('act-num').value || (invoices.length + 1);
+  const clientName = document.getElementById('act-client').value;
+  const date   = document.getElementById('act-date').value || todayIso();
+  const desc   = document.getElementById('act-desc').value.trim();
+  const amount = parseFloat(document.getElementById('act-amount').value) || 0;
+  const vat    = parseInt(document.getElementById('act-vat').value) || 0;
+  invoices.unshift({ id: invoiceIdSeq++, num: 'А-'+num, clientName, date, dueDate: date, items: [{ name: desc, qty: 1, price: amount }], vat, comment: 'Акт выполненных работ', status: 'sent', docType: 'act' });
+  saveData('invoices', invoices);
+  saveData('invoiceIdSeq', invoiceIdSeq);
+  closeModal('modal-add-act');
+  e.target.reset();
+  filterInvoices();
+  notify(`Акт №${num} создан`, 'success');
+}
+
+function viewInvoice(id) {
+  const inv = invoices.find(i => i.id === id);
+  if (!inv) return;
+  currentViewInvoiceId = id;
+  const { sub, vatAmt, total } = calcInvoiceTotal(inv);
+  document.getElementById('modal-inv-view-title').textContent = `${inv.docType === 'act' ? 'Акт' : 'Счёт'} №${inv.num}`;
+  document.getElementById('invoice-preview-content').innerHTML = `
+    <div class="invoice-preview" id="printable-invoice">
+      <div class="invoice-preview__header">
+        <div>
+          <div class="invoice-preview__logo">Proto</div>
+          <div style="font-size:12px;color:#999;margin-top:4px;">${escapeHtml(taxSettings.name)}</div>
+          <div style="font-size:12px;color:#999;">ИНН ${escapeHtml(taxSettings.inn)}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="invoice-preview__number">${inv.docType === 'act' ? 'Акт' : 'Счёт'} №${inv.num}</div>
+          <div style="font-size:13px;color:#666;margin-top:4px;">от ${formatDate(inv.date)}</div>
+          ${inv.dueDate ? `<div style="font-size:13px;color:#666;">Срок оплаты: ${formatDate(inv.dueDate)}</div>` : ''}
+        </div>
+      </div>
+      <div class="invoice-preview__parties">
+        <div>
+          <div class="invoice-preview__party-label">Исполнитель</div>
+          <div class="invoice-preview__party-name">${escapeHtml(taxSettings.name)}</div>
+          <div class="invoice-preview__party-info">ИНН: ${escapeHtml(taxSettings.inn)}</div>
+          <div class="invoice-preview__party-info">${escapeHtml(taxSettings.bank)} · р/с ${escapeHtml(taxSettings.acc)}</div>
+        </div>
+        <div>
+          <div class="invoice-preview__party-label">Заказчик</div>
+          <div class="invoice-preview__party-name">${escapeHtml(inv.clientName)}</div>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>№</th><th>Наименование</th><th>Кол-во</th><th>Цена, ₽</th><th>Сумма, ₽</th></tr></thead>
+        <tbody>
+          ${inv.items.map((it, i) => `<tr><td>${i+1}</td><td>${escapeHtml(it.name)}</td><td>${it.qty}</td><td>${formatRub(it.price)}</td><td>${formatRub(it.qty * it.price)}</td></tr>`).join('')}
+        </tbody>
+      </table>
+      <div class="invoice-preview__totals">
+        <div class="invoice-preview__total-row"><span>Итого без НДС:</span><span>${formatRub(sub)}</span></div>
+        ${inv.vat ? `<div class="invoice-preview__total-row"><span>НДС ${inv.vat}%:</span><span>${formatRub(vatAmt)}</span></div>` : ''}
+        <div class="invoice-preview__total-row invoice-preview__grand-total"><span>ИТОГО К ОПЛАТЕ:</span><span>${formatRub(total)}</span></div>
+      </div>
+      ${inv.comment ? `<div style="margin-top:20px;font-size:12px;color:#666;">Основание: ${escapeHtml(inv.comment)}</div>` : ''}
+    </div>
+  `;
+  document.getElementById('btn-mark-invoice-paid').onclick = () => { markInvoicePaid(id); closeModal('modal-view-invoice'); };
+  document.getElementById('btn-mark-invoice-paid').style.display = inv.status === 'paid' ? 'none' : '';
+  openModal('modal-view-invoice');
+}
+
+function printInvoice() {
+  const content = document.getElementById('printable-invoice')?.innerHTML;
+  if (!content) return;
+  const w = window.open('', '_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Счёт</title>
+    <style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;padding:32px;}table{width:100%;border-collapse:collapse;margin-bottom:20px;}th{background:#f5f5f5;padding:8px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;}td{padding:10px 12px;border-bottom:1px solid #eee;}.logo{font-size:20px;font-weight:800;color:#2563eb;}</style>
+  </head><body>${content}</body></html>`);
+  w.document.close();
+  w.print();
+}
+
+function markInvoicePaid(id) {
+  const inv = invoices.find(i => i.id === id);
+  if (!inv) return;
+  inv.status = 'paid';
+  saveData('invoices', invoices);
+  filterInvoices();
+  // Автодобавить в финансы
+  const { total } = calcInvoiceTotal(inv);
+  transactions.unshift({ id: txIdSeq++, type: 'income', amount: total, desc: `Оплата счёта №${inv.num} — ${inv.clientName}`, category: 'Продажи', date: todayIso() });
+  saveData('transactions', transactions);
+  saveData('txIdSeq', txIdSeq);
+  filterTransactions();
+  notify(`Счёт №${inv.num} отмечен оплаченным, добавлен в Финансы`, 'success');
+}
+
+function deleteInvoice(id) {
+  invoices = invoices.filter(i => i.id !== id);
+  saveData('invoices', invoices);
+  filterInvoices();
+  notify('Документ удалён', 'info');
+}
+
+// =============================================
+// НАСТРОЙКИ
+// =============================================
+
+function switchSettingsTab(tab) {
+  document.querySelectorAll('.settings-nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.settings-panel').forEach(el => el.classList.remove('active'));
+  const nav = document.getElementById('stab-' + tab);
+  const panel = document.getElementById('spanel-' + tab);
+  if (nav) nav.classList.add('active');
+  if (panel) panel.classList.add('active');
+
+  if (tab === 'about') {
+    document.getElementById('about-clients').textContent = clients.length;
+    document.getElementById('about-tasks').textContent   = tasks.length;
+    document.getElementById('about-txs').textContent     = transactions.length;
+    document.getElementById('about-emps').textContent    = employees.length;
+  }
+}
+
+function saveCompanySettings() {
+  const upd = {
+    name:    document.getElementById('s-company-name').value.trim(),
+    form:    document.getElementById('s-company-form').value,
+    inn:     document.getElementById('s-company-inn').value.trim(),
+    ogrn:    document.getElementById('s-company-ogrn').value.trim(),
+    phone:   document.getElementById('s-company-phone').value.trim(),
+    email:   document.getElementById('s-company-email').value.trim(),
+    address: document.getElementById('s-company-address').value.trim(),
+    bank:    document.getElementById('s-company-bank').value.trim(),
+    acc:     document.getElementById('s-company-acc').value.trim(),
+    logo:    document.getElementById('s-company-logo').value.trim(),
+  };
+  Object.assign(taxSettings, upd);
+  saveData('taxSettings', taxSettings);
+  if (upd.name) {
+    document.querySelector('.sidebar__user-name').textContent = upd.name.split(' ').slice(0,2).join(' ');
+    document.getElementById('tax-company-name').textContent = upd.name;
+    document.getElementById('fld-inn').textContent  = upd.inn;
+    document.getElementById('fld-ogrn').textContent = upd.ogrn;
+    document.getElementById('fld-ifns').textContent = taxSettings.ifns;
+    document.getElementById('fld-form').textContent = upd.form;
+  }
+  notify('Профиль компании сохранён', 'success');
+}
+
+function loadSettingsForm() {
+  const s = taxSettings;
+  document.getElementById('s-company-name').value    = s.name || '';
+  document.getElementById('s-company-form').value    = s.form || 'ИП';
+  document.getElementById('s-company-inn').value     = s.inn  || '';
+  document.getElementById('s-company-ogrn').value    = s.ogrn || '';
+  document.getElementById('s-company-phone').value   = s.phone || '';
+  document.getElementById('s-company-email').value   = s.email || '';
+  document.getElementById('s-company-address').value = s.address || '';
+  document.getElementById('s-company-bank').value    = s.bank || '';
+  document.getElementById('s-company-acc').value     = s.acc  || '';
+}
+
+function exportAllData() {
+  const data = { clients, tasks, transactions, employees, campaigns, prEvents, invoices, competitors, declarations, taxSettings, exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `proto-backup-${todayIso()}.json`;
+  a.click();
+  notify('Данные экспортированы', 'success');
+}
+
+function importAllData(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (d.clients)       { clients = d.clients;       saveData('clients', clients); }
+      if (d.tasks)         { tasks = d.tasks;           saveData('tasks', tasks); }
+      if (d.transactions)  { transactions = d.transactions; saveData('transactions', transactions); }
+      if (d.employees)     { employees = d.employees;   saveData('employees', employees); }
+      if (d.campaigns)     { campaigns = d.campaigns;   saveData('campaigns', campaigns); }
+      if (d.invoices)      { invoices = d.invoices;     saveData('invoices', invoices); }
+      if (d.competitors)   { competitors = d.competitors; saveData('competitors', competitors); }
+      // Re-render
+      filterClients(); filterTransactions(); renderTasks(); filterInvoices();
+      filterCampaigns(); filterEmployees(); renderHrSummary(); renderCompetitors();
+      notify('Данные импортированы успешно', 'success');
+    } catch {
+      notify('Ошибка чтения файла', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function exportCsv() {
+  const headers = ['Название', 'Телефон', 'Email', 'Сумма сделок', 'Статус', 'Дата добавления'];
+  const rows = clients.map(c => [c.name, c.phone||'', c.email||'', c.amount||0, c.status, c.date].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `clients-${todayIso()}.csv`;
+  a.click();
+  notify('CRM экспортирован в CSV', 'success');
+}
+
+function confirmReset() {
+  document.getElementById('modal-universal-title').textContent = 'Сбросить все данные?';
+  document.getElementById('modal-universal-body').innerHTML = `
+    <div style="color:var(--danger);background:var(--danger-light);border-radius:var(--radius-md);padding:14px 16px;font-size:13.5px;">
+      <i class="ti ti-alert-triangle" style="font-size:18px;vertical-align:middle;margin-right:6px;"></i>
+      Это действие <strong>необратимо</strong>. Будут удалены все клиенты, задачи, финансовые операции, сотрудники и настройки.
+    </div>
+  `;
+  document.getElementById('modal-universal-save').className = 'btn btn-danger';
+  document.getElementById('modal-universal-save').innerHTML = '<i class="ti ti-trash"></i> Да, сбросить всё';
+  document.getElementById('modal-universal-save').onclick = () => {
+    ['clients','tasks','transactions','employees','campaigns','prEvents','invoices','competitors','declarations','taxSettings','theme','accent','compact'].forEach(k => localStorage.removeItem('proto_' + k));
+    location.reload();
+  };
+  openModal('modal-universal');
+}
+
+// =============================================
+// ДАШБОРД — ЖИВЫЕ ДАННЫЕ
+// =============================================
+
+function updateDashboardLiveData() {
+  const finSummary = calcFinanceSummary(transactions);
+  const activeTasks = tasks.filter(t => t.status !== 'done').length;
+  const overdueTasks = tasks.filter(t => t.status !== 'done' && t.due && t.due < todayIso()).length;
+  const totalClients = clients.length;
+  const newClients = clients.filter(c => c.date && c.date >= new Date(Date.now() - 30*86400000).toISOString().split('T')[0]).length;
+
+  const metrics = document.querySelectorAll('.metric-card');
+  // Update first 4 metric cards in dashboard
+  if (metrics[0]) {
+    metrics[0].querySelector('.metric-card__value').textContent = formatRub(finSummary.income);
+  }
+  if (metrics[1]) {
+    metrics[1].querySelector('.metric-card__value').textContent = totalClients;
+    metrics[1].querySelector('.metric-card__delta').textContent = `+${newClients} за 30 дней`;
+  }
+  if (metrics[2]) {
+    metrics[2].querySelector('.metric-card__value').textContent = activeTasks;
+    metrics[2].querySelector('.metric-card__delta').textContent = `${overdueTasks > 0 ? overdueTasks + ' просрочено' : 'Всё в срок'}`;
+    metrics[2].querySelector('.metric-card__delta').className   = 'metric-card__delta ' + (overdueTasks > 0 ? 'delta-down' : 'delta-up');
+  }
+  if (metrics[3]) {
+    metrics[3].querySelector('.metric-card__value').textContent = formatRub(finSummary.expense);
+  }
+}
+
+// Уведомления при просроченных задачах и налогах
+function checkDeadlineNotifications() {
+  const today = todayIso();
+  const overdueTasks = tasks.filter(t => t.status !== 'done' && t.due && t.due < today);
+  if (overdueTasks.length > 0) {
+    setTimeout(() => notify(`${overdueTasks.length} задач${plural(overdueTasks.length,['а','и',''])} просрочено`, 'error'), 500);
+  }
+  const soonTax = TAX_CALENDAR_2026.filter(d => d.status !== 'paid' && d.date >= today && Math.round((new Date(d.date) - new Date(today)) / 86400000) <= 14);
+  if (soonTax.length > 0) {
+    setTimeout(() => notify(`Налог «${soonTax[0].name}» через ≤14 дней`, 'info'), 1500);
+  }
+}
+
+// =============================================
 // ИНИЦИАЛИЗАЦИЯ
 // =============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+
   filterClients();
   filterTransactions();
   filterBankTx();
@@ -4506,6 +5555,30 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('tx-date').value = todayIso();
   initCharts();
   initTaxSection();
+
+  // Apply saved theme and accent
+  applyTheme();
+  if (currentAccent !== '#2563eb') setAccent(currentAccent);
+  if (loadData('compact', false)) {
+    document.body.style.fontSize = '13px';
+    const ct = document.getElementById('toggle-compact');
+    if (ct) ct.checked = true;
+  }
+
+  // Invoices
+  populateClientSelect('inv-client');
+  populateClientSelect('act-client');
+  addInvoiceItem();
+  filterInvoices();
+
+  // Settings
+  loadSettingsForm();
+
+  // Dashboard live data
+  updateDashboardLiveData();
+
+  // Deadline notifications
+  setTimeout(checkDeadlineNotifications, 2000);
 });
 </script>
 
