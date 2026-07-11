@@ -1,10 +1,14 @@
 """
 ai_engine.py — ИИ-аналитик на базе бесплатного Google Gemini API.
 
-Модель 'gemini-2.5-flash' получает сводку технических индикаторов и
+Модель Gemini Flash получает сводку технических индикаторов и
 последние заголовки новостей, взвешивает их и возвращает строгое решение:
 "ВВЕРХ", "ВНИЗ" или "СТОИМ НА МЕСТЕ" с процентом уверенности,
 рекомендованным временем экспирации и кратким обоснованием.
+
+Google периодически закрывает старые модели для новых ключей, поэтому
+модуль перебирает список моделей MODEL_CANDIDATES: если модель
+недоступна (404 NOT_FOUND), автоматически пробуется следующая.
 
 Ключ берётся из переменной окружения GEMINI_API_KEY (см. README.md)
 или передаётся явно в get_ai_signal(api_key=...).
@@ -15,12 +19,20 @@ from __future__ import annotations
 import json
 import os
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from google import genai
 from google.genai import types
 
-MODEL_NAME = "gemini-2.5-flash"
+# Модели пробуются по порядку. Все перечисленные имеют бесплатный тариф
+# Gemini API (по состоянию на июль 2026). Первым идёт алиас
+# gemini-flash-latest — Google сам направляет его на актуальную Flash-модель.
+MODEL_CANDIDATES: tuple[str, ...] = (
+    "gemini-flash-latest",
+    "gemini-3.5-flash",
+    "gemini-3-flash-preview",
+    "gemini-2.5-flash",
+)
 
 VALID_SIGNALS = ("ВВЕРХ", "ВНИЗ", "СТОИМ НА МЕСТЕ")
 
@@ -37,6 +49,7 @@ class AISignal:
     confidence: int           # уверенность в процентах, 0–100
     expiration_minutes: int   # рекомендованная экспирация, минут (1–5)
     reasoning: str            # краткое обоснование на русском языке
+    model: str = field(default="", compare=False)  # какая модель ответила
 
 
 SYSTEM_INSTRUCTION = """Ты — опытный трейдер-аналитик бинарных опционов.
@@ -126,6 +139,17 @@ def _validate(data: dict) -> AISignal:
     )
 
 
+def _is_model_unavailable_error(exc: Exception) -> bool:
+    """Определяет, что модель недоступна и стоит попробовать следующую."""
+    message = str(exc)
+    return (
+        "NOT_FOUND" in message
+        or "404" in message
+        or "no longer available" in message.lower()
+        or "is not found" in message.lower()
+    )
+
+
 def get_ai_signal(
     market_summary: str,
     news_block: str,
@@ -133,6 +157,9 @@ def get_ai_signal(
 ) -> AISignal:
     """
     Отправляет данные в Gemini и возвращает торговый сигнал.
+
+    Перебирает модели из MODEL_CANDIDATES: если модель недоступна для этого
+    ключа (404 NOT_FOUND / "no longer available"), пробует следующую.
 
     :param market_summary: текстовая сводка индикаторов (data_engine.get_market_snapshot()["summary"]).
     :param news_block: блок заголовков новостей (news_engine.headlines_for_prompt()).
@@ -147,25 +174,44 @@ def get_ai_signal(
         )
 
     client = genai.Client(api_key=key)
+    prompt = build_prompt(market_summary, news_block)
+    config = types.GenerateContentConfig(
+        system_instruction=SYSTEM_INSTRUCTION,
+        temperature=0.2,
+        response_mime_type="application/json",
+    )
 
-    try:
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=build_prompt(market_summary, news_block),
-            config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_INSTRUCTION,
-                temperature=0.2,
-                response_mime_type="application/json",
-            ),
-        )
-    except Exception as exc:
-        raise AIEngineError(f"Ошибка запроса к Gemini API: {exc}") from exc
+    unavailable: list[str] = []
+    for model_name in MODEL_CANDIDATES:
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+                config=config,
+            )
+        except Exception as exc:
+            if _is_model_unavailable_error(exc):
+                unavailable.append(model_name)
+                continue
+            raise AIEngineError(f"Ошибка запроса к Gemini API ({model_name}): {exc}") from exc
 
-    text = getattr(response, "text", None)
-    if not text:
-        raise AIEngineError("Gemini вернул пустой ответ (возможно, сработал фильтр безопасности).")
+        text = getattr(response, "text", None)
+        if not text:
+            raise AIEngineError(
+                f"Gemini ({model_name}) вернул пустой ответ "
+                "(возможно, сработал фильтр безопасности)."
+            )
 
-    return _validate(_extract_json(text))
+        result = _validate(_extract_json(text))
+        result.model = model_name
+        return result
+
+    raise AIEngineError(
+        "Ни одна из моделей Gemini не доступна для вашего ключа: "
+        f"{', '.join(unavailable)}. Проверьте список доступных моделей на "
+        "https://ai.google.dev/gemini-api/docs/models и добавьте актуальную "
+        "в MODEL_CANDIDATES (ai_engine.py)."
+    )
 
 
 if __name__ == "__main__":

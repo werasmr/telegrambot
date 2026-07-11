@@ -7,7 +7,7 @@
   (`yfinance`), индикаторы RSI(14), MACD, Bollinger Bands, EMA(9)/EMA(21);
 - **Новостного фона** — свежие заголовки из RSS-лент Yahoo Finance,
   Investing.com и CoinDesk (для крипты);
-- **ИИ-аналитика** — бесплатная модель **Google Gemini 2.5 Flash** взвешивает
+- **ИИ-аналитика** — бесплатная модель **Google Gemini Flash** взвешивает
   индикаторы и новости и выдаёт решение с процентом уверенности,
   рекомендованной экспирацией (1–5 минут) и кратким обоснованием.
 
@@ -19,7 +19,7 @@
 |---|---|
 | `data_engine.py` | Загрузка свечей через `yfinance` и расчёт индикаторов (`ta`) |
 | `news_engine.py` | Парсер финансовых новостей из RSS-лент (`feedparser`) |
-| `ai_engine.py` | Интеграция с Google Gemini API (модель `gemini-2.5-flash`) |
+| `ai_engine.py` | Интеграция с Google Gemini API (автоподбор доступной Flash-модели) |
 | `main.py` | Веб-интерфейс на Streamlit + графики Plotly |
 | `requirements.txt` | Зависимости проекта |
 
@@ -91,6 +91,13 @@ python ai_engine.py     # тестовый запрос к Gemini (нужен GE
   рынок открыт (пн–пт); BTC/USD торгуется круглосуточно.
 - Бесплатный тариф Gemini имеет лимиты запросов в минуту — при ошибке 429
   подождите немного и повторите запрос.
+- Google периодически закрывает старые модели для новых ключей, поэтому
+  `ai_engine.py` перебирает список `MODEL_CANDIDATES`
+  (`gemini-flash-latest` → `gemini-3.5-flash` → `gemini-3-flash-preview` →
+  `gemini-2.5-flash`) и использует первую доступную. Если все модели из
+  списка перестали работать — допишите актуальное имя из
+  [списка моделей Gemini](https://ai.google.dev/gemini-api/docs/models)
+  в начало `MODEL_CANDIDATES`.
 
 ## ⚠️ Отказ от ответственности
 

@@ -84,7 +84,7 @@ with st.sidebar:
 st.title("📈 AI-генератор сигналов для бинарных опционов")
 st.caption(
     f"Актив: **{asset}** · Таймфрейм: **{interval}** · "
-    "Тех. анализ (RSI, MACD, Bollinger, EMA) + новостной фон + Gemini 2.5 Flash"
+    "Тех. анализ (RSI, MACD, Bollinger, EMA) + новостной фон + Google Gemini Flash"
 )
 
 get_signal_clicked = st.button(
@@ -219,7 +219,7 @@ if get_signal_clicked:
 
     # 3. ИИ-аналитик
     try:
-        with st.spinner("Gemini 2.5 Flash взвешивает данные и принимает решение…"):
+        with st.spinner("Gemini взвешивает данные и принимает решение…"):
             result = get_ai_signal(snapshot["summary"], news_block, api_key=api_key)
     except AIEngineError as exc:
         st.error(f"Ошибка ИИ-аналитика: {exc}")
@@ -235,6 +235,8 @@ if get_signal_clicked:
     with col_details:
         st.subheader("🧠 Обоснование ИИ")
         st.info(result.reasoning)
+        if result.model:
+            st.caption(f"Модель: `{result.model}`")
 
         ind = snapshot["indicators"]
         m1, m2, m3 = st.columns(3)
@@ -273,5 +275,5 @@ else:
         "Выберите актив и таймфрейм в боковой панели, укажите GEMINI_API_KEY "
         "и нажмите **«ПОЛУЧИТЬ СИГНАЛ»**. Приложение скачает свежие свечи, "
         "рассчитает RSI, MACD, Bollinger Bands и EMA, соберёт последние новости "
-        "и передаст всё ИИ-аналитику Gemini 2.5 Flash для принятия решения."
+        "и передаст всё ИИ-аналитику Google Gemini Flash для принятия решения."
     )
