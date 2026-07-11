@@ -261,9 +261,12 @@ if get_signal_clicked:
         if news:
             for item in news:
                 if item["link"]:
-                    st.markdown(f"- [{item['title']}]({item['link']})  \n  *{item['published']}*")
+                    st.markdown(
+                        f"- [{item['title']}]({item['link']})  \n"
+                        f"  *{item['source']} · {item['published']}*"
+                    )
                 else:
-                    st.markdown(f"- {item['title']}  \n  *{item['published']}*")
+                    st.markdown(f"- {item['title']}  \n  *{item['source']} · {item['published']}*")
         else:
             st.write("Свежие новости получить не удалось — решение принято только по тех. анализу.")
 

@@ -5,8 +5,11 @@
 
 - **Технического анализа** — минутные/5-минутные свечи с Yahoo Finance
   (`yfinance`), индикаторы RSI(14), MACD, Bollinger Bands, EMA(9)/EMA(21);
-- **Новостного фона** — свежие заголовки из RSS-лент Yahoo Finance,
-  Investing.com и CoinDesk (для крипты);
+- **Новостного фона** — свежие заголовки из ~20 RSS-лент: Yahoo Finance,
+  Investing.com (Forex/Economy/Indicators/Stocks), CNBC, MarketWatch,
+  Bloomberg, FXStreet, FXEmpire, ForexLive; для крипты дополнительно
+  CoinDesk, Cointelegraph, Decrypt, Bitcoin Magazine, CryptoPotato.
+  Ленты качаются параллельно, недоступные молча пропускаются;
 - **ИИ-аналитика** — бесплатная модель **Google Gemini Flash** взвешивает
   индикаторы и новости и выдаёт решение с процентом уверенности,
   рекомендованной экспирацией (1–5 минут) и кратким обоснованием.
