@@ -94,21 +94,87 @@ def build_prompt(market_summary: str, news_block: str) -> str:
     )
 
 
+def _repair_truncated_json(text: str) -> dict | None:
+    """
+    Пытается починить обрезанный JSON: закрывает незакрытую строку
+    и добавляет недостающие закрывающие скобки. Возвращает dict или None.
+    """
+    candidate = text.strip().rstrip(",")
+
+    # Считаем незакрытые кавычки (без учёта экранированных \").
+    unescaped_quotes = len(re.findall(r'(?<!\\)"', candidate))
+    if unescaped_quotes % 2 == 1:
+        candidate += '"'
+
+    open_braces = candidate.count("{") - candidate.count("}")
+    if open_braces > 0:
+        candidate += "}" * open_braces
+
+    try:
+        result = json.loads(candidate)
+        return result if isinstance(result, dict) else None
+    except json.JSONDecodeError:
+        return None
+
+
+def _extract_fields_by_regex(text: str) -> dict | None:
+    """
+    Запасной разбор: вытаскивает поля из сломанного JSON регулярками.
+    Возвращает dict, если удалось найти хотя бы сигнал, иначе None.
+    """
+    signal_match = re.search(r'"signal"\s*:\s*"([^"]+)"', text)
+    if not signal_match:
+        return None
+
+    data: dict = {"signal": signal_match.group(1)}
+
+    confidence_match = re.search(r'"confidence"\s*:\s*"?(\d+(?:\.\d+)?)', text)
+    if confidence_match:
+        data["confidence"] = confidence_match.group(1)
+
+    expiration_match = re.search(r'"expiration_minutes"\s*:\s*"?(\d+(?:\.\d+)?)', text)
+    if expiration_match:
+        data["expiration_minutes"] = expiration_match.group(1)
+
+    reasoning_match = re.search(r'"reasoning"\s*:\s*"((?:[^"\\]|\\.)*)', text, re.DOTALL)
+    if reasoning_match:
+        reasoning = reasoning_match.group(1)
+        reasoning = reasoning.replace('\\"', '"').replace("\\n", "\n").replace("\\\\", "\\")
+        data["reasoning"] = reasoning
+
+    return data
+
+
 def _extract_json(text: str) -> dict:
-    """Достаёт JSON-объект из ответа модели (в т.ч. из markdown-блока)."""
+    """
+    Достаёт JSON-объект из ответа модели (в т.ч. из markdown-блока).
+    Устойчив к обрезанным ответам: сначала пытается починить JSON,
+    затем вытащить поля регулярками.
+    """
     text = text.strip()
     # Убираем возможную обёртку ```json ... ```
-    fence = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
+    fence = re.search(r"```(?:json)?\s*(\{.*?)\s*```", text, re.DOTALL)
     if fence:
         text = fence.group(1)
     else:
-        brace = re.search(r"\{.*\}", text, re.DOTALL)
-        if brace:
-            text = brace.group(0)
+        brace_start = text.find("{")
+        if brace_start >= 0:
+            text = text[brace_start:]
+
     try:
         return json.loads(text)
-    except json.JSONDecodeError as exc:
-        raise AIEngineError(f"Не удалось разобрать JSON из ответа модели: {text!r}") from exc
+    except json.JSONDecodeError:
+        pass
+
+    repaired = _repair_truncated_json(text)
+    if repaired is not None:
+        return repaired
+
+    fields = _extract_fields_by_regex(text)
+    if fields is not None:
+        return fields
+
+    raise AIEngineError(f"Не удалось разобрать JSON из ответа модели: {text!r}")
 
 
 def _validate(data: dict) -> AISignal:
