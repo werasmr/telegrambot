@@ -18,7 +18,18 @@ ASSETS: dict[str, str] = {
     "EUR/USD": "EURUSD=X",
     "GBP/USD": "GBPUSD=X",
     "BTC/USD": "BTC-USD",
+    "ETH/USD": "ETH-USD",
+    "SOL/USD": "SOL-USD",
+    "XRP/USD": "XRP-USD",
+    "BNB/USD": "BNB-USD",
+    "DOGE/USD": "DOGE-USD",
+    "ADA/USD": "ADA-USD",
 }
+
+# Криптовалютные активы (торгуются 24/7, для них подключаются крипто-новости)
+CRYPTO_ASSETS: frozenset[str] = frozenset(
+    {"BTC/USD", "ETH/USD", "SOL/USD", "XRP/USD", "BNB/USD", "DOGE/USD", "ADA/USD"}
+)
 
 # Допустимые интервалы свечей и соответствующая глубина истории,
 # достаточная для расчёта индикаторов (MACD требует минимум ~35 свечей).
@@ -164,6 +175,109 @@ def get_market_snapshot(asset: str, interval: str = "5m") -> dict:
         "indicators": indicators,
         "summary": summary,
     }
+
+
+def quick_bias(ind: dict) -> dict:
+    """
+    Быстрый локальный анализ без ИИ: голосование индикаторов.
+
+    Каждый индикатор голосует за рост (+1), падение (-1) или нейтрально (0).
+    :return: {"label": "ВВЕРХ"|"ВНИЗ"|"НЕЙТРАЛЬНО", "score": -4..4, "reasons": [...]}
+    """
+    score = 0
+    reasons: list[str] = []
+
+    if ind["rsi_14"] < 30:
+        score += 1
+        reasons.append(f"RSI {ind['rsi_14']:.0f} — перепроданность")
+    elif ind["rsi_14"] > 70:
+        score -= 1
+        reasons.append(f"RSI {ind['rsi_14']:.0f} — перекупленность")
+
+    if ind["ema_9"] > ind["ema_21"]:
+        score += 1
+        reasons.append("EMA9 > EMA21 — тренд вверх")
+    else:
+        score -= 1
+        reasons.append("EMA9 < EMA21 — тренд вниз")
+
+    if ind["macd_hist"] > 0 and ind["macd_hist"] >= ind["macd_hist_prev"]:
+        score += 1
+        reasons.append("MACD выше сигнальной, импульс растёт")
+    elif ind["macd_hist"] < 0 and ind["macd_hist"] <= ind["macd_hist_prev"]:
+        score -= 1
+        reasons.append("MACD ниже сигнальной, импульс падает")
+
+    if ind["bb_position"] < 0.15:
+        score += 1
+        reasons.append("цена у нижней полосы Боллинджера")
+    elif ind["bb_position"] > 0.85:
+        score -= 1
+        reasons.append("цена у верхней полосы Боллинджера")
+
+    if score >= 2:
+        label = "ВВЕРХ"
+    elif score <= -2:
+        label = "ВНИЗ"
+    else:
+        label = "НЕЙТРАЛЬНО"
+
+    return {"label": label, "score": score, "reasons": reasons}
+
+
+def _overview_row(asset: str, interval: str) -> dict:
+    """Собирает строку обзора по одному активу (или запись об ошибке)."""
+    try:
+        candles = add_indicators(fetch_candles(asset, interval))
+    except DataEngineError as exc:
+        return {"asset": asset, "ok": False, "error": str(exc)}
+
+    last = candles.iloc[-1]
+    prev = candles.iloc[-2]
+    price = float(last["Close"])
+
+    # Изменение за последние 12 свечей (~1 час на таймфрейме 5m)
+    lookback = min(12, len(candles) - 1)
+    change_pct = (price / float(candles["Close"].iloc[-1 - lookback]) - 1.0) * 100.0
+
+    bb_range = float(last["BB_upper"]) - float(last["BB_lower"])
+    bb_position = (price - float(last["BB_lower"])) / bb_range if bb_range > 0 else 0.5
+
+    ind = {
+        "rsi_14": float(last["RSI_14"]),
+        "ema_9": float(last["EMA_9"]),
+        "ema_21": float(last["EMA_21"]),
+        "macd_hist": float(last["MACD_hist"]),
+        "macd_hist_prev": float(prev["MACD_hist"]),
+        "bb_position": bb_position,
+    }
+    bias = quick_bias(ind)
+
+    return {
+        "asset": asset,
+        "ok": True,
+        "price": price,
+        "change_pct": change_pct,
+        "rsi": ind["rsi_14"],
+        "ema_trend": "вверх" if ind["ema_9"] > ind["ema_21"] else "вниз",
+        "bias": bias["label"],
+        "score": bias["score"],
+        "reasons": bias["reasons"],
+        "is_crypto": asset in CRYPTO_ASSETS,
+    }
+
+
+def get_market_overview(interval: str = "5m") -> list[dict]:
+    """
+    Параллельно скачивает котировки по ВСЕМ активам и возвращает
+    краткий анализ каждого: цена, изменение, RSI, тренд EMA и
+    итоговый локальный вердикт (без обращения к ИИ).
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=len(ASSETS)) as pool:
+        rows = list(pool.map(lambda a: _overview_row(a, interval), ASSETS))
+    return rows
 
 
 def _build_summary(asset: str, interval: str, ind: dict) -> str:

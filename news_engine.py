@@ -77,7 +77,34 @@ ASSET_KEYWORDS: dict[str, tuple[str, ...]] = {
         "blockchain", "stablecoin", "etf", "sec", "halving", "miner",
         "binance", "coinbase", "defi", "altcoin",
     ),
+    "ETH/USD": (
+        "eth", "ethereum", "vitalik", "staking", "layer-2", "l2",
+        "crypto", "cryptocurrency", "etf", "sec", "defi", "bitcoin",
+    ),
+    "SOL/USD": (
+        "sol", "solana", "crypto", "cryptocurrency", "etf", "sec",
+        "defi", "altcoin", "bitcoin", "memecoin",
+    ),
+    "XRP/USD": (
+        "xrp", "ripple", "crypto", "cryptocurrency", "etf", "sec",
+        "altcoin", "bitcoin",
+    ),
+    "BNB/USD": (
+        "bnb", "binance", "cz", "crypto", "cryptocurrency", "etf",
+        "sec", "altcoin", "bitcoin",
+    ),
+    "DOGE/USD": (
+        "doge", "dogecoin", "memecoin", "musk", "crypto",
+        "cryptocurrency", "altcoin", "bitcoin",
+    ),
+    "ADA/USD": (
+        "ada", "cardano", "hoskinson", "crypto", "cryptocurrency",
+        "altcoin", "etf", "sec", "bitcoin",
+    ),
 }
+
+# Символы криптовалют для выбора крипто-лент
+_CRYPTO_TOKENS = ("BTC", "ETH", "SOL", "XRP", "BNB", "DOGE", "ADA", "CRYPTO")
 
 
 def _parse_feed(name: str, url: str) -> list[dict]:
@@ -140,7 +167,7 @@ def fetch_latest_news(asset: str = "", limit: int = 5) -> list[dict]:
     :return: список словарей {"title", "link", "source", "published", "published_ts"}.
     """
     feeds = list(GENERAL_FEEDS)
-    if "BTC" in asset.upper() or "CRYPTO" in asset.upper():
+    if any(token in asset.upper() for token in _CRYPTO_TOKENS):
         # Для криптовалют крипто-новости важнее — ставим их в начало.
         feeds = CRYPTO_FEEDS + GENERAL_FEEDS
 

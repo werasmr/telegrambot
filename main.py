@@ -8,13 +8,19 @@ main.py — веб-интерфейс на Streamlit для генерации �
 from __future__ import annotations
 
 import os
+from datetime import datetime, timezone
 
 import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
 
 from ai_engine import AIEngineError, AISignal, get_ai_signal
-from data_engine import ASSETS, DataEngineError, get_market_snapshot
+from data_engine import (
+    ASSETS,
+    DataEngineError,
+    get_market_overview,
+    get_market_snapshot,
+)
 from news_engine import fetch_latest_news, headlines_for_prompt
 
 # ----------------------------- Настройка страницы -----------------------------
@@ -40,6 +46,19 @@ st.markdown(
     .signal-arrow { font-size: 110px; line-height: 1; margin: 0; }
     .signal-title { font-size: 34px; font-weight: 800; margin: 6px 0 0 0; }
     .signal-sub   { font-size: 16px; opacity: 0.75; margin-top: 4px; }
+    .ov-card {
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+        border: 1px solid rgba(128,128,128,0.25);
+    }
+    .ov-up   { background: rgba(0, 200, 83, 0.10);  border-left: 5px solid #00c853; }
+    .ov-down { background: rgba(255, 23, 68, 0.10); border-left: 5px solid #ff1744; }
+    .ov-flat { background: rgba(158, 158, 158, 0.10); border-left: 5px solid #9e9e9e; }
+    .ov-asset { font-size: 18px; font-weight: 700; margin: 0; }
+    .ov-price { font-size: 22px; font-weight: 800; margin: 2px 0; }
+    .ov-line  { font-size: 13px; opacity: 0.85; margin: 0; }
+    .ov-bias  { font-size: 15px; font-weight: 700; margin: 4px 0 0 0; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -86,6 +105,96 @@ st.caption(
     f"Актив: **{asset}** · Таймфрейм: **{interval}** · "
     "Тех. анализ (RSI, MACD, Bollinger, EMA) + новостной фон + Google Gemini Flash"
 )
+
+# ------------------------------ Обзор рынка ------------------------------------
+
+
+@st.cache_data(ttl=120, show_spinner=False)
+def cached_overview(interval: str) -> tuple[list[dict], str]:
+    """Обзор всех активов; кешируется на 2 минуты."""
+    rows = get_market_overview(interval)
+    fetched_at = datetime.now(timezone.utc).strftime("%H:%M:%S UTC")
+    return rows, fetched_at
+
+
+def fmt_price(price: float) -> str:
+    """Форматирует цену с разумным числом знаков (BTC vs DOGE)."""
+    if price >= 1000:
+        return f"{price:,.2f}"
+    if price >= 1:
+        return f"{price:.4f}"
+    return f"{price:.6f}"
+
+
+def render_overview() -> None:
+    """Сетка карточек с кратким локальным анализом по всем активам."""
+    header_col, refresh_col = st.columns([4, 1])
+    with header_col:
+        st.subheader("🌍 Обзор рынка — все пары и монеты")
+    with refresh_col:
+        if st.button("🔄 Обновить", use_container_width=True):
+            cached_overview.clear()
+
+    with st.spinner("Загружаю котировки по всем активам…"):
+        rows, fetched_at = cached_overview(interval)
+
+    st.caption(
+        f"Котировки и экспресс-анализ (RSI, EMA, MACD, Bollinger) без ИИ · "
+        f"таймфрейм {interval} · обновлено {fetched_at} · кеш 2 мин"
+    )
+
+    per_row = 3
+    for start in range(0, len(rows), per_row):
+        cols = st.columns(per_row)
+        for col, row in zip(cols, rows[start:start + per_row]):
+            with col:
+                if not row["ok"]:
+                    st.markdown(
+                        f"""
+                        <div class="ov-card ov-flat">
+                            <p class="ov-asset">{row['asset']}</p>
+                            <p class="ov-line">⚠️ Нет данных (рынок закрыт или сбой сети)</p>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+                    continue
+
+                if row["bias"] == "ВВЕРХ":
+                    css, badge, color = "ov-up", "🟢 ВВЕРХ", "#00c853"
+                elif row["bias"] == "ВНИЗ":
+                    css, badge, color = "ov-down", "🔴 ВНИЗ", "#ff1744"
+                else:
+                    css, badge, color = "ov-flat", "⚪ НЕЙТРАЛЬНО", "#9e9e9e"
+
+                change_color = "#00c853" if row["change_pct"] >= 0 else "#ff1744"
+                emoji = "🪙" if row["is_crypto"] else "💱"
+                reasons = " · ".join(row["reasons"]) if row["reasons"] else "явных сигналов нет"
+
+                st.markdown(
+                    f"""
+                    <div class="ov-card {css}">
+                        <p class="ov-asset">{emoji} {row['asset']}</p>
+                        <p class="ov-price">{fmt_price(row['price'])}
+                            <span style="font-size:14px;color:{change_color};">
+                                {row['change_pct']:+.2f}% / час
+                            </span>
+                        </p>
+                        <p class="ov-line">RSI {row['rsi']:.0f} · EMA-тренд {row['ema_trend']}</p>
+                        <p class="ov-bias" style="color:{color};">{badge}
+                            <span style="opacity:0.6;font-weight:400;">(счёт {row['score']:+d})</span>
+                        </p>
+                        <p class="ov-line" style="opacity:0.65;">{reasons}</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+
+
+render_overview()
+
+st.divider()
+st.subheader(f"🎯 Точный AI-сигнал по {asset}")
 
 get_signal_clicked = st.button(
     "🚀 ПОЛУЧИТЬ СИГНАЛ",
@@ -275,8 +384,9 @@ if get_signal_clicked:
         st.code(snapshot["summary"] + "\n\nНОВОСТИ:\n" + news_block, language="text")
 else:
     st.info(
-        "Выберите актив и таймфрейм в боковой панели, укажите GEMINI_API_KEY "
-        "и нажмите **«ПОЛУЧИТЬ СИГНАЛ»**. Приложение скачает свежие свечи, "
-        "рассчитает RSI, MACD, Bollinger Bands и EMA, соберёт последние новости "
-        "и передаст всё ИИ-аналитику Google Gemini Flash для принятия решения."
+        "Выше — автоматический экспресс-обзор по всем парам и монетам. "
+        "Для точного сигнала выберите актив в боковой панели, укажите "
+        "GEMINI_API_KEY и нажмите **«ПОЛУЧИТЬ СИГНАЛ»**: приложение скачает "
+        "свежие свечи, рассчитает индикаторы, соберёт новости и передаст всё "
+        "ИИ-аналитику Google Gemini Flash для принятия решения."
     )
